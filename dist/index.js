@@ -35,19 +35,17 @@ const initialMatrix = [
   {x: 0.75, y: 0.75},
   {x: 0.75, y: 0.25}
 ];
-const speed = 24;
+const speed = 12;
 const size = 580;
 function quickRound(num) {
   return Math.round((num + Number.EPSILON) * 100) / 100;
 }
 function getSubdivisionMatrix(subdivisions, matrix) {
-  console.log("makeMatrix");
   return matrix.slice(0, GlobalValues.vertices).map((_, index, passedMatrix) => {
     const startY = passedMatrix[index].y;
     const endY = passedMatrix[index + 1] ? passedMatrix[index + 1].y : passedMatrix[0].y;
     const startX = passedMatrix[index].x;
     const endX = passedMatrix[index + 1] ? passedMatrix[index + 1].x : passedMatrix[0].x;
-    console.log({startY, endY, startX, endX});
     return [...Array(subdivisions)].map((_2, index2) => {
       const partOfSubdivision = index2;
       const y = quickRound((1 - partOfSubdivision / subdivisions) * startY + partOfSubdivision / subdivisions * endY);
