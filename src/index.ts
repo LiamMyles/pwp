@@ -65,7 +65,7 @@ const initialMatrix = [
   { x: 0.75, y: 0.25 },
 ]
 
-const speed = 24
+const speed = 12
 
 const size = 580
 
@@ -77,7 +77,6 @@ function getSubdivisionMatrix(
   subdivisions: number,
   matrix: verticesMatrix[]
 ): verticesMatrix[] {
-  console.log("makeMatrix")
   return matrix
     .slice(0, GlobalValues.vertices)
     .map((_, index, passedMatrix) => {
@@ -89,7 +88,7 @@ function getSubdivisionMatrix(
       const endX = passedMatrix[index + 1]
         ? passedMatrix[index + 1].x
         : passedMatrix[0].x
-      console.log({ startY, endY, startX, endX })
+
       return [...Array(subdivisions)].map((_, index) => {
         const partOfSubdivision = index
         const y = quickRound(
