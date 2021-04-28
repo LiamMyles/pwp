@@ -1,4 +1,4 @@
-import p5 from "../_snowpack/pkg/p5.js";
+import p5 from "../snowpack/pkg/p5.js";
 const GlobalValues = {
   vertices: 4,
   subdivisions: 4,
