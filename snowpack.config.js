@@ -29,5 +29,6 @@ module.exports = {
   },
   buildOptions: {
     baseUrl: "https://liammyles.github.io/pwp/",
+    metaUrlPath: "snowpack",
   },
 }
