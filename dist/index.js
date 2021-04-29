@@ -1,8 +1,8 @@
 import p5 from "../snowpack/pkg/p5.js";
 const GlobalValues = {
-  vertices: 4,
-  subdivisions: 4,
-  points: 37
+  vertices: 3,
+  subdivisions: 45,
+  points: 82
 };
 const vertexRange = document.getElementById("vertex-count");
 const vertexValue = document.getElementById("vertex-value");
@@ -25,6 +25,12 @@ pointsRange.addEventListener("input", () => {
   GlobalValues.points = parseInt(value);
   pointsValue.innerHTML = value;
 });
+vertexRange.value = GlobalValues.vertices.toString();
+vertexValue.innerHTML = GlobalValues.vertices.toString();
+subdivisionsRange.value = GlobalValues.subdivisions.toString();
+subdivisionsValue.innerHTML = GlobalValues.subdivisions.toString();
+pointsRange.value = GlobalValues.points.toString();
+pointsValue.innerHTML = GlobalValues.points.toString();
 const initialMatrix = [
   {x: 0, y: 0},
   {x: 0, y: 1},
@@ -37,9 +43,6 @@ const initialMatrix = [
 ];
 const speed = 12;
 const size = 580;
-function quickRound(num) {
-  return Math.round((num + Number.EPSILON) * 100) / 100;
-}
 function getSubdivisionMatrix(subdivisions, matrix) {
   return matrix.slice(0, GlobalValues.vertices).map((_, index, passedMatrix) => {
     const startY = passedMatrix[index].y;
@@ -48,8 +51,8 @@ function getSubdivisionMatrix(subdivisions, matrix) {
     const endX = passedMatrix[index + 1] ? passedMatrix[index + 1].x : passedMatrix[0].x;
     return [...Array(subdivisions)].map((_2, index2) => {
       const partOfSubdivision = index2;
-      const y = quickRound((1 - partOfSubdivision / subdivisions) * startY + partOfSubdivision / subdivisions * endY);
-      const x = quickRound((1 - partOfSubdivision / subdivisions) * startX + partOfSubdivision / subdivisions * endX);
+      const y = (1 - partOfSubdivision / subdivisions) * startY + partOfSubdivision / subdivisions * endY;
+      const x = (1 - partOfSubdivision / subdivisions) * startX + partOfSubdivision / subdivisions * endX;
       return {x, y};
     });
   }).flat();
@@ -91,6 +94,7 @@ const sketch = (p52) => {
       p52.push();
       const {x: subX, y: subY} = pointsMatrix[count] ? pointsMatrix[count] : pointsMatrix[pointsMatrix.length - 1];
       const {x: pointX, y: pointY} = pointsMatrix[count + 1] ? pointsMatrix[count + 1] : pointsMatrix[0];
+      p52.strokeWeight(0.2);
       p52.line(pointX * size, pointY * size, subX * size, subY * size);
       p52.pop();
     });
