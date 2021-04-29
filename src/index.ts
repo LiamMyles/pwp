@@ -1,14 +1,3 @@
-/**
- * This file is just a silly example to show everything working in the browser.
- * When you're ready to start on your site, clear the file. Happy hacking!
- **/
-
-// import confetti from "canvas-confetti"
-// confetti.create(document.getElementById("canvas") as HTMLCanvasElement, {
-//   resize: true,
-//   useWorker: true,
-// })({ particleCount: 200, spread: 200 })
-
 import p5 from "p5"
 import type typeP5 from "p5"
 
@@ -18,13 +7,14 @@ interface verticesMatrix {
 }
 
 const GlobalValues = {
-  vertices: 4,
-  subdivisions: 4,
-  points: 37,
+  vertices: 3,
+  subdivisions: 45,
+  points: 82,
 }
 
 const vertexRange = <HTMLInputElement>document.getElementById("vertex-count")
 const vertexValue = <HTMLElement>document.getElementById("vertex-value")
+
 const subdivisionsRange = <HTMLInputElement>(
   document.getElementById("subdivisions-count")
 )
@@ -50,9 +40,12 @@ pointsRange.addEventListener("input", () => {
   pointsValue.innerHTML = value
 })
 
-// const vertices = GlobalValues.vertices
-// const subdivisions = GlobalValues.subdivisions
-// const points = GlobalValues.points
+vertexRange.value = GlobalValues.vertices.toString()
+vertexValue.innerHTML = GlobalValues.vertices.toString()
+subdivisionsRange.value = GlobalValues.subdivisions.toString()
+subdivisionsValue.innerHTML = GlobalValues.subdivisions.toString()
+pointsRange.value = GlobalValues.points.toString()
+pointsValue.innerHTML = GlobalValues.points.toString()
 
 const initialMatrix = [
   { x: 0, y: 0 },
@@ -68,10 +61,6 @@ const initialMatrix = [
 const speed = 12
 
 const size = 580
-
-function quickRound(num: number) {
-  return Math.round((num + Number.EPSILON) * 100) / 100
-}
 
 function getSubdivisionMatrix(
   subdivisions: number,
@@ -91,14 +80,14 @@ function getSubdivisionMatrix(
 
       return [...Array(subdivisions)].map((_, index) => {
         const partOfSubdivision = index
-        const y = quickRound(
+        const y =
           (1 - partOfSubdivision / subdivisions) * startY +
-            (partOfSubdivision / subdivisions) * endY
-        )
-        const x = quickRound(
+          (partOfSubdivision / subdivisions) * endY
+
+        const x =
           (1 - partOfSubdivision / subdivisions) * startX +
-            (partOfSubdivision / subdivisions) * endX
-        )
+          (partOfSubdivision / subdivisions) * endX
+
         return { x, y }
       })
     })
@@ -166,6 +155,7 @@ const sketch = (p5: typeP5) => {
       const { x: pointX, y: pointY } = pointsMatrix[count + 1]
         ? pointsMatrix[count + 1]
         : pointsMatrix[0]
+      p5.strokeWeight(0.2)
       p5.line(pointX * size, pointY * size, subX * size, subY * size)
       p5.pop()
     })
