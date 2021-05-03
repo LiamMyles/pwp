@@ -4,7 +4,6 @@ import { GlobalValues } from "./globals"
 import { getSubdivisionMatrix, getPointsMatrix, getInitialPoints } from "./pwp"
 
 const speed = 12
-const size = 580
 
 export const sketch = (p5: typeP5) => {
   p5.setup = () => {
@@ -62,24 +61,5 @@ export const sketch = (p5: typeP5) => {
       p5.line(pointX, pointY, subX, subY)
       p5.pop()
     })
-
-    // const { x: subX, y: subY } = pointsMatrix[count]
-    //   ? pointsMatrix[count]
-    //   : pointsMatrix[pointsMatrix.length - 1]
-    // const { x: pointX, y: pointY } = pointsMatrix[count + 1]
-    //   ? pointsMatrix[count + 1]
-    //   : pointsMatrix[0]
-    // p5.line(pointX * size, pointY * size, subX * size, subY * size)
-
-    // if (count >= GlobalValues.vertices * GlobalValues.subdivisions) {
-    //   count = 0
-    //   p5.frameRate(0)
-    //   setTimeout(() => {
-    //     p5.frameRate(speed)
-    //     p5.background(220)
-    //   }, 2000)
-    // } else {
-    //   count++
-    // }
   }
 }

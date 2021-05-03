@@ -2,8 +2,8 @@
   "homepage": "https://liammyles.github.io/pwp/",
   "scripts": {
     "start": "snowpack dev",
-    "build": "snowpack build",
-    "predeploy": "touch ./build/.nojekyll",
+    "build": "snowpack build; touch ./build/.nojekyll",
+    "predeploy": "yarn build",
     "deploy": "gh-pages -t -d build",
     "test": "web-test-runner \"src/**/*.test.tsx\"",
     "format": "prettier --write \"src/**/*.{ts,js}\"",

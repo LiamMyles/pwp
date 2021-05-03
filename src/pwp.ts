@@ -25,8 +25,8 @@ export function getInitialPoints(
     currentAngle += angleBetweenPoints
     const cos = Math.cos(currentAngle)
     const sin = Math.sin(currentAngle)
-    const x = Math.round(cos * startingSize)
-    const y = Math.round(sin * startingSize)
+    const y = Math.round(cos * startingSize)
+    const x = Math.round(sin * startingSize)
 
     return { x, y, sin, cos }
   })
