@@ -16,16 +16,24 @@ export const sketch = (p5) => {
     const matrix = getInitialPoints(GlobalValues.vertices, 250);
     const subdivisionMatrix = getSubdivisionMatrix(GlobalValues.subdivisions, matrix, GlobalValues.vertices);
     const pointsMatrix = getPointsMatrix(GlobalValues.vertices, GlobalValues.subdivisions, GlobalValues.points, subdivisionMatrix);
-    matrix.forEach(({x, y}) => {
+    matrix.forEach(({x, y}, index) => {
       p5.push();
-      p5.stroke("green");
+      if (index === 0) {
+        p5.stroke("blue");
+      } else {
+        p5.stroke("green");
+      }
       p5.strokeWeight(15);
       p5.point(x, y);
       p5.pop();
     });
-    subdivisionMatrix.forEach(({x, y}) => {
+    subdivisionMatrix.forEach(({x, y}, index) => {
       p5.push();
-      p5.stroke("purple");
+      if (index == 0) {
+        p5.stroke("red");
+      } else {
+        p5.stroke("purple");
+      }
       p5.strokeWeight(10);
       p5.point(x, y);
       p5.pop();
