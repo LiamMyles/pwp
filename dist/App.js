@@ -36,7 +36,7 @@ function App({}) {
     htmlFor: "vertex-number-slider"
   }, "Vertex Slider"), /* @__PURE__ */ React.createElement(Slider, {
     min: 1,
-    max: 8,
+    max: 20,
     id: "vertex-number-slider",
     onChange: (value) => setVertex(value),
     value: vertex
@@ -46,7 +46,7 @@ function App({}) {
     type: "number",
     id: "vertex-number-input",
     min: 1,
-    max: 8,
+    max: 20,
     onChange: ({currentTarget: {value}}) => {
       setVertex(parseInt(value));
     },

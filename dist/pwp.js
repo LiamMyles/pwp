@@ -1,3 +1,16 @@
+export function getInitialPoints(sides, startingSize) {
+  const twoPi = Math.PI * 2;
+  const angleBetweenPoints = twoPi / sides;
+  let currentAngle = angleBetweenPoints;
+  return [...Array(sides)].map(() => {
+    currentAngle += angleBetweenPoints;
+    const cos = Math.cos(currentAngle);
+    const sin = Math.sin(currentAngle);
+    const x = Math.round(cos * startingSize);
+    const y = Math.round(sin * startingSize);
+    return {x, y, sin, cos};
+  });
+}
 export function getSubdivisionMatrix(subdivisions, matrix, vertices) {
   return matrix.slice(0, vertices).map((_, index, passedMatrix) => {
     const startY = passedMatrix[index].y;
