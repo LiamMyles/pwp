@@ -1,5 +1,10 @@
 {
   "imports": {
-    "p5": "./p5.js"
+    "@reach/slider": "./@reach/slider.js",
+    "@reach/slider/styles.css": "./@reach/slider/styles.css",
+    "p5": "./p5.js",
+    "react": "./react.js",
+    "react-dom": "./react-dom.js",
+    "styled-components": "./styled-components.js"
   }
 }
