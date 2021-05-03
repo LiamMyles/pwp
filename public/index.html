@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Web site created using create-snowpack-app" />
     <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/index.css" />
@@ -10,38 +10,7 @@
     <title>PWP App</title>
   </head>
   <body>
-    <div class="p5-container" id="p5"></div>
-    <h1 style="font-size: xx-large; margin: 10px 0;">Controls</h1>
-    <div>
-      <input type="range" value="4" min="1" max="8" id="vertex-count">
-      <label for="vertex-count">Vertex's 1-8</label>
-      <p>Vertex count = <span id="vertex-value">4</span></p>
-    </div>
-    <div>
-      <input type="range" value="4" min="1" max="1000" id="subdivisions-count">
-      <label for="subdivisions-count">Subdivisions 1-1000</label>
-      <p>Subdivisions count = <span id="subdivisions-value">4</span></p>
-    </div>
-    <div>
-      <input type="range" value="37" min="1" max="1000" id="points-count">
-      <label for="points-count">Points 1-1000</label>
-      <p>Points count = <span id="points-value">37</span></p>
-    </div>
-    <h1 style="font-size: xx-large; margin: 10px 0;">Notes</h1>
-    <p style="font-size: large; margin: 10px 0;">Purple Dots are all the subdivisions, Green dots are all the vertices.</p>
-    <p style="font-size: large; margin: 10px 0;">These are the currently preset vertices:</p>
-    <pre>
-      <code>
-      { x: 0, y: 0 },
-      { x: 0, y: 1 },
-      { x: 1, y: 1 },
-      { x: 1, y: 0 },
-      { x: 0.25, y: 0.25 },
-      { x: 0.25, y: 0.75 },
-      { x: 0.75, y: 0.75 },
-      { x: 0.75, y: 0.25 },
-      </code>
-    </pre>
+    <div id="root"></div>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <script type="module" src="%PUBLIC_URL%/dist/index.js"></script>
     <!--
