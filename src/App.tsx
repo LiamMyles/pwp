@@ -44,7 +44,7 @@ function App({}: AppProps) {
         <label htmlFor="vertex-number-slider">Vertex Slider</label>
         <Slider
           min={1}
-          max={8}
+          max={20}
           id="vertex-number-slider"
           onChange={(value) => setVertex(value)}
           value={vertex}
@@ -54,7 +54,7 @@ function App({}: AppProps) {
           type="number"
           id="vertex-number-input"
           min={1}
-          max={8}
+          max={20}
           onChange={({ currentTarget: { value } }) => {
             setVertex(parseInt(value))
           }}

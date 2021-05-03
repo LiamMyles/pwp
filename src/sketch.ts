@@ -1,7 +1,7 @@
 import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"
-import { getSubdivisionMatrix, getPointsMatrix } from "./pwp"
+import { getSubdivisionMatrix, getPointsMatrix, getInitialPoints } from "./pwp"
 
 const speed = 12
 const size = 580
@@ -18,12 +18,14 @@ export const sketch = (p5: typeP5) => {
   p5.draw = () => {
     p5.background(220)
     p5.angleMode(p5.DEGREES)
-    p5.translate(10, p5.height - 10)
+    p5.translate(p5.width / 2, p5.height / 2)
     p5.scale(1, -1)
+
+    const matrix = getInitialPoints(GlobalValues.vertices, 250)
 
     const subdivisionMatrix = getSubdivisionMatrix(
       GlobalValues.subdivisions,
-      GlobalValues.initialMatrix,
+      matrix,
       GlobalValues.vertices
     )
     const pointsMatrix = getPointsMatrix(
@@ -33,18 +35,18 @@ export const sketch = (p5: typeP5) => {
       subdivisionMatrix
     )
 
-    GlobalValues.initialMatrix.forEach(({ x, y }) => {
+    matrix.forEach(({ x, y }) => {
       p5.push()
       p5.stroke("green")
       p5.strokeWeight(15)
-      p5.point(x * size, y * size)
+      p5.point(x, y)
       p5.pop()
     })
     subdivisionMatrix.forEach(({ x, y }) => {
       p5.push()
       p5.stroke("purple")
       p5.strokeWeight(10)
-      p5.point(x * size, y * size)
+      p5.point(x, y)
       p5.pop()
     })
 
@@ -57,7 +59,7 @@ export const sketch = (p5: typeP5) => {
         ? pointsMatrix[count + 1]
         : pointsMatrix[0]
       p5.strokeWeight(0.2)
-      p5.line(pointX * size, pointY * size, subX * size, subY * size)
+      p5.line(pointX, pointY, subX, subY)
       p5.pop()
     })
 

@@ -3,6 +3,35 @@ interface verticesMatrix {
   y: number
 }
 
+interface Cords {
+  x: number
+  y: number
+}
+
+interface PolygonPoint extends Cords {
+  cos: number
+  sin: number
+}
+
+export function getInitialPoints(
+  sides: number,
+  startingSize: number
+): PolygonPoint[] {
+  const twoPi = Math.PI * 2
+  const angleBetweenPoints = twoPi / sides
+
+  let currentAngle = angleBetweenPoints
+  return [...Array(sides)].map(() => {
+    currentAngle += angleBetweenPoints
+    const cos = Math.cos(currentAngle)
+    const sin = Math.sin(currentAngle)
+    const x = Math.round(cos * startingSize)
+    const y = Math.round(sin * startingSize)
+
+    return { x, y, sin, cos }
+  })
+}
+
 export function getSubdivisionMatrix(
   subdivisions: number,
   matrix: verticesMatrix[],
