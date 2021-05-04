@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "../snowpack/pkg/react.js";
+import React, {useState, useEffect, useRef} from "../snowpack/pkg/react.js";
 import {P5Canvas} from "./components/P5Canvas.js";
 import {sketch} from "./sketch.js";
 import styled from "../snowpack/pkg/styled-components.js";
@@ -25,11 +25,37 @@ function App({}) {
   const [vertex, setVertex] = useState(GlobalValues.vertices);
   const [subdivisions, setSubdivisions] = useState(GlobalValues.subdivisions);
   const [points, setPoints] = useState(GlobalValues.points);
+  const [matrix, setMatrix] = useState(GlobalValues.matrix);
+  const [showSubdivisions, setShowSubdivisions] = useState(GlobalValues.showSubdivisions);
+  const [showVertices, setShowVertices] = useState(GlobalValues.showVertices);
+  const [jumps, setJumps] = useState(GlobalValues.jumps);
+  const [shouldSlowDraw, setShouldSlowDraw] = useState(GlobalValues.slowDraw);
+  const hackTimeoutId = useRef(0);
   useEffect(() => {
     GlobalValues.vertices = vertex;
     GlobalValues.subdivisions = subdivisions;
     GlobalValues.points = points;
-  }, [vertex, subdivisions, points]);
+    GlobalValues.showSubdivisions = showSubdivisions;
+    GlobalValues.showVertices = showVertices;
+    GlobalValues.jumps = jumps;
+    GlobalValues.slowDraw = shouldSlowDraw;
+  }, [
+    vertex,
+    subdivisions,
+    points,
+    showSubdivisions,
+    showVertices,
+    jumps,
+    shouldSlowDraw
+  ]);
+  useEffect(() => {
+    hackTimeoutId.current = setTimeout(() => {
+      setMatrix(GlobalValues.matrix);
+    }, 250);
+    return () => {
+      clearTimeout(hackTimeoutId.current);
+    };
+  }, [GlobalValues.matrix, setMatrix]);
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(StyledP5Canvas, {
     sketch
   }), /* @__PURE__ */ React.createElement(StyledWrapperDiv, null, /* @__PURE__ */ React.createElement("label", {
@@ -89,14 +115,66 @@ function App({}) {
       setPoints(parseInt(value));
     },
     value: points
-  }), /* @__PURE__ */ React.createElement("h1", null, "Notes"), /* @__PURE__ */ React.createElement("p", null, "Purple Dots are all the subdivisions, Green dots are all the vertices."), /* @__PURE__ */ React.createElement("p", null, "These are the currently preset vertices:"), /* @__PURE__ */ React.createElement("pre", null, /* @__PURE__ */ React.createElement("code", null, `
-{ x: 0, y: 0 },
-{ x: 0, y: 1 },
-{ x: 1, y: 1 },
-{ x: 1, y: 0 },
-{ x: 0.25, y: 0.25 },
-{ x: 0.25, y: 0.75 },
-{ x: 0.75, y: 0.75 },
-{ x: 0.75, y: 0.25 },`))));
+  })), /* @__PURE__ */ React.createElement(StyledWrapperDiv, null, /* @__PURE__ */ React.createElement("input", {
+    type: "checkbox",
+    id: "toggle-subdivisions",
+    value: `${showSubdivisions}`,
+    onChange: ({currentTarget: {checked}}) => {
+      setShowSubdivisions(checked);
+    }
+  }), /* @__PURE__ */ React.createElement("label", {
+    htmlFor: "toggle-subdivisions"
+  }, "Toggle Subdivisions"), /* @__PURE__ */ React.createElement("input", {
+    type: "checkbox",
+    id: "toggle-vertices",
+    value: `${showVertices}`,
+    onChange: ({currentTarget: {checked}}) => {
+      setShowVertices(checked);
+    }
+  }), /* @__PURE__ */ React.createElement("label", {
+    htmlFor: "toggle-vertices"
+  }, "Toggle Vertices"), /* @__PURE__ */ React.createElement("input", {
+    type: "checkbox",
+    id: "toggle-slow-draw",
+    value: `${shouldSlowDraw}`,
+    onChange: ({currentTarget: {checked}}) => {
+      setShouldSlowDraw(checked);
+    }
+  }), /* @__PURE__ */ React.createElement("label", {
+    htmlFor: "toggle-slow-draw"
+  }, "Toggle Drawing")), /* @__PURE__ */ React.createElement(StyledWrapperDiv, null, /* @__PURE__ */ React.createElement("button", {
+    onClick: () => {
+      setJumps((previousState) => {
+        return [...previousState, 0];
+      });
+    }
+  }, "Add Jump"), /* @__PURE__ */ React.createElement("button", {
+    onClick: () => {
+      setJumps((previousState) => {
+        const newState = [...previousState];
+        newState.pop();
+        return newState;
+      });
+    }
+  }, "Remove Jump"), jumps.map((jump, index) => {
+    return /* @__PURE__ */ React.createElement(React.Fragment, {
+      key: `${jump}-${index}`
+    }, /* @__PURE__ */ React.createElement("input", {
+      type: "number",
+      name: "",
+      id: "",
+      value: jump,
+      onChange: ({currentTarget: {value}}) => {
+        setJumps((previousState) => {
+          const newState = [...previousState];
+          newState[index] = parseInt(value);
+          return newState;
+        });
+      }
+    }));
+  })), /* @__PURE__ */ React.createElement(StyledWrapperDiv, null, /* @__PURE__ */ React.createElement("p", null, "List of vertices:"), /* @__PURE__ */ React.createElement("pre", null, /* @__PURE__ */ React.createElement("code", null, matrix.map((cords) => {
+    return `${JSON.stringify(cords)}
+`;
+  })))));
 }
 export default App;

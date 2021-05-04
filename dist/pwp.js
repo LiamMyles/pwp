@@ -1,15 +1,28 @@
-export function getInitialPoints(sides, startingSize) {
+export function getInitialPoints(sides, ...jumps) {
   const twoPi = Math.PI * 2;
   const angleBetweenPoints = twoPi / sides;
   let currentAngle = angleBetweenPoints;
-  return [...Array(sides)].map(() => {
+  const initialVertices = [...Array(sides)].map(() => {
     currentAngle += angleBetweenPoints;
     const cos = Math.cos(currentAngle);
     const sin = Math.sin(currentAngle);
-    const x = Math.round(cos * startingSize);
-    const y = Math.round(sin * startingSize);
-    return {x, y, sin, cos};
+    const y = cos;
+    const x = sin;
+    return {x, y};
   });
+  if (jumps.length !== 0) {
+    let lastValue = 0;
+    const jumpedMatrix = [...Array(sides * jumps.length)].map((_, index) => {
+      const currentJump = index % jumps.length;
+      const newValue = jumps[currentJump] + lastValue;
+      lastValue = newValue;
+      return initialVertices[newValue % sides];
+    });
+    jumpedMatrix.push(jumpedMatrix.shift());
+    return jumpedMatrix;
+  } else {
+    return initialVertices;
+  }
 }
 export function getSubdivisionMatrix(subdivisions, matrix, vertices) {
   return matrix.slice(0, vertices).map((_, index, passedMatrix) => {
