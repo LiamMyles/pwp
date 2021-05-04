@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { P5Canvas } from "./components/P5Canvas"
 import { sketch } from "./sketch"
 import styled from "styled-components"
@@ -30,12 +30,42 @@ function App({}: AppProps) {
   const [vertex, setVertex] = useState(GlobalValues.vertices)
   const [subdivisions, setSubdivisions] = useState(GlobalValues.subdivisions)
   const [points, setPoints] = useState(GlobalValues.points)
+  const [matrix, setMatrix] = useState(GlobalValues.matrix)
+  const [showSubdivisions, setShowSubdivisions] = useState(
+    GlobalValues.showSubdivisions
+  )
+  const [showVertices, setShowVertices] = useState(GlobalValues.showVertices)
+  const [jumps, setJumps] = useState(GlobalValues.jumps)
+  const [shouldSlowDraw, setShouldSlowDraw] = useState(GlobalValues.slowDraw)
+
+  const hackTimeoutId = useRef(0)
 
   useEffect(() => {
     GlobalValues.vertices = vertex
     GlobalValues.subdivisions = subdivisions
     GlobalValues.points = points
-  }, [vertex, subdivisions, points])
+    GlobalValues.showSubdivisions = showSubdivisions
+    GlobalValues.showVertices = showVertices
+    GlobalValues.jumps = jumps
+    GlobalValues.slowDraw = shouldSlowDraw
+  }, [
+    vertex,
+    subdivisions,
+    points,
+    showSubdivisions,
+    showVertices,
+    jumps,
+    shouldSlowDraw,
+  ])
+
+  useEffect(() => {
+    hackTimeoutId.current = setTimeout(() => {
+      setMatrix(GlobalValues.matrix)
+    }, 250)
+    return () => {
+      clearTimeout(hackTimeoutId.current)
+    }
+  }, [GlobalValues.matrix, setMatrix])
 
   return (
     <>
@@ -98,22 +128,86 @@ function App({}: AppProps) {
           }}
           value={points}
         />
-        <h1>Notes</h1>
-        <p>
-          Purple Dots are all the subdivisions, Green dots are all the vertices.
-        </p>
-        <p>These are the currently preset vertices:</p>
+      </StyledWrapperDiv>
+      <StyledWrapperDiv>
+        <input
+          type="checkbox"
+          id="toggle-subdivisions"
+          value={`${showSubdivisions}`}
+          onChange={({ currentTarget: { checked } }) => {
+            setShowSubdivisions(checked)
+          }}
+        />
+        <label htmlFor="toggle-subdivisions">Toggle Subdivisions</label>
+        <input
+          type="checkbox"
+          id="toggle-vertices"
+          value={`${showVertices}`}
+          onChange={({ currentTarget: { checked } }) => {
+            setShowVertices(checked)
+          }}
+        />
+        <label htmlFor="toggle-vertices">Toggle Vertices</label>
+        <input
+          type="checkbox"
+          id="toggle-slow-draw"
+          value={`${shouldSlowDraw}`}
+          onChange={({ currentTarget: { checked } }) => {
+            setShouldSlowDraw(checked)
+          }}
+        />
+        <label htmlFor="toggle-slow-draw">Toggle Drawing</label>
+      </StyledWrapperDiv>
+      <StyledWrapperDiv>
+        <button
+          onClick={() => {
+            setJumps((previousState) => {
+              return [...previousState, 0]
+            })
+          }}
+        >
+          Add Jump
+        </button>
+        <button
+          onClick={() => {
+            setJumps((previousState) => {
+              const newState = [...previousState]
+              newState.pop()
+              return newState
+            })
+          }}
+        >
+          Remove Jump
+        </button>
+
+        {jumps.map((jump, index) => {
+          return (
+            <React.Fragment key={`${jump}-${index}`}>
+              <input
+                type="number"
+                name=""
+                id=""
+                value={jump}
+                onChange={({ currentTarget: { value } }) => {
+                  setJumps((previousState) => {
+                    const newState = [...previousState]
+                    newState[index] = parseInt(value)
+                    return newState
+                  })
+                }}
+              />
+            </React.Fragment>
+          )
+        })}
+      </StyledWrapperDiv>
+      <StyledWrapperDiv>
+        <p>List of vertices:</p>
         <pre>
           <code>
-            {`
-{ x: 0, y: 0 },
-{ x: 0, y: 1 },
-{ x: 1, y: 1 },
-{ x: 1, y: 0 },
-{ x: 0.25, y: 0.25 },
-{ x: 0.25, y: 0.75 },
-{ x: 0.75, y: 0.75 },
-{ x: 0.75, y: 0.25 },`}
+            {matrix.map((cords) => {
+              return `${JSON.stringify(cords)}
+`
+            })}
           </code>
         </pre>
       </StyledWrapperDiv>

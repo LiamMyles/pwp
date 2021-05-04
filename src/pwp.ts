@@ -13,23 +13,36 @@ interface PolygonPoint extends Cords {
   sin: number
 }
 
-export function getInitialPoints(
-  sides: number,
-  startingSize: number
-): PolygonPoint[] {
+export function getInitialPoints(sides: number, ...jumps: number[]): Cords[] {
   const twoPi = Math.PI * 2
   const angleBetweenPoints = twoPi / sides
 
   let currentAngle = angleBetweenPoints
-  return [...Array(sides)].map(() => {
+  const initialVertices = [...Array(sides)].map(() => {
     currentAngle += angleBetweenPoints
     const cos = Math.cos(currentAngle)
     const sin = Math.sin(currentAngle)
-    const y = Math.round(cos * startingSize)
-    const x = Math.round(sin * startingSize)
+    const y = cos
+    const x = sin
 
-    return { x, y, sin, cos }
+    return { x, y }
   })
+
+  if (jumps.length !== 0) {
+    let lastValue = 0
+    const jumpedMatrix = [...Array(sides * jumps.length)].map((_, index) => {
+      const currentJump = index % jumps.length
+      const newValue = jumps[currentJump] + lastValue
+
+      lastValue = newValue
+      return initialVertices[newValue % sides]
+    })
+
+    jumpedMatrix.push(jumpedMatrix.shift() as Cords)
+    return jumpedMatrix
+  } else {
+    return initialVertices
+  }
 }
 
 export function getSubdivisionMatrix(
