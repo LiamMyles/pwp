@@ -47,11 +47,9 @@ export function getInitialPoints(sides: number, ...jumps: number[]): Cords[] {
 
 export function getSubdivisionMatrix(
   subdivisions: number,
-  matrix: verticesMatrix[],
-  vertices: number
+  matrix: verticesMatrix[]
 ): verticesMatrix[] {
   return matrix
-    .slice(0, vertices)
     .map((_, index, passedMatrix) => {
       const startY = passedMatrix[index].y
       const endY = passedMatrix[index + 1]
@@ -82,9 +80,10 @@ export function getPointsMatrix(
   vertices: number,
   subdivisions: number,
   points: number,
-  subdivisionMatrix: verticesMatrix[]
+  subdivisionMatrix: verticesMatrix[],
+  ...jumps: number[]
 ) {
-  const totalPoints = vertices * subdivisions
+  const totalPoints = vertices * jumps.length * subdivisions
   return [...Array(totalPoints)].map((_, index) => {
     return subdivisionMatrix[(index * points) % totalPoints]
   })

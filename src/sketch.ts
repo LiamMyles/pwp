@@ -3,7 +3,7 @@ import type typeP5 from "p5"
 import { GlobalValues } from "./globals"
 import { getSubdivisionMatrix, getPointsMatrix, getInitialPoints } from "./pwp"
 
-const speed = 10
+const speed = 2
 const size = 250
 
 export const sketch = (p5: typeP5) => {
@@ -33,14 +33,15 @@ export const sketch = (p5: typeP5) => {
 
     const subdivisionMatrix = getSubdivisionMatrix(
       GlobalValues.subdivisions,
-      matrix,
-      GlobalValues.vertices
+      matrix
     )
+
     const pointsMatrix = getPointsMatrix(
       GlobalValues.vertices,
       GlobalValues.subdivisions,
       GlobalValues.points,
-      subdivisionMatrix
+      subdivisionMatrix,
+      ...GlobalValues.jumps
     )
 
     if (GlobalValues.slowDraw) {
