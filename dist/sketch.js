@@ -1,6 +1,6 @@
 import {GlobalValues} from "./globals.js";
 import {getSubdivisionMatrix, getPointsMatrix, getInitialPoints} from "./pwp.js";
-const speed = 10;
+const speed = 2;
 const size = 250;
 export const sketch = (p5) => {
   p5.setup = () => {
@@ -20,8 +20,8 @@ export const sketch = (p5) => {
     p5.scale(1, -1);
     const matrix = getInitialPoints(GlobalValues.vertices, ...GlobalValues.jumps);
     GlobalValues.matrix = matrix;
-    const subdivisionMatrix = getSubdivisionMatrix(GlobalValues.subdivisions, matrix, GlobalValues.vertices);
-    const pointsMatrix = getPointsMatrix(GlobalValues.vertices, GlobalValues.subdivisions, GlobalValues.points, subdivisionMatrix);
+    const subdivisionMatrix = getSubdivisionMatrix(GlobalValues.subdivisions, matrix);
+    const pointsMatrix = getPointsMatrix(GlobalValues.vertices, GlobalValues.subdivisions, GlobalValues.points, subdivisionMatrix, ...GlobalValues.jumps);
     if (GlobalValues.slowDraw) {
       p5.push();
       const {x: subX, y: subY} = pointsMatrix[slowDrawCount] ? pointsMatrix[slowDrawCount] : pointsMatrix[pointsMatrix.length - 1];
