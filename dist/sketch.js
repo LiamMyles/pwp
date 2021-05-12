@@ -1,6 +1,11 @@
 import {GlobalValues} from "./globals.js";
-import {getSubdivisionMatrix, getPointsMatrix, getInitialPoints} from "./pwp.js";
-const speed = 2;
+import {
+  getSubdivisionMatrix,
+  getPointsMatrix,
+  getInitialPoints,
+  getJumpedPoints
+} from "./pwp.js";
+const speed = 20;
 const size = 250;
 export const sketch = (p5) => {
   p5.setup = () => {
@@ -18,21 +23,26 @@ export const sketch = (p5) => {
     p5.angleMode(p5.DEGREES);
     p5.translate(p5.width / 2, p5.height / 2);
     p5.scale(1, -1);
-    const matrix = getInitialPoints(GlobalValues.vertices, ...GlobalValues.jumps);
-    GlobalValues.matrix = matrix;
-    const subdivisionMatrix = getSubdivisionMatrix(GlobalValues.subdivisions, matrix);
+    const initialMatrix = getInitialPoints(GlobalValues.vertices);
+    const jumpedMatrix = getJumpedPoints(initialMatrix, ...GlobalValues.jumps);
+    GlobalValues.matrix = jumpedMatrix;
+    const subdivisionMatrix = getSubdivisionMatrix(GlobalValues.subdivisions, jumpedMatrix);
     const pointsMatrix = getPointsMatrix(GlobalValues.vertices, GlobalValues.subdivisions, GlobalValues.points, subdivisionMatrix, ...GlobalValues.jumps);
     if (GlobalValues.slowDraw) {
       p5.push();
       const {x: subX, y: subY} = pointsMatrix[slowDrawCount] ? pointsMatrix[slowDrawCount] : pointsMatrix[pointsMatrix.length - 1];
       const {x: pointX, y: pointY} = pointsMatrix[slowDrawCount + 1] ? pointsMatrix[slowDrawCount + 1] : pointsMatrix[0];
-      p5.strokeWeight(0.2);
+      p5.strokeWeight(0.5);
       p5.line(pointX * size, pointY * size, subX * size, subY * size);
       p5.pop();
       slowDrawCount++;
       if (slowDrawCount === pointsMatrix.length) {
-        p5.background(220);
+        p5.frameRate(0);
         slowDrawCount = 0;
+        setTimeout(() => {
+          p5.background(220);
+          p5.frameRate(speed);
+        }, 2e3);
       }
     } else {
       p5.background(220);
@@ -46,7 +56,7 @@ export const sketch = (p5) => {
       });
     }
     if (GlobalValues.showVertices) {
-      matrix.forEach(({x, y}) => {
+      initialMatrix.forEach(({x, y}) => {
         p5.push();
         p5.stroke("green");
         p5.strokeWeight(15);
