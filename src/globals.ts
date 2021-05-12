@@ -1,4 +1,4 @@
-interface GlobalValues {
+export interface GlobalValues {
   vertices: number
   subdivisions: number
   points: number

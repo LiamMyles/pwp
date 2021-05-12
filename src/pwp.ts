@@ -8,17 +8,12 @@ interface Cords {
   y: number
 }
 
-interface PolygonPoint extends Cords {
-  cos: number
-  sin: number
-}
-
-export function getInitialPoints(sides: number, ...jumps: number[]): Cords[] {
+export function getInitialPoints(vertices: number): Cords[] {
   const twoPi = Math.PI * 2
-  const angleBetweenPoints = twoPi / sides
+  const angleBetweenPoints = twoPi / vertices
 
   let currentAngle = angleBetweenPoints
-  const initialVertices = [...Array(sides)].map(() => {
+  const initialVertices = [...Array(vertices)].map(() => {
     currentAngle += angleBetweenPoints
     const cos = Math.cos(currentAngle)
     const sin = Math.sin(currentAngle)
@@ -28,15 +23,24 @@ export function getInitialPoints(sides: number, ...jumps: number[]): Cords[] {
     return { x, y }
   })
 
+  return initialVertices
+}
+
+export function getJumpedPoints(
+  initialVertices: Cords[],
+  ...jumps: number[]
+): Cords[] {
   if (jumps.length !== 0) {
     let lastValue = 0
-    const jumpedMatrix = [...Array(sides * jumps.length)].map((_, index) => {
-      const currentJump = index % jumps.length
-      const newValue = jumps[currentJump] + lastValue
+    const jumpedMatrix = [...Array(initialVertices.length * jumps.length)].map(
+      (_, index) => {
+        const currentJump = index % jumps.length
+        const newValue = jumps[currentJump] + lastValue
 
-      lastValue = newValue
-      return initialVertices[newValue % sides]
-    })
+        lastValue = newValue
+        return initialVertices[newValue % initialVertices.length]
+      }
+    )
 
     jumpedMatrix.push(jumpedMatrix.shift() as Cords)
     return jumpedMatrix
@@ -83,7 +87,11 @@ export function getPointsMatrix(
   subdivisionMatrix: verticesMatrix[],
   ...jumps: number[]
 ) {
-  const totalPoints = vertices * jumps.length * subdivisions
+  let totalPoints = vertices * subdivisions
+  if (jumps.length !== 0) {
+    totalPoints = jumps.length * vertices * subdivisions
+  }
+
   return [...Array(totalPoints)].map((_, index) => {
     return subdivisionMatrix[(index * points) % totalPoints]
   })
