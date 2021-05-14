@@ -112,7 +112,7 @@ function App({}: AppProps) {
 
   return (
     <>
-      <StyledP5Canvas key="never" sketch={sketch} />
+      <StyledP5Canvas sketch={sketch} />
       <StyledSlider>
         <div>
           <label htmlFor="vertex-number-slider">Vertex Slider</label>
