@@ -7,10 +7,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "predeploy": "next build && next export && touch ./out/.nojekyll",
-    "deploy": "gh-pages -t -d out",
     "test": "jest",
-    "lint": "yarn eslint . --ignore-path ./.gitignore"
+    "lint": "yarn eslint . --ignore-path ./.gitignore",
+    "predeploy": "yarn test && yarn lint && next build && next export && touch ./out/.nojekyll",
+    "deploy": "gh-pages -t -d out"
   },
   "xo": {
     "prettier": true,

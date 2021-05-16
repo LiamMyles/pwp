@@ -67,7 +67,7 @@ const TotalJumps = styled.div`
   display: grid;
 `
 
-function Home(): React.ReactElement {
+export function Home(): React.ReactElement {
   const [vertex, setVertex] = useState(GlobalValues.vertices)
   const [subdivisions, setSubdivisions] = useState(GlobalValues.subdivisions)
   const [points, setPoints] = useState(GlobalValues.points)
@@ -284,5 +284,3 @@ function Home(): React.ReactElement {
     </>
   )
 }
-
-export default Home
