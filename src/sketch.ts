@@ -2,16 +2,16 @@ import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"
 import {
-  getSubdivisionMatrix,
-  getPointsMatrix,
   getInitialPoints,
   getJumpedPoints,
+  getPointsMatrix,
+  getSubdivisionMatrix,
 } from "./pwp"
 
 const speed = 20
 const size = 250
 
-export const sketch = (p5: typeP5) => {
+export function sketch(p5: typeP5): void {
   p5.setup = () => {
     p5.createCanvas(600, 600)
 
