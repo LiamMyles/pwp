@@ -1,11 +1,13 @@
-import Head from "next/head"
-import { useState, useEffect, useRef } from "react"
-import { P5Canvas } from "../src/components/P5Canvas"
-import { sketch } from "../src/sketch"
-import styled from "styled-components"
-import { Slider } from "@reach/slider"
 import "@reach/slider/styles.css"
+
+import { Slider } from "@reach/slider"
+import Head from "next/head"
+import { useEffect, useRef, useState } from "react"
+import styled from "styled-components"
+
+import { P5Canvas } from "../src/components/P5Canvas"
 import { GlobalValues } from "../src/globals"
+import { sketch } from "../src/sketch"
 
 const StyledP5Canvas = styled(P5Canvas)`
   margin: 10px auto;

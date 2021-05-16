@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react"
 import { render, waitFor } from "@testing-library/react"
-import p5 from "p5"
 import type p5Type from "p5"
+import p5 from "p5"
+import React, { useEffect, useState } from "react"
 
 import { P5Canvas } from "./P5Canvas"
 

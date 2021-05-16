@@ -2,10 +2,10 @@ import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"
 import {
-  getSubdivisionMatrix,
-  getPointsMatrix,
   getInitialPoints,
   getJumpedPoints,
+  getPointsMatrix,
+  getSubdivisionMatrix,
 } from "./pwp"
 
 const speed = 20
