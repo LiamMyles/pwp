@@ -1,14 +1,17 @@
 import React, { useEffect, useRef } from "react"
-import type P5 from "p5"
+import type p5Type from "p5"
 
 interface P5CanvasProps {
-  sketch: (p5: P5) => void
+  sketch: (p5: p5Type) => void
   className?: string
 }
 
-export const P5Canvas: React.FC<P5CanvasProps> = ({ sketch, className }) => {
+export function P5Canvas({
+  sketch,
+  className,
+}: P5CanvasProps): React.ReactElement {
   const divRef = useRef<HTMLDivElement>(null)
-  const P5Ref = useRef<P5>()
+  const P5Ref = useRef<p5Type>()
 
   if (typeof window === "undefined") {
     return <div ref={divRef} className={className} />
@@ -32,7 +35,7 @@ export const P5Canvas: React.FC<P5CanvasProps> = ({ sketch, className }) => {
     return () => {
       clearTimeout(delay)
       if (P5Ref?.current) {
-        const P5Instance = P5Ref.current as P5
+        const P5Instance = P5Ref.current as p5Type
         P5Instance.remove()
       }
     }

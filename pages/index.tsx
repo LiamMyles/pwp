@@ -66,9 +66,7 @@ const TotalJumps = styled.div`
   display: grid;
 `
 
-interface AppProps {}
-
-function App({}: AppProps) {
+function App(): React.ReactElement {
   const [vertex, setVertex] = useState(GlobalValues.vertices)
   const [subdivisions, setSubdivisions] = useState(GlobalValues.subdivisions)
   const [points, setPoints] = useState(GlobalValues.points)

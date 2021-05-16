@@ -86,7 +86,7 @@ export function getPointsMatrix(
   points: number,
   subdivisionMatrix: verticesMatrix[],
   ...jumps: number[]
-) {
+): verticesMatrix[] {
   let totalPoints = vertices * subdivisions
   if (jumps.length !== 0) {
     totalPoints = jumps.length * vertices * subdivisions

@@ -11,7 +11,7 @@ import {
 const speed = 20
 const size = 250
 
-export const sketch = (p5: typeP5) => {
+export function sketch(p5: typeP5): void {
   p5.setup = () => {
     p5.createCanvas(600, 600)
 

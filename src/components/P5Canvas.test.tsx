@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { render, waitFor } from "@testing-library/react"
 import p5 from "p5"
+import type p5Type from "p5"
 
 import { P5Canvas } from "./P5Canvas"
 
@@ -12,14 +13,14 @@ jest.mock("p5", () => {
 })
 
 beforeEach(() => {
-  const mockedP5: jest.MockInstance<any, any> = p5 as any
+  const mockedP5 = p5 as unknown as jest.Mock<p5Type>
   mockP5RemoveFunction.mockClear()
   mockedP5.mockClear()
 })
 
 describe("P5Canvas Component", () => {
   it("should render run sketch, and remove on unmount", async () => {
-    const { unmount } = render(<P5Canvas sketch={() => {}} />)
+    const { unmount } = render(<P5Canvas sketch={jest.fn()} />)
     await waitFor(() => {
       expect(p5).toHaveBeenCalledTimes(1)
     })
@@ -53,7 +54,7 @@ describe("P5Canvas Component", () => {
       return (
         <>
           <p>Render Count: {triggerRenderCounter}</p>
-          <P5Canvas sketch={() => {}} key="Same Key" />
+          <P5Canvas sketch={jest.fn()} key="Same Key" />
         </>
       )
     }
