@@ -15,6 +15,7 @@ export const P5Canvas: React.FC<P5CanvasProps> = ({ sketch, className }) => {
   }
 
   useEffect(() => {
+    let delay: NodeJS.Timeout
     ;(async () => {
       const p5 = (await import("p5")).default
       const node = divRef.current as HTMLDivElement
@@ -22,19 +23,19 @@ export const P5Canvas: React.FC<P5CanvasProps> = ({ sketch, className }) => {
         P5Ref.current.remove()
       }
       //Add delay to help handle any excess renders
-      const delay = setTimeout(() => {
+      delay = setTimeout(() => {
         const p5Instance = new p5(sketch, node)
         P5Ref.current = p5Instance
       }, 100)
-
-      return () => {
-        clearTimeout(delay)
-        if (P5Ref?.current) {
-          const P5Instance = P5Ref.current as P5
-          P5Instance.remove()
-        }
-      }
     })()
+
+    return () => {
+      clearTimeout(delay)
+      if (P5Ref?.current) {
+        const P5Instance = P5Ref.current as P5
+        P5Instance.remove()
+      }
+    }
   }, [P5Ref, divRef, sketch])
 
   return <div ref={divRef} className={className} />
