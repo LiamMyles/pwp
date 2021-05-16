@@ -1,11 +1,12 @@
 import Head from "next/head"
 import { useState, useEffect, useRef } from "react"
-import { P5Canvas } from "../src/components/P5Canvas"
-import { sketch } from "../src/sketch"
+import { P5Canvas } from "Components/P5Canvas"
+
 import styled from "styled-components"
+import { sketch } from "Src/sketch"
 import { Slider } from "@reach/slider"
 import "@reach/slider/styles.css"
-import { GlobalValues } from "../src/globals"
+import { GlobalValues } from "Src/globals"
 
 const StyledP5Canvas = styled(P5Canvas)`
   margin: 10px auto;
@@ -66,7 +67,7 @@ const TotalJumps = styled.div`
   display: grid;
 `
 
-function App(): React.ReactElement {
+function Home(): React.ReactElement {
   const [vertex, setVertex] = useState(GlobalValues.vertices)
   const [subdivisions, setSubdivisions] = useState(GlobalValues.subdivisions)
   const [points, setPoints] = useState(GlobalValues.points)
@@ -284,4 +285,4 @@ function App(): React.ReactElement {
   )
 }
 
-export default App
+export default Home
