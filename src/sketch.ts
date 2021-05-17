@@ -1,10 +1,11 @@
+import { getLineDensity } from "Calculations/getLineDensity"
 import { getNGonVertices } from "Calculations/getNGonVertices"
 import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"
 import { getJumpedPoints, getPointsMatrix, getSubdivisionMatrix } from "./pwp"
 
-const speed = 20
+let speed = 20
 const size = 250
 
 export function sketch(p5: typeP5): void {
@@ -43,6 +44,18 @@ export function sketch(p5: typeP5): void {
       ...GlobalValues.jumps
     )
 
+    let lineDensity = getLineDensity({
+      vertices: GlobalValues.vertices,
+      subdivisions: GlobalValues.subdivisions,
+      points: GlobalValues.points,
+    })
+
+    if (GlobalValues.jumps.length > 0) {
+      lineDensity = pointsMatrix.length
+    }
+
+    speed = lineDensity / 2
+
     if (GlobalValues.slowDraw) {
       p5.push()
       const { x: subX, y: subY } = pointsMatrix[slowDrawCount]
@@ -56,7 +69,10 @@ export function sketch(p5: typeP5): void {
       p5.pop()
 
       slowDrawCount++
-      if (slowDrawCount === pointsMatrix.length) {
+      if (
+        slowDrawCount === pointsMatrix.length ||
+        slowDrawCount === lineDensity
+      ) {
         p5.frameRate(0)
         slowDrawCount = 0
         setTimeout(() => {
@@ -65,8 +81,9 @@ export function sketch(p5: typeP5): void {
         }, 2000)
       }
     } else {
+      p5.frameRate(speed)
       p5.background(220)
-      pointsMatrix.forEach((_, count) => {
+      pointsMatrix.slice(0, lineDensity).forEach((_, count) => {
         p5.push()
         const { x: subX, y: subY } = pointsMatrix[count]
           ? pointsMatrix[count]
