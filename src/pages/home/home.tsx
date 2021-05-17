@@ -1,6 +1,7 @@
 import "@reach/slider/styles.css"
 
 import { Slider } from "@reach/slider"
+import { getLineDensity } from "Calculations/getLineDensity"
 import { P5Canvas } from "Components/P5Canvas"
 import Head from "next/head"
 import { useEffect, useRef, useState } from "react"
@@ -67,8 +68,16 @@ const TotalJumps = styled.div`
   display: grid;
 `
 
+const Title = styled.h1`
+  font-size: 20px;
+  width: 600px;
+  margin: 5px auto;
+  padding: 0 0 10px;
+  border-bottom: solid grey 2px;
+`
+
 export function Home(): React.ReactElement {
-  const [vertex, setVertex] = useState(GlobalValues.vertices)
+  const [vertices, setVertex] = useState(GlobalValues.vertices)
   const [subdivisions, setSubdivisions] = useState(GlobalValues.subdivisions)
   const [points, setPoints] = useState(GlobalValues.points)
   const [showSubdivisions, setShowSubdivisions] = useState(
@@ -93,7 +102,7 @@ export function Home(): React.ReactElement {
   }, [totalJumps])
 
   useEffect(() => {
-    globalValues.current.vertices = vertex
+    globalValues.current.vertices = vertices
     globalValues.current.subdivisions = subdivisions
     globalValues.current.points = points
     globalValues.current.showSubdivisions = showSubdivisions
@@ -101,7 +110,7 @@ export function Home(): React.ReactElement {
     globalValues.current.jumps = jumps
     globalValues.current.slowDraw = shouldSlowDraw
   }, [
-    vertex,
+    vertices,
     subdivisions,
     points,
     showSubdivisions,
@@ -127,19 +136,24 @@ export function Home(): React.ReactElement {
         />
       </Head>
       <StyledP5Canvas sketch={sketch} />
+      <Title>
+        Polygon: ({vertices},{subdivisions},{points}
+        {jumps.length > 0 && `(${jumps?.join(",")})`}) - Lines:{" "}
+        {getLineDensity({ vertices, subdivisions, points })}
+      </Title>
       <StyledSlider>
         <div>
-          <label htmlFor="vertex-number-slider">Vertex Slider</label>
+          <label htmlFor="vertex-number-slider">N-Gon</label>
           <Slider
             min={1}
-            max={20}
+            max={36}
             id="vertex-number-slider"
             onChange={(value) => setVertex(value)}
-            value={vertex}
+            value={vertices}
           />
         </div>
         <div>
-          <label htmlFor="vertex-number-input">Vertex Input</label>
+          <label htmlFor="vertex-number-input">N-Gon</label>
           <input
             type="number"
             id="vertex-number-input"
@@ -147,23 +161,23 @@ export function Home(): React.ReactElement {
             onChange={({ currentTarget: { value } }) => {
               setVertex(parseInt(value) || 1)
             }}
-            value={vertex}
+            value={vertices}
           />
         </div>
       </StyledSlider>
       <StyledSlider>
         <div>
-          <label htmlFor="subdivision-number-slider">Subdivision Slider</label>
+          <label htmlFor="subdivision-number-slider">Subdivision</label>
           <Slider
             min={1}
-            max={1000}
+            max={50}
             id="subdivision-number-slider"
             onChange={(value) => setSubdivisions(value)}
             value={subdivisions}
           />
         </div>
         <div>
-          <label htmlFor="subdivision-number-input">Subdivision Input</label>
+          <label htmlFor="subdivision-number-input">Subdivision</label>
 
           <input
             type="number"
@@ -178,16 +192,17 @@ export function Home(): React.ReactElement {
       </StyledSlider>
       <StyledSlider>
         <div>
-          <label htmlFor="points-number-slider">Points Slider</label>
+          <label htmlFor="points-number-slider">Points</label>
           <Slider
             min={1}
+            max={Math.floor((vertices * subdivisions) / 2)}
             id="points-number-slider"
             onChange={(value) => setPoints(value)}
             value={points}
           />
         </div>
         <div>
-          <label htmlFor="points-number-input">Points Input</label>
+          <label htmlFor="points-number-input">Points</label>
           <input
             type="number"
             id="points-number-input"
