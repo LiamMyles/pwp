@@ -118,7 +118,7 @@ export function Home(): React.ReactElement {
           name="description"
           content="Maths, Polygons and Adventures to be had"
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/pwp/favicon.ico" />
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
