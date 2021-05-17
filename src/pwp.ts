@@ -3,33 +3,10 @@ interface verticesMatrix {
   y: number
 }
 
-interface Cords {
-  x: number
-  y: number
-}
-
-export function getInitialPoints(vertices: number): Cords[] {
-  const twoPi = Math.PI * 2
-  const angleBetweenPoints = twoPi / vertices
-
-  let currentAngle = angleBetweenPoints
-  const initialVertices = [...Array(vertices)].map(() => {
-    currentAngle += angleBetweenPoints
-    const cos = Math.cos(currentAngle)
-    const sin = Math.sin(currentAngle)
-    const y = cos
-    const x = sin
-
-    return { x, y }
-  })
-
-  return initialVertices
-}
-
 export function getJumpedPoints(
-  initialVertices: Cords[],
+  initialVertices: verticesMatrix[],
   ...jumps: number[]
-): Cords[] {
+): verticesMatrix[] {
   if (jumps.length !== 0) {
     let lastValue = 0
     const jumpedMatrix = [...Array(initialVertices.length * jumps.length)].map(
@@ -42,7 +19,7 @@ export function getJumpedPoints(
       }
     )
 
-    jumpedMatrix.push(jumpedMatrix.shift() as Cords)
+    jumpedMatrix.push(jumpedMatrix.shift() as verticesMatrix)
     return jumpedMatrix
   } else {
     return initialVertices
