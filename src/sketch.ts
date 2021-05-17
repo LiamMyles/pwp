@@ -1,12 +1,8 @@
+import { getNGonVertices } from "Calculations/getNGonVertices"
 import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"
-import {
-  getInitialPoints,
-  getJumpedPoints,
-  getPointsMatrix,
-  getSubdivisionMatrix,
-} from "./pwp"
+import { getJumpedPoints, getPointsMatrix, getSubdivisionMatrix } from "./pwp"
 
 const speed = 20
 const size = 250
@@ -30,7 +26,7 @@ export function sketch(p5: typeP5): void {
     p5.translate(p5.width / 2, p5.height / 2)
     p5.scale(1, -1)
 
-    const initialMatrix = getInitialPoints(GlobalValues.vertices)
+    const initialMatrix = getNGonVertices(GlobalValues.vertices)
 
     const jumpedMatrix = getJumpedPoints(initialMatrix, ...GlobalValues.jumps)
     GlobalValues.matrix = jumpedMatrix
@@ -85,9 +81,13 @@ export function sketch(p5: typeP5): void {
     }
 
     if (GlobalValues.showVertices) {
-      initialMatrix.forEach(({ x, y }) => {
+      initialMatrix.forEach(({ x, y }, index) => {
         p5.push()
-        p5.stroke("green")
+        if (index === 0) {
+          p5.stroke("blue")
+        } else {
+          p5.stroke("green")
+        }
         p5.strokeWeight(15)
         p5.point(x * size, y * size)
         p5.pop()
