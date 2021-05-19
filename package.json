@@ -1,6 +1,6 @@
 {
-  "homepage": "https://liammyles.github.io/pwp/",
-  "name": "next-migration",
+  "homepage": "https://www.playingwithpolygons.com",
+  "name": "playing-with-polygons",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,8 +9,8 @@
     "start": "next start",
     "test": "jest",
     "lint": "yarn eslint . --ignore-path ./.gitignore",
-    "predeploy": "yarn test && yarn lint && next build && next export && touch ./out/.nojekyll",
-    "deploy": "gh-pages -t -d out"
+    "pregh-deploy": "yarn test && yarn lint && GH_PAGES_BUILD=true next build && next export && touch ./out/.nojekyll",
+    "gh-deploy": "gh-pages -t -d out"
   },
   "dependencies": {
     "@reach/slider": "^0.15.0",

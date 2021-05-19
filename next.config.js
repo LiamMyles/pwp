@@ -1,10 +1,14 @@
 module.exports = (phase) => {
   switch (phase) {
     case "phase-production-build": {
-      return { basePath: "/pwp" }
+      if (process.env.GH_PAGES_BUILD === "true") {
+        return { basePath: "/pwp" }
+      } else {
+        return {}
+      }
     }
     case "phase-development-server": {
-      return {}
+      return { reactStrictMode: true }
     }
     default: {
       return {}

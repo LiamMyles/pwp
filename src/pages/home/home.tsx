@@ -4,6 +4,7 @@ import { Slider } from "@reach/slider"
 import { getLineDensity } from "Calculations/getLineDensity"
 import { P5Canvas } from "Components/P5Canvas"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 import { GlobalValues } from "Src/globals"
 import { sketch } from "Src/sketch"
@@ -119,6 +120,8 @@ export function Home(): React.ReactElement {
     shouldSlowDraw,
   ])
 
+  const { basePath } = useRouter()
+
   return (
     <>
       <Head>
@@ -127,7 +130,7 @@ export function Home(): React.ReactElement {
           name="description"
           content="Maths, Polygons and Adventures to be had"
         />
-        <link rel="icon" href="/pwp/favicon.ico" />
+        <link rel="icon" href={`${basePath}/favicon.ico`} />
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
