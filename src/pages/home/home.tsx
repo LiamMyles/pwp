@@ -105,11 +105,9 @@ export function Home({
     initialVertices ?? GlobalValues.vertices
   )
   const [subdivisions, setSubdivisions] = useState(
-    initialSubdivisions ?? GlobalValues.points
+    initialSubdivisions ?? GlobalValues.subdivisions
   )
-  const [points, setPoints] = useState(
-    initialPoints ?? GlobalValues.subdivisions
-  )
+  const [points, setPoints] = useState(initialPoints ?? GlobalValues.points)
   const [showSubdivisions, setShowSubdivisions] = useState(
     GlobalValues.showSubdivisions
   )
