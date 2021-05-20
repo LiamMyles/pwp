@@ -3,12 +3,21 @@ import "@reach/slider/styles.css"
 import { Slider } from "@reach/slider"
 import { getLineDensity } from "Calculations/getLineDensity"
 import { P5Canvas } from "Components/P5Canvas"
+import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
+import CopyToClipboard from "react-copy-to-clipboard"
 import { GlobalValues } from "Src/globals"
 import { sketch } from "Src/sketch"
 import styled from "styled-components"
+
+interface Props {
+  initialVertices: number | null
+  initialSubdivisions: number | null
+  initialPoints: number | null
+  initialJumps: number[] | null
+}
 
 const StyledP5Canvas = styled(P5Canvas)`
   margin: 10px auto;
@@ -42,7 +51,6 @@ const StyledSlider = styled(StyledWrapperDiv)`
 const ToggleBox = styled.div`
   margin: 10px 0;
 `
-
 const ToggleArea = styled(StyledWrapperDiv)`
   grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
@@ -50,7 +58,6 @@ const ToggleArea = styled(StyledWrapperDiv)`
   border-top: solid grey 2px;
   border-bottom: solid grey 2px;
 `
-
 const JumpsArea = styled(StyledWrapperDiv)`
   grid-template-columns: repeat(5, 1fr);
   border-bottom: solid grey 2px;
@@ -68,7 +75,6 @@ const TotalJumps = styled.div`
   grid-column: 1/6;
   display: grid;
 `
-
 const Title = styled.h1`
   font-size: 20px;
   width: 600px;
@@ -76,29 +82,53 @@ const Title = styled.h1`
   padding: 0 0 10px;
   border-bottom: solid grey 2px;
 `
+const CopyWrapper = styled(StyledWrapperDiv)`
+  & button {
+    padding: 10px;
+    background: #e0e0e0;
+    border: 2px solid grey;
+    border-radius: 5px;
+    &:focus,
+    &:hover {
+      box-shadow: 0px 0 3px 0 #3167ff;
+    }
+  }
+`
 
-export function Home(): React.ReactElement {
-  const [vertices, setVertex] = useState(GlobalValues.vertices)
-  const [subdivisions, setSubdivisions] = useState(GlobalValues.subdivisions)
-  const [points, setPoints] = useState(GlobalValues.points)
+export function Home({
+  initialVertices,
+  initialPoints,
+  initialSubdivisions,
+  initialJumps,
+}: Props): React.ReactElement {
+  const [vertices, setVertex] = useState(
+    initialVertices ?? GlobalValues.vertices
+  )
+  const [subdivisions, setSubdivisions] = useState(
+    initialSubdivisions ?? GlobalValues.subdivisions
+  )
+  const [points, setPoints] = useState(initialPoints ?? GlobalValues.points)
   const [showSubdivisions, setShowSubdivisions] = useState(
     GlobalValues.showSubdivisions
   )
   const [showVertices, setShowVertices] = useState(GlobalValues.showVertices)
-  const [jumps, setJumps] = useState(GlobalValues.jumps)
-  const [totalJumps, setTotalJumps] = useState(0)
+  const [jumps, setJumps] = useState(initialJumps ?? GlobalValues.jumps)
+  const [totalJumps, setTotalJumps] = useState(initialJumps?.length ?? 0)
   const [shouldSlowDraw, setShouldSlowDraw] = useState(GlobalValues.slowDraw)
-
+  const [generatedLink, setGeneratedLink] = useState("")
   const globalValues = useRef(GlobalValues)
 
   useEffect(() => {
     setJumps((previousState) => {
-      if (jumps.length < totalJumps) {
-        return [...Array(totalJumps)].map(() => 1)
-      } else {
-        const newState = [...previousState]
-        return newState.slice(0, totalJumps - 1)
+      if (totalJumps >= previousState.length) {
+        const newArray = [...previousState]
+        const extraJumps = [...Array(totalJumps - previousState.length)].map(
+          () => 1
+        )
+        newArray.push(...extraJumps)
+        return newArray
       }
+      return [...previousState].slice(0, totalJumps)
     })
   }, [totalJumps])
 
@@ -110,6 +140,13 @@ export function Home(): React.ReactElement {
     globalValues.current.showVertices = showVertices
     globalValues.current.jumps = jumps
     globalValues.current.slowDraw = shouldSlowDraw
+    setGeneratedLink(
+      `${
+        window?.location.origin
+      }${basePath}?vertex=${vertices}&subdivisions=${subdivisions}&points=${points}${
+        totalJumps !== 0 ? `&jumps=${jumps.join("&jumps=")}` : ""
+      }`
+    )
   }, [
     vertices,
     subdivisions,
@@ -273,7 +310,7 @@ export function Home(): React.ReactElement {
                 type="number"
                 name=""
                 id={`jump-${index}`}
-                defaultValue={1}
+                defaultValue={jumps[index]}
                 onChange={({ currentTarget: { value } }) => {
                   setJumps((previousState) => {
                     const newState = [...previousState]
@@ -286,6 +323,11 @@ export function Home(): React.ReactElement {
           )
         })}
       </JumpsArea>
+      <CopyWrapper>
+        <CopyToClipboard text={generatedLink}>
+          <button type="button">Copy link To Shape</button>
+        </CopyToClipboard>
+      </CopyWrapper>
       <StyledWrapperDiv>
         <p>List of vertices:</p>
         <pre>
@@ -301,4 +343,49 @@ export function Home(): React.ReactElement {
       </StyledWrapperDiv>
     </>
   )
+}
+
+function validateToNumber(value: string | string[] | undefined): number | null {
+  if (typeof value === "string") {
+    if (!isNaN(parseInt(value))) {
+      return parseInt(value) ?? null
+    }
+  }
+  return null
+}
+
+function validateToNumberArray(
+  value: string | string[] | undefined
+): number[] | null {
+  if (Array.isArray(value)) {
+    const result = value
+      .map(validateToNumber)
+      .filter(
+        (numberOrUndefined): numberOrUndefined is number =>
+          numberOrUndefined !== null
+      )
+    return result
+  } else if (typeof value === "string") {
+    const validValue = validateToNumber(value)
+    if (validValue !== null) {
+      return [validValue]
+    }
+  }
+
+  return null
+}
+
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
+  const { vertex, subdivisions, points, jumps } = context.query
+
+  return {
+    props: {
+      initialVertices: validateToNumber(vertex),
+      initialSubdivisions: validateToNumber(subdivisions),
+      initialPoints: validateToNumber(points),
+      initialJumps: validateToNumberArray(jumps),
+    },
+  }
 }
