@@ -178,7 +178,7 @@ export function Home({
       <StyledP5Canvas sketch={sketch} />
       <Title>
         Polygon: ({vertices},{subdivisions},{points}
-        {jumps.length > 0 && `(${jumps?.join(",")})`}) - Lines:{" "}
+        {jumps.length > 0 && `,J(${jumps?.join(",")})`}) - Lines:{" "}
         {getLineDensity({ vertices, subdivisions, points })}
       </Title>
       <StyledSlider>
