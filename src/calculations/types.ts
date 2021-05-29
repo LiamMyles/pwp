@@ -10,5 +10,5 @@ export interface VSP {
 }
 
 export interface VSPJ extends VSP {
-  jumps?: number[]
+  jumps: number[]
 }

@@ -10,7 +10,12 @@ describe("getLineDensity", () => {
   `(
     "should return correct density for vertices:$vertices, subdivisions:$subdivisions, points:$points",
     ({ vertices, subdivisions, points, expectedDensity }) => {
-      const actualDensity = getLineDensity({ vertices, subdivisions, points })
+      const actualDensity = getLineDensity({
+        vertices,
+        subdivisions,
+        points,
+        jumps: [],
+      })
       expect(actualDensity).toEqual(expectedDensity)
     }
   )

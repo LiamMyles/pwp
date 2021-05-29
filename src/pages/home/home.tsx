@@ -179,7 +179,7 @@ export function Home({
       <Title>
         Polygon: ({vertices},{subdivisions},{points}
         {jumps.length > 0 && `,J(${jumps?.join(",")})`}) - Lines:{" "}
-        {getLineDensity({ vertices, subdivisions, points })}
+        {getLineDensity({ vertices, subdivisions, points, jumps })}
       </Title>
       <StyledSlider>
         <div>
