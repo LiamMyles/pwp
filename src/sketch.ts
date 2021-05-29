@@ -44,15 +44,12 @@ export function sketch(p5: typeP5): void {
       ...GlobalValues.jumps
     )
 
-    let lineDensity = getLineDensity({
+    const lineDensity = getLineDensity({
       vertices: GlobalValues.vertices,
       subdivisions: GlobalValues.subdivisions,
       points: GlobalValues.points,
+      jumps: GlobalValues.jumps,
     })
-
-    if (GlobalValues.jumps.length > 0) {
-      lineDensity = pointsMatrix.length
-    }
 
     speed = lineDensity / 2
 

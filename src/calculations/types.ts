@@ -8,3 +8,7 @@ export interface VSP {
   subdivisions: number
   points: number
 }
+
+export interface VSPJ extends VSP {
+  jumps?: number[]
+}

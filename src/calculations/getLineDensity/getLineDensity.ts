@@ -1,4 +1,4 @@
-import type { VSP } from "Calculations/types"
+import type { VSPJ } from "Calculations/types"
 
 function GCD(a: number, b: number): number {
   if (!b) {
@@ -12,9 +12,21 @@ export function getLineDensity({
   vertices,
   subdivisions,
   points,
-}: VSP): number {
+  jumps = [],
+}: VSPJ): number {
+  let totalJumps = 1
+  let sumOfJumps = 1
+
+  if (jumps.length !== 0) {
+    totalJumps = jumps.length
+    sumOfJumps = jumps.reduce((a, b) => a + b)
+  }
+
+  const jumpsFactor =
+    (vertices * totalJumps) / GCD(vertices, sumOfJumps % vertices)
+
   const density =
-    (vertices * subdivisions) / GCD(vertices * subdivisions, points)
+    (jumpsFactor * subdivisions) / GCD(jumpsFactor * subdivisions, points)
 
   return density
 }
