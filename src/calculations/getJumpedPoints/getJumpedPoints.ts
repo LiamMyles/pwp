@@ -17,7 +17,20 @@ export function getJumpedPoints(
     )
 
     jumpedMatrix.push(jumpedMatrix.shift() as VerticesMatrix)
-    return jumpedMatrix
+
+    const newIndex = jumpedMatrix
+      .map(({ x, y }) => `x${x}y${y}`)
+      .indexOf("x0y1")
+
+    const newEnd = jumpedMatrix.slice(0, newIndex)
+
+    const newStart = jumpedMatrix.slice(newIndex, jumpedMatrix.length)
+    const toReturn = [...newStart, ...newEnd]
+
+    console.log(jumpedMatrix.length)
+    console.log(toReturn.length)
+
+    return toReturn
   } else {
     return initialVertices
   }

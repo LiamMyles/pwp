@@ -1,9 +1,10 @@
+import { getJumpedPoints } from "Calculations/getJumpedPoints"
 import { getLineDensity } from "Calculations/getLineDensity"
 import { getNGonVertices } from "Calculations/getNGonVertices"
 import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"
-import { getJumpedPoints, getPointsMatrix, getSubdivisionMatrix } from "./pwp"
+import { getPointsMatrix, getSubdivisionMatrix } from "./pwp"
 
 let speed = 20
 const size = 250
