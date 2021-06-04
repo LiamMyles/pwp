@@ -57,13 +57,13 @@ describe("getJumpedPoints", () => {
 
         const expectedVertices: VerticesMatrix[] = [
           { x: 0, y: 1 },
-          { x: 1, y: 1 },
-          { x: 0, y: 0 },
           { x: 1, y: 0 },
-          { x: 1, y: 1 },
+          { x: 0, y: 0 },
           { x: 0, y: 1 },
-          { x: 1, y: 0 },
+          { x: 1, y: 1 },
           { x: 0, y: 0 },
+          { x: 1, y: 0 },
+          { x: 1, y: 1 },
         ]
         const actualVertices = getJumpedPoints(initialVertices, 1, 2)
 
@@ -88,13 +88,13 @@ describe("getJumpedPoints", () => {
 
         const expectedVertices: VerticesMatrix[] = [
           { x: 0, y: 1 },
-          { x: 0, y: 0 },
+          { x: 1, y: 0 },
           { x: 0, y: 1 },
-          { x: 0, y: 0 },
+          { x: 1, y: 0 },
           { x: 0, y: 1 },
-          { x: 0, y: 0 },
+          { x: 1, y: 0 },
           { x: 0, y: 1 },
-          { x: 0, y: 0 },
+          { x: 1, y: 0 },
         ]
         const actualVertices = getJumpedPoints(initialVertices, 1, 3)
 
@@ -117,14 +117,14 @@ describe("getJumpedPoints", () => {
         ]
 
         const expectedVertices: VerticesMatrix[] = [
+          { x: 0, y: 1 },
+          { x: 1, y: 0 },
           { x: 1, y: 0 },
           { x: 1, y: 1 },
           { x: 1, y: 1 },
           { x: 0, y: 0 },
           { x: 0, y: 0 },
           { x: 0, y: 1 },
-          { x: 0, y: 1 },
-          { x: 1, y: 0 },
         ]
         const actualVertices = getJumpedPoints(initialVertices, 1, 4)
 
@@ -149,14 +149,14 @@ describe("getJumpedPoints", () => {
         ]
 
         const expectedVertices: VerticesMatrix[] = [
+          { x: 0, y: 1 },
+          { x: 1, y: 1 },
           { x: 0, y: 0 },
           { x: 1, y: 0 },
           { x: 1, y: 1 },
           { x: 0, y: 1 },
           { x: 1, y: 0 },
           { x: 0, y: 0 },
-          { x: 0, y: 1 },
-          { x: 1, y: 1 },
         ]
         const actualVertices = getJumpedPoints(initialVertices, 2, 1)
 
@@ -210,14 +210,14 @@ describe("getJumpedPoints", () => {
         ]
 
         const expectedVertices: VerticesMatrix[] = [
+          { x: 0, y: 1 },
+          { x: 1, y: 1 },
           { x: 1, y: 0 },
           { x: 0, y: 0 },
           { x: 1, y: 1 },
           { x: 0, y: 1 },
           { x: 0, y: 0 },
           { x: 1, y: 0 },
-          { x: 0, y: 1 },
-          { x: 1, y: 1 },
         ]
         const actualVertices = getJumpedPoints(initialVertices, 2, 3)
 
@@ -241,14 +241,14 @@ describe("getJumpedPoints", () => {
         ]
 
         const expectedVertices: VerticesMatrix[] = [
-          { x: 1, y: 1 },
-          { x: 0, y: 1 },
           { x: 0, y: 1 },
           { x: 1, y: 1 },
           { x: 1, y: 1 },
           { x: 0, y: 1 },
           { x: 0, y: 1 },
           { x: 1, y: 1 },
+          { x: 1, y: 1 },
+          { x: 0, y: 1 },
         ]
         const actualVertices = getJumpedPoints(initialVertices, 2, 4)
 
@@ -262,19 +262,6 @@ describe("getJumpedPoints", () => {
         expect(actualVertices[6]).toEqual(expectedVertices[6])
         expect(actualVertices[7]).toEqual(expectedVertices[7])
       })
-    })
-
-    describe("first jump 3", () => {
-      it.todo("should return correct list for second jump 1")
-      it.todo("should return correct list for second jump 2")
-      it.todo("should return correct list for second jump 3")
-      it.todo("should return correct list for second jump 4")
-    })
-    describe("first jump 4", () => {
-      it.todo("should return correct list for second jump 1")
-      it.todo("should return correct list for second jump 2")
-      it.todo("should return correct list for second jump 3")
-      it.todo("should return correct list for second jump 4")
     })
   })
 
@@ -370,5 +357,15 @@ describe("getJumpedPoints", () => {
       expect(actualVertices[2]).toEqual(expectedVertices[2])
       expect(actualVertices[3]).toEqual(expectedVertices[3])
     })
+  })
+
+  it.each`
+    jumps            | vertices
+    ${[1, 2, 3, 4]}  | ${[{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 0 }]}
+    ${[1, 6, 3, 10]} | ${[{ x: 1, y: 2 }, { x: 3, y: 4 }, { x: 2, y: 3 }, { x: 0, y: 0 }, { x: 2, y: 3 }]}
+    ${[1, 2, 3, 4]}  | ${[{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 0 }]}
+    ${[1, 2, 3, 4]}  | ${[{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 0 }]}
+  `("should match assortment of options", ({ jumps, vertices }) => {
+    expect(getJumpedPoints(vertices, ...jumps)).toMatchSnapshot()
   })
 })

@@ -68,8 +68,8 @@ export function sketch(p5: typeP5): void {
 
       slowDrawCount++
       if (
-        slowDrawCount === pointsMatrix.length ||
-        slowDrawCount === lineDensity
+        slowDrawCount >= lineDensity ||
+        slowDrawCount >= pointsMatrix.length
       ) {
         p5.frameRate(0)
         slowDrawCount = 0
