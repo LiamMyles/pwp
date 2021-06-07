@@ -3,29 +3,6 @@ interface verticesMatrix {
   y: number
 }
 
-export function getJumpedPoints(
-  initialVertices: verticesMatrix[],
-  ...jumps: number[]
-): verticesMatrix[] {
-  if (jumps.length !== 0) {
-    let lastValue = 0
-    const jumpedMatrix = [...Array(initialVertices.length * jumps.length)].map(
-      (_, index) => {
-        const currentJump = index % jumps.length
-        const newValue = jumps[currentJump] + lastValue
-
-        lastValue = newValue
-        return initialVertices[newValue % initialVertices.length]
-      }
-    )
-
-    jumpedMatrix.push(jumpedMatrix.shift() as verticesMatrix)
-    return jumpedMatrix
-  } else {
-    return initialVertices
-  }
-}
-
 export function getSubdivisionMatrix(
   subdivisions: number,
   matrix: verticesMatrix[]
