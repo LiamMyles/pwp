@@ -1,6 +1,7 @@
 import { getJumpedPoints } from "Calculations/getJumpedPoints"
 import { getLineDensity } from "Calculations/getLineDensity"
 import { getNGonVertices } from "Calculations/getNGonVertices"
+import { getSpiral } from "Calculations/getSpiral"
 import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"
@@ -30,7 +31,9 @@ export function sketch(p5: typeP5): void {
 
     const initialMatrix = getNGonVertices(GlobalValues.vertices)
 
-    const jumpedMatrix = getJumpedPoints(initialMatrix, ...GlobalValues.jumps)
+    const spiralStart = getSpiral(initialMatrix, 400)
+
+    const jumpedMatrix = getJumpedPoints(spiralStart, ...GlobalValues.jumps)
     GlobalValues.matrix = jumpedMatrix
 
     const subdivisionMatrix = getSubdivisionMatrix(
@@ -81,7 +84,7 @@ export function sketch(p5: typeP5): void {
     } else {
       p5.frameRate(speed)
       p5.background(220)
-      pointsMatrix.slice(0, lineDensity).forEach((_, count) => {
+      pointsMatrix.forEach((_, count) => {
         p5.push()
         const { x: subX, y: subY } = pointsMatrix[count]
           ? pointsMatrix[count]
