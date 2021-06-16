@@ -22,11 +22,17 @@ export function getLineDensity({
     sumOfJumps = jumps.reduce((a, b) => a + b)
   }
 
-  const jumpsFactor =
+  const VerticesCommonFactor = GCD(vertices, sumOfJumps % vertices)
+
+  const VerticesUsed =
     (vertices * totalJumps) / GCD(vertices, sumOfJumps % vertices)
 
-  const density =
-    (jumpsFactor * subdivisions) / GCD(jumpsFactor * subdivisions, points)
+  const SubdivisionCommonFactor = GCD(VerticesUsed * subdivisions, points)
 
-  return density
+  const linesUsed = (VerticesUsed * subdivisions) / SubdivisionCommonFactor
+
+  // Add this next to line like -> Lines: 2, vcf: 1, scf: 1
+  console.log({ VerticesCommonFactor, SubdivisionCommonFactor })
+
+  return linesUsed
 }
