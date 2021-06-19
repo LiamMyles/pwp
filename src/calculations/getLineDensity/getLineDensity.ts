@@ -13,7 +13,11 @@ export function getLineDensity({
   subdivisions,
   points,
   jumps = [],
-}: VSPJ): number {
+}: VSPJ): {
+  lineDensity: number
+  subdivisionCommonFactor: number
+  verticesCommonFactor: number
+} {
   let totalJumps = 1
   let sumOfJumps = 1
 
@@ -22,17 +26,15 @@ export function getLineDensity({
     sumOfJumps = jumps.reduce((a, b) => a + b)
   }
 
-  const VerticesCommonFactor = GCD(vertices, sumOfJumps % vertices)
+  const verticesCommonFactor = GCD(vertices, sumOfJumps % vertices)
 
-  const VerticesUsed =
-    (vertices * totalJumps) / GCD(vertices, sumOfJumps % vertices)
+  const verticesUsed = (vertices * totalJumps) / verticesCommonFactor
 
-  const SubdivisionCommonFactor = GCD(VerticesUsed * subdivisions, points)
+  const subdivisionCommonFactor = GCD(verticesUsed * subdivisions, points)
 
-  const linesUsed = (VerticesUsed * subdivisions) / SubdivisionCommonFactor
+  const lineDensity = (verticesUsed * subdivisions) / subdivisionCommonFactor
 
   // Add this next to line like -> Lines: 2, vcf: 1, scf: 1
-  console.log({ VerticesCommonFactor, SubdivisionCommonFactor })
 
-  return linesUsed
+  return { lineDensity, subdivisionCommonFactor, verticesCommonFactor }
 }
