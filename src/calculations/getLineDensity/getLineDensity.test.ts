@@ -2,42 +2,74 @@ import { getLineDensity } from "Calculations/getLineDensity"
 
 describe("getLineDensity", () => {
   it.each`
-    vertices | subdivisions | points | expectedDensity
-    ${9}     | ${2}         | ${3}   | ${6}
-    ${12}    | ${65}        | ${20}  | ${39}
-    ${30}    | ${12}        | ${45}  | ${8}
-    ${1}     | ${1}         | ${1}   | ${1}
+    vertices | subdivisions | points | expectedDensity | expectedSubdivisionCommonFactor | verticesCommonFactor
+    ${9}     | ${2}         | ${3}   | ${6}            | ${3}                            | ${1}
+    ${12}    | ${65}        | ${20}  | ${39}           | ${20}                           | ${1}
+    ${30}    | ${12}        | ${45}  | ${8}            | ${45}                           | ${1}
+    ${1}     | ${1}         | ${1}   | ${1}            | ${1}                            | ${1}
   `(
     "should return correct density for vertices:$vertices, subdivisions:$subdivisions, points:$points",
-    ({ vertices, subdivisions, points, expectedDensity }) => {
-      const actualDensity = getLineDensity({
+    ({
+      vertices,
+      subdivisions,
+      points,
+      expectedDensity,
+      expectedSubdivisionCommonFactor,
+      verticesCommonFactor,
+    }) => {
+      const {
+        lineDensity: actualLineDensity,
+        subdivisionCommonFactor: actualSubdivisionCommonFactor,
+        verticesCommonFactor: actualVerticesCommonFactor,
+      } = getLineDensity({
         vertices,
         subdivisions,
         points,
         jumps: [],
       })
-      expect(actualDensity).toEqual(expectedDensity)
+      expect(actualLineDensity).toEqual(expectedDensity)
+      expect(actualSubdivisionCommonFactor).toEqual(
+        expectedSubdivisionCommonFactor
+      )
+      expect(actualVerticesCommonFactor).toEqual(verticesCommonFactor)
     }
   )
 
   it.each`
-    vertices | subdivisions | points | jumps        | expectedDensity
-    ${9}     | ${2}         | ${3}   | ${[]}        | ${6}
-    ${9}     | ${2}         | ${3}   | ${[1, 1, 1]} | ${6}
-    ${9}     | ${2}         | ${3}   | ${[2, 2, 1]} | ${18}
-    ${12}    | ${65}        | ${20}  | ${[2, 2, 1]} | ${117}
-    ${30}    | ${12}        | ${45}  | ${[2]}       | ${4}
-    ${1}     | ${1}         | ${1}   | ${[1]}       | ${1}
+    vertices | subdivisions | points | jumps        | expectedDensity | expectedSubdivisionCommonFactor | verticesCommonFactor
+    ${9}     | ${2}         | ${3}   | ${[]}        | ${6}            | ${3}                            | ${1}
+    ${9}     | ${2}         | ${3}   | ${[1, 1, 1]} | ${6}            | ${3}                            | ${3}
+    ${9}     | ${2}         | ${3}   | ${[2, 2, 1]} | ${18}           | ${3}                            | ${1}
+    ${12}    | ${65}        | ${20}  | ${[2, 2, 1]} | ${117}          | ${20}                           | ${1}
+    ${30}    | ${12}        | ${45}  | ${[2]}       | ${4}            | ${45}                           | ${2}
+    ${1}     | ${1}         | ${1}   | ${[1]}       | ${1}            | ${1}                            | ${1}
   `(
-    "should return correct density for vertices:$vertices, subdivisions:$subdivisions, points:$points",
-    ({ vertices, subdivisions, points, expectedDensity, jumps }) => {
-      const actualDensity = getLineDensity({
+    "should return correct density and commonFactors for vertices:$vertices, subdivisions:$subdivisions, points:$points",
+    ({
+      vertices,
+      subdivisions,
+      points,
+      jumps,
+      expectedDensity,
+      expectedSubdivisionCommonFactor,
+      verticesCommonFactor,
+    }) => {
+      const {
+        lineDensity: actualLineDensity,
+        subdivisionCommonFactor: actualSubdivisionCommonFactor,
+        verticesCommonFactor: actualVerticesCommonFactor,
+      } = getLineDensity({
         vertices,
         subdivisions,
         points,
         jumps,
       })
-      expect(actualDensity).toEqual(expectedDensity)
+
+      expect(actualLineDensity).toEqual(expectedDensity)
+      expect(actualSubdivisionCommonFactor).toEqual(
+        expectedSubdivisionCommonFactor
+      )
+      expect(actualVerticesCommonFactor).toEqual(verticesCommonFactor)
     }
   )
 })
