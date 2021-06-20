@@ -181,7 +181,7 @@ export function Home({
       <Title>
         Polygon: ({vertices},{subdivisions},{points}
         {jumps.length > 0 && `,J(${jumps?.join(",")})`}) - Lines: {lineDensity},
-        VCF: {subdivisionCommonFactor}, SCF: {verticesCommonFactor}
+        VCF: {verticesCommonFactor}, SCF: {subdivisionCommonFactor}
       </Title>
       <StyledSlider>
         <div>
