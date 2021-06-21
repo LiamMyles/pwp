@@ -53,7 +53,7 @@ export function sketch(p5: typeP5): void {
       subdivisions: GlobalValues.subdivisions,
       points: GlobalValues.points,
       jumps: GlobalValues.jumps,
-    })
+    }).lineDensity
 
     speed = lineDensity / 2
 

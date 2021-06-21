@@ -159,6 +159,8 @@ export function Home({
 
   const { basePath } = useRouter()
 
+  const { lineDensity, subdivisionCommonFactor, verticesCommonFactor } =
+    getLineDensity({ vertices, subdivisions, points, jumps })
   return (
     <>
       <Head>
@@ -178,8 +180,8 @@ export function Home({
       <StyledP5Canvas sketch={sketch} />
       <Title>
         Polygon: ({vertices},{subdivisions},{points}
-        {jumps.length > 0 && `,J(${jumps?.join(",")})`}) - Lines:{" "}
-        {getLineDensity({ vertices, subdivisions, points, jumps })}
+        {jumps.length > 0 && `,J(${jumps?.join(",")})`}) - Lines: {lineDensity},
+        VCF: {verticesCommonFactor}, SCF: {subdivisionCommonFactor}
       </Title>
       <StyledSlider>
         <div>

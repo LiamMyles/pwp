@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest",
+    "test": "jest --coverage-provider=v8 --coverage",
     "lint": "yarn eslint . --ignore-path ./.gitignore",
     "pregh-deploy": "yarn test && yarn lint && GH_PAGES_BUILD=true next build && next export && touch ./out/.nojekyll",
     "gh-deploy": "gh-pages -t -d out"
