@@ -7,6 +7,8 @@ export interface GlobalValues {
   showVertices: boolean
   matrix: Cords[]
   slowDraw: boolean
+  reduction: number
+  showMirror: boolean
 }
 
 interface Cords {
@@ -22,6 +24,8 @@ export const GlobalValues: GlobalValues = {
   showSubdivisions: false,
   showVertices: false,
   slowDraw: false,
+  reduction: 30,
+  showMirror: false,
   matrix: [
     { x: 0, y: 0 },
     { x: 0, y: 0 },
