@@ -62,7 +62,7 @@ export function InputSlider({
         <label
           htmlFor={`${title.split(" ").join(" ").toLocaleLowerCase()}-input`}
         >
-          N-Gon
+          {title}
         </label>
         <input
           type="number"
