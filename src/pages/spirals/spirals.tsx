@@ -181,13 +181,13 @@ export function Spirals({
             title="N-Gon"
             setter={setVertex}
             min={1}
-            max={36}
+            max={100}
             currentValue={vertices}
           />
           <InputSlider
             title="Reduction"
             min={1}
-            max={50}
+            max={400}
             setter={setReduction}
             currentValue={reduction}
           />
