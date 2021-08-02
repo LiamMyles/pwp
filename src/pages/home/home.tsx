@@ -290,7 +290,7 @@ export function Home({
               <button type="button">Copy link To Shape</button>
             </CopyToClipboard>
           </CopyWrapper>
-          <StyledWrapperDiv>
+          {/* <StyledWrapperDiv>
             <p>List of vertices:</p>
             <pre>
               <code>
@@ -302,7 +302,7 @@ export function Home({
                 })}
               </code>
             </pre>
-          </StyledWrapperDiv>
+          </StyledWrapperDiv> */}
         </div>
       </LayoutDiv>
     </>

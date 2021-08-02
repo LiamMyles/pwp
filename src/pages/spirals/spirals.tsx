@@ -265,7 +265,7 @@ export function Spirals({
               <button type="button">Copy link To Shape</button>
             </CopyToClipboard>
           </CopyWrapper>
-          <StyledWrapperDiv>
+          {/* <StyledWrapperDiv>
             <p>List of vertices:</p>
             <pre>
               <code>
@@ -277,7 +277,7 @@ export function Spirals({
                 })}
               </code>
             </pre>
-          </StyledWrapperDiv>
+          </StyledWrapperDiv> */}
         </div>
       </LayoutDiv>
     </>
