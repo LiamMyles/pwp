@@ -3,6 +3,7 @@ interface verticesMatrix {
   y: number
 }
 
+//TODO: Move to it's own tested function
 export function getSubdivisionMatrix(
   subdivisions: number,
   matrix: verticesMatrix[]
@@ -34,6 +35,7 @@ export function getSubdivisionMatrix(
     .flat()
 }
 
+//TODO: Move to it's own tested function
 export function getPointsMatrix(
   vertices: number,
   subdivisions: number,
