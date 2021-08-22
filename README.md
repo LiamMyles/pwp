@@ -4,10 +4,44 @@ A project created for the fun of creating cool patterns with maths 🔢
 
 ## Sequences to create different variation's
 
+### Get Shape Classes
+
+```mermaid
+  classDiagram
+    NGon <|-- NGonJumps
+    NGonJumps <|-- NGonSubdivisions
+    NGonJumps <|-- NGonSpirals
+
+    class NGon {
+      Number verticesAmount
+      Array~Vertices~ verticesMatrix
+      setVertices(Number) void
+    }
+
+    class NGonJumps {
+      Array~Number~ jumps
+      setJumps(Array~Number~) void
+    }
+
+    class NGonSubdivisions{
+      Number subdivisions
+      Number points
+      Boolean setPointsAutomatically
+      setSubdivisions(Number) void
+      setPoints(Number) void
+    }
+
+    class NGonSpirals{
+      Number: reduction
+      setReduction(Number)
+    }
+```
+
 ### Default N-Gon Shape
 
 ```mermaid
 graph TD
+  UV[updateVertices] --> V
   subgraph User Controlled Variables
   V[/Vertices\]
   J[/Jumps\]
