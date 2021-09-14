@@ -1,4 +1,4 @@
-import { NGon } from "./n-gon.class"
+import { NGon } from "."
 
 describe("NGon Class", () => {
   it("should start with correct defaults", () => {

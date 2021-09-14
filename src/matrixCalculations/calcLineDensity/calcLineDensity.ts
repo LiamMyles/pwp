@@ -1,4 +1,4 @@
-import type { VSPJ } from "Calculations/types"
+import type { VSPJ } from "Src/matrixCalculations/types"
 
 function GCD(a: number, b: number): number {
   if (!b) {
@@ -8,7 +8,7 @@ function GCD(a: number, b: number): number {
   return GCD(b, a % b)
 }
 
-export function getLineDensity({
+export function calcLineDensity({
   vertices,
   subdivisions,
   points,

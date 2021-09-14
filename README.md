@@ -26,7 +26,7 @@ A project created for the fun of creating cool patterns with maths 🔢
     class NGonSubdivisions{
       Number subdivisions
       Number points
-      Boolean setPointsAutomatically
+      Boolean autoPoints
       setSubdivisions(Number) void
       setPoints(Number) void
     }

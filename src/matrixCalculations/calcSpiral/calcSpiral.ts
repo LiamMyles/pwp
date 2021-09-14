@@ -1,6 +1,6 @@
-import type { VerticesMatrix } from "Calculations/types"
+import type { VerticesMatrix } from "Src/matrixCalculations/types"
 
-export function getSpiral(
+export function calcSpiral(
   verts: VerticesMatrix[],
   reduction: number,
   isMirrored = false

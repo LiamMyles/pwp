@@ -1,5 +1,5 @@
-import { getNGonVertices } from "Calculations/getNGonVertices"
-import { getSpiral } from "Calculations/getSpiral"
+import { calcNGonVertices } from "Src/matrixCalculations/calcNGonVertices"
+import { calcSpiral } from "Src/matrixCalculations/calcSpiral"
 
 describe("getSpirals", () => {
   describe("NOT Mirrored", () => {
@@ -13,8 +13,8 @@ describe("getSpirals", () => {
     `(
       "should end roughly in the middle with $vertices vertices and $reduction reduction",
       ({ vertices, reduction }) => {
-        const nGonVertices = getNGonVertices(vertices)
-        const actualSpirals = getSpiral(nGonVertices, reduction)
+        const nGonVertices = calcNGonVertices(vertices)
+        const actualSpirals = calcSpiral(nGonVertices, reduction)
 
         expect(actualSpirals[0]).toEqual({ x: 0, y: 1 })
         expect(actualSpirals[actualSpirals.length - 1].x).toBeLessThanOrEqual(
@@ -27,8 +27,8 @@ describe("getSpirals", () => {
     )
 
     it("should match expected output", () => {
-      const nGonVertices = getNGonVertices(12)
-      const actualSpirals = getSpiral(nGonVertices, 20)
+      const nGonVertices = calcNGonVertices(12)
+      const actualSpirals = calcSpiral(nGonVertices, 20)
 
       expect(actualSpirals).toMatchInlineSnapshot(`
         Array [
@@ -131,8 +131,8 @@ describe("getSpirals", () => {
     `(
       "should end roughly in the middle with $vertices vertices and $reduction reduction",
       ({ vertices, reduction }) => {
-        const nGonVertices = getNGonVertices(vertices)
-        const actualSpirals = getSpiral(nGonVertices, reduction, true)
+        const nGonVertices = calcNGonVertices(vertices)
+        const actualSpirals = calcSpiral(nGonVertices, reduction, true)
 
         expect(actualSpirals[0]).toEqual({ x: 0, y: 1 })
         expect(
@@ -147,8 +147,8 @@ describe("getSpirals", () => {
     )
 
     it("should match expected output", () => {
-      const nGonVertices = getNGonVertices(12)
-      const actualSpirals = getSpiral(nGonVertices, 20, true)
+      const nGonVertices = calcNGonVertices(12)
+      const actualSpirals = calcSpiral(nGonVertices, 20, true)
 
       expect(actualSpirals).toMatchInlineSnapshot(`
         Array [

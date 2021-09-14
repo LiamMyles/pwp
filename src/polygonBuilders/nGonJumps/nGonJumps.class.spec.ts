@@ -1,4 +1,4 @@
-import { NGonJumps } from "./n-gon-jumps.class"
+import { NGonJumps } from "."
 
 describe("NGon Class", () => {
   it("should inherit from nGon and start with correct defaults", () => {

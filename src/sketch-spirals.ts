@@ -1,6 +1,6 @@
-import { getJumpedPoints } from "Calculations/getJumpedPoints"
-import { getNGonVertices } from "Calculations/getNGonVertices"
-import { getSpiral } from "Calculations/getSpiral"
+import { calcJumpedPoints } from "Src/matrixCalculations/calcJumpedPoints"
+import { calcNGonVertices } from "Src/matrixCalculations/calcNGonVertices"
+import { calcSpiral } from "Src/matrixCalculations/calcSpiral"
 import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"
@@ -27,10 +27,10 @@ export function sketch(p5: typeP5): void {
     p5.translate(p5.width / 2, p5.height / 2)
     p5.scale(1, -1)
 
-    const initialMatrix = getNGonVertices(GlobalValues.vertices)
-    const jumpedMatrix = getJumpedPoints(initialMatrix, ...GlobalValues.jumps)
+    const initialMatrix = calcNGonVertices(GlobalValues.vertices)
+    const jumpedMatrix = calcJumpedPoints(initialMatrix, ...GlobalValues.jumps)
 
-    const spiralStart = getSpiral(
+    const spiralStart = calcSpiral(
       jumpedMatrix,
       GlobalValues.reduction,
       GlobalValues.showMirror

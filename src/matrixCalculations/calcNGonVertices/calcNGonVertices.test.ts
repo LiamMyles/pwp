@@ -1,4 +1,4 @@
-import { getNGonVertices } from "Calculations/getNGonVertices"
+import { calcNGonVertices } from "Src/matrixCalculations/calcNGonVertices"
 
 describe("getNGonVertices", () => {
   it.each`
@@ -18,7 +18,7 @@ describe("getNGonVertices", () => {
   `(
     "should start at x:0, y:1 for n-gon $verticesCount",
     ({ verticesCount }) => {
-      const polygon = getNGonVertices(verticesCount)
+      const polygon = calcNGonVertices(verticesCount)
 
       expect(polygon[0]).toEqual({ x: 0, y: 1 })
     }
@@ -41,7 +41,7 @@ describe("getNGonVertices", () => {
   `(
     "should create correct vertices for $verticesCount vertices",
     ({ verticesCount }) => {
-      const polygon = getNGonVertices(verticesCount)
+      const polygon = calcNGonVertices(verticesCount)
 
       expect(polygon.length).toEqual(verticesCount)
     }

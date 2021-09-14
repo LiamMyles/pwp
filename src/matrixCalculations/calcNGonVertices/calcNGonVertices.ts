@@ -1,6 +1,6 @@
-import type { VerticesMatrix } from "Calculations/types"
+import type { VerticesMatrix } from "Src/matrixCalculations/types"
 
-export function getNGonVertices(vertices: number): VerticesMatrix[] {
+export function calcNGonVertices(vertices: number): VerticesMatrix[] {
   const twoPi = Math.PI * 2
   const angleBetweenPoints = twoPi / vertices
 

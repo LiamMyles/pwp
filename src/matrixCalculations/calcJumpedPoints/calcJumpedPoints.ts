@@ -1,6 +1,6 @@
-import type { VerticesMatrix } from "Calculations/types"
+import type { VerticesMatrix } from "Src/matrixCalculations/types"
 
-export function getJumpedPoints(
+export function calcJumpedPoints(
   initialVertices: VerticesMatrix[],
   ...jumps: number[]
 ): VerticesMatrix[] {

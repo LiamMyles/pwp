@@ -1,6 +1,6 @@
-import { getJumpedPoints } from "Calculations/getJumpedPoints"
-import { getLineDensity } from "Calculations/getLineDensity"
-import { getNGonVertices } from "Calculations/getNGonVertices"
+import { calcJumpedPoints } from "Src/matrixCalculations/calcJumpedPoints"
+import { calcLineDensity } from "Src/matrixCalculations/calcLineDensity"
+import { calcNGonVertices } from "Src/matrixCalculations/calcNGonVertices"
 import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"
@@ -28,9 +28,9 @@ export function sketch(p5: typeP5): void {
     p5.translate(p5.width / 2, p5.height / 2)
     p5.scale(1, -1)
 
-    const initialMatrix = getNGonVertices(GlobalValues.vertices)
+    const initialMatrix = calcNGonVertices(GlobalValues.vertices)
 
-    const jumpedMatrix = getJumpedPoints(initialMatrix, ...GlobalValues.jumps)
+    const jumpedMatrix = calcJumpedPoints(initialMatrix, ...GlobalValues.jumps)
     GlobalValues.matrix = jumpedMatrix
 
     const subdivisionMatrix = getSubdivisionMatrix(
@@ -45,7 +45,7 @@ export function sketch(p5: typeP5): void {
       ...GlobalValues.jumps
     )
 
-    const lineDensity = getLineDensity({
+    const lineDensity = calcLineDensity({
       vertices: GlobalValues.vertices,
       subdivisions: GlobalValues.subdivisions,
       points: GlobalValues.points,

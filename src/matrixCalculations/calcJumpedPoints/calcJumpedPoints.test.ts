@@ -1,5 +1,5 @@
-import { getJumpedPoints } from "Calculations/getJumpedPoints"
-import type { VerticesMatrix } from "Calculations/types"
+import { calcJumpedPoints } from "Src/matrixCalculations/calcJumpedPoints"
+import type { VerticesMatrix } from "Src/matrixCalculations/types"
 
 describe("getJumpedPoints", () => {
   it("should return passed points if no jumps exist", () => {
@@ -10,7 +10,7 @@ describe("getJumpedPoints", () => {
       { x: 0, y: 0 },
     ]
 
-    const actual = getJumpedPoints(initialVertices)
+    const actual = calcJumpedPoints(initialVertices)
 
     expect(actual).toEqual(initialVertices)
   })
@@ -34,7 +34,7 @@ describe("getJumpedPoints", () => {
           { x: 1, y: 1 },
           { x: 0, y: 0 },
         ]
-        const actualVertices = getJumpedPoints(initialVertices, 1, 1)
+        const actualVertices = calcJumpedPoints(initialVertices, 1, 1)
 
         expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
         expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -65,7 +65,7 @@ describe("getJumpedPoints", () => {
           { x: 1, y: 0 },
           { x: 1, y: 1 },
         ]
-        const actualVertices = getJumpedPoints(initialVertices, 1, 2)
+        const actualVertices = calcJumpedPoints(initialVertices, 1, 2)
 
         expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
         expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -96,7 +96,7 @@ describe("getJumpedPoints", () => {
           { x: 0, y: 1 },
           { x: 1, y: 0 },
         ]
-        const actualVertices = getJumpedPoints(initialVertices, 1, 3)
+        const actualVertices = calcJumpedPoints(initialVertices, 1, 3)
 
         expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
         expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -126,7 +126,7 @@ describe("getJumpedPoints", () => {
           { x: 0, y: 0 },
           { x: 0, y: 1 },
         ]
-        const actualVertices = getJumpedPoints(initialVertices, 1, 4)
+        const actualVertices = calcJumpedPoints(initialVertices, 1, 4)
 
         expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
         expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -158,7 +158,7 @@ describe("getJumpedPoints", () => {
           { x: 1, y: 0 },
           { x: 0, y: 0 },
         ]
-        const actualVertices = getJumpedPoints(initialVertices, 2, 1)
+        const actualVertices = calcJumpedPoints(initialVertices, 2, 1)
 
         expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
         expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -189,7 +189,7 @@ describe("getJumpedPoints", () => {
           { x: 0, y: 1 },
           { x: 1, y: 1 },
         ]
-        const actualVertices = getJumpedPoints(initialVertices, 2, 2)
+        const actualVertices = calcJumpedPoints(initialVertices, 2, 2)
 
         expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
         expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -219,7 +219,7 @@ describe("getJumpedPoints", () => {
           { x: 0, y: 0 },
           { x: 1, y: 0 },
         ]
-        const actualVertices = getJumpedPoints(initialVertices, 2, 3)
+        const actualVertices = calcJumpedPoints(initialVertices, 2, 3)
 
         expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
         expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -250,7 +250,7 @@ describe("getJumpedPoints", () => {
           { x: 1, y: 1 },
           { x: 0, y: 1 },
         ]
-        const actualVertices = getJumpedPoints(initialVertices, 2, 4)
+        const actualVertices = calcJumpedPoints(initialVertices, 2, 4)
 
         expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
         expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -280,7 +280,7 @@ describe("getJumpedPoints", () => {
         { x: 1, y: 1 },
         { x: 0, y: 0 },
       ]
-      const actualVertices = getJumpedPoints(initialVertices, 1)
+      const actualVertices = calcJumpedPoints(initialVertices, 1)
 
       expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
       expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -303,7 +303,7 @@ describe("getJumpedPoints", () => {
         { x: 0, y: 1 },
         { x: 1, y: 1 },
       ]
-      const actualVertices = getJumpedPoints(initialVertices, 2)
+      const actualVertices = calcJumpedPoints(initialVertices, 2)
 
       expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
       expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -326,7 +326,7 @@ describe("getJumpedPoints", () => {
         { x: 1, y: 1 },
         { x: 1, y: 0 },
       ]
-      const actualVertices = getJumpedPoints(initialVertices, 3)
+      const actualVertices = calcJumpedPoints(initialVertices, 3)
 
       expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
       expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -349,7 +349,7 @@ describe("getJumpedPoints", () => {
         { x: 0, y: 1 },
         { x: 0, y: 1 },
       ]
-      const actualVertices = getJumpedPoints(initialVertices, 4)
+      const actualVertices = calcJumpedPoints(initialVertices, 4)
 
       expect(actualVertices[0]).toEqual({ x: 0, y: 1 })
       expect(actualVertices[0]).toEqual(expectedVertices[0])
@@ -366,6 +366,6 @@ describe("getJumpedPoints", () => {
     ${[1, 2, 3, 4]}  | ${[{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 0 }]}
     ${[1, 2, 3, 4]}  | ${[{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 0 }]}
   `("should match assortment of options", ({ jumps, vertices }) => {
-    expect(getJumpedPoints(vertices, ...jumps)).toMatchSnapshot()
+    expect(calcJumpedPoints(vertices, ...jumps)).toMatchSnapshot()
   })
 })

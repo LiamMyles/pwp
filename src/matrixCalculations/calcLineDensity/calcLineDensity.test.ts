@@ -1,4 +1,4 @@
-import { getLineDensity } from "Calculations/getLineDensity"
+import { calcLineDensity } from "Src/matrixCalculations/calcLineDensity"
 
 describe("getLineDensity", () => {
   it.each`
@@ -21,7 +21,7 @@ describe("getLineDensity", () => {
         lineDensity: actualLineDensity,
         subdivisionCommonFactor: actualSubdivisionCommonFactor,
         verticesCommonFactor: actualVerticesCommonFactor,
-      } = getLineDensity({
+      } = calcLineDensity({
         vertices,
         subdivisions,
         points,
@@ -58,7 +58,7 @@ describe("getLineDensity", () => {
         lineDensity: actualLineDensity,
         subdivisionCommonFactor: actualSubdivisionCommonFactor,
         verticesCommonFactor: actualVerticesCommonFactor,
-      } = getLineDensity({
+      } = calcLineDensity({
         vertices,
         subdivisions,
         points,

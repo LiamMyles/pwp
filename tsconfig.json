@@ -5,8 +5,9 @@
     "paths": {
       "Components/*": ["src/components/*"],
       "Pages/*": ["src/pages/*"],
-      "Calculations/*": ["src/calculations/*"],
+      "MatrixCalculations/*": ["src/matrixCalculations/*"],
       "Src/*": ["src/*"],
+      "PolygonBuilders/*": ["src/polygonBuilders/*"],
     },
     "lib": [
       "dom",
@@ -29,7 +30,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/calculations/getNGonVertices"  ],
+, "src/polygonCalculations/getNGonVertices"  ],
   "exclude": [
     "node_modules"
   ]

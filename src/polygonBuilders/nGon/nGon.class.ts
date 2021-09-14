@@ -1,4 +1,4 @@
-import { getNGonVertices } from "Calculations/getNGonVertices"
+import { calcNGonVertices } from "Src/matrixCalculations/calcNGonVertices"
 
 import { Vertices } from "../n-gon.types"
 
@@ -8,6 +8,6 @@ export class NGon {
 
   setVertices(count: number): void {
     this.verticesAmount = count
-    this.verticesMatrix = getNGonVertices(count)
+    this.verticesMatrix = calcNGonVertices(count)
   }
 }

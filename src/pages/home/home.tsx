@@ -1,4 +1,4 @@
-import { getLineDensity } from "Calculations/getLineDensity"
+import { calcLineDensity } from "Src/matrixCalculations/calcLineDensity"
 import { InputSlider } from "Components/InputSlider"
 import { Navigation } from "Components/Navigation"
 import { P5Canvas } from "Components/P5Canvas"
@@ -168,7 +168,7 @@ export function Home({
   const { basePath } = useRouter()
 
   const { lineDensity, subdivisionCommonFactor, verticesCommonFactor } =
-    getLineDensity({ vertices, subdivisions, points, jumps })
+    calcLineDensity({ vertices, subdivisions, points, jumps })
   return (
     <>
       <Head>
