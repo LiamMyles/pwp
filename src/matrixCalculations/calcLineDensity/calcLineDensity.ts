@@ -1,4 +1,4 @@
-import type { VSPJ } from "Src/matrixCalculations/types"
+import type { VSPJ } from "MatrixCalculations/types"
 
 function GCD(a: number, b: number): number {
   if (!b) {

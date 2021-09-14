@@ -1,4 +1,4 @@
-import { calcLineDensity } from "Src/matrixCalculations/calcLineDensity"
+import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import { InputSlider } from "Components/InputSlider"
 import { Navigation } from "Components/Navigation"
 import { P5Canvas } from "Components/P5Canvas"

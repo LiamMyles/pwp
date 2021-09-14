@@ -1,4 +1,4 @@
-import type { VerticesMatrix } from "Src/matrixCalculations/types"
+import type { VerticesMatrix } from "MatrixCalculations/types"
 
 export function calcSpiral(
   verts: VerticesMatrix[],

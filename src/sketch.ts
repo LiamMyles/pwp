@@ -1,6 +1,6 @@
-import { calcJumpedPoints } from "Src/matrixCalculations/calcJumpedPoints"
-import { calcLineDensity } from "Src/matrixCalculations/calcLineDensity"
-import { calcNGonVertices } from "Src/matrixCalculations/calcNGonVertices"
+import { calcJumpedPoints } from "MatrixCalculations/calcJumpedPoints"
+import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
+import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
 import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"

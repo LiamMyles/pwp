@@ -1,4 +1,4 @@
-import { calcLineDensity } from "Src/matrixCalculations/calcLineDensity"
+import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 
 describe("getLineDensity", () => {
   it.each`

@@ -1,5 +1,5 @@
-import { calcNGonVertices } from "Src/matrixCalculations/calcNGonVertices"
-import { calcSpiral } from "Src/matrixCalculations/calcSpiral"
+import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
+import { calcSpiral } from "MatrixCalculations/calcSpiral"
 
 describe("getSpirals", () => {
   describe("NOT Mirrored", () => {

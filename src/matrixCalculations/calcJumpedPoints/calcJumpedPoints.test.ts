@@ -1,5 +1,5 @@
-import { calcJumpedPoints } from "Src/matrixCalculations/calcJumpedPoints"
-import type { VerticesMatrix } from "Src/matrixCalculations/types"
+import { calcJumpedPoints } from "MatrixCalculations/calcJumpedPoints"
+import type { VerticesMatrix } from "MatrixCalculations/types"
 
 describe("getJumpedPoints", () => {
   it("should return passed points if no jumps exist", () => {

@@ -1,4 +1,4 @@
-import { calcJumpedPoints } from "Src/matrixCalculations/calcJumpedPoints"
+import { calcJumpedPoints } from "MatrixCalculations/calcJumpedPoints"
 
 import { NGon } from "../nGon"
 

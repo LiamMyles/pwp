@@ -1,4 +1,4 @@
-import { calcNGonVertices } from "Src/matrixCalculations/calcNGonVertices"
+import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
 
 describe("getNGonVertices", () => {
   it.each`

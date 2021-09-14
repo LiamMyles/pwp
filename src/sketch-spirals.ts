@@ -1,6 +1,6 @@
-import { calcJumpedPoints } from "Src/matrixCalculations/calcJumpedPoints"
-import { calcNGonVertices } from "Src/matrixCalculations/calcNGonVertices"
-import { calcSpiral } from "Src/matrixCalculations/calcSpiral"
+import { calcJumpedPoints } from "MatrixCalculations/calcJumpedPoints"
+import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
+import { calcSpiral } from "MatrixCalculations/calcSpiral"
 import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"
