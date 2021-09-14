@@ -1,4 +1,4 @@
-import { calcJumpedPoints } from "MatrixCalculations/calcJumpedPoints"
+import { calcJumpedMatrix } from "MatrixCalculations/calcJumpedMatrix"
 import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
 import { calcSpiral } from "MatrixCalculations/calcSpiral"
 import type typeP5 from "p5"
@@ -28,7 +28,7 @@ export function sketch(p5: typeP5): void {
     p5.scale(1, -1)
 
     const initialMatrix = calcNGonVertices(GlobalValues.vertices)
-    const jumpedMatrix = calcJumpedPoints(initialMatrix, ...GlobalValues.jumps)
+    const jumpedMatrix = calcJumpedMatrix(initialMatrix, ...GlobalValues.jumps)
 
     const spiralStart = calcSpiral(
       jumpedMatrix,

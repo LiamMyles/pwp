@@ -1,4 +1,4 @@
-import { calcJumpedPoints } from "MatrixCalculations/calcJumpedPoints"
+import { calcJumpedMatrix } from "MatrixCalculations/calcJumpedMatrix"
 
 import { NGon } from "../nGon"
 
@@ -11,6 +11,6 @@ export class NGonJumps extends NGon {
 
   setJumps(jumps: number[]): void {
     this.jumps = jumps
-    this.verticesMatrix = calcJumpedPoints(this.verticesMatrix, ...jumps)
+    this.verticesMatrix = calcJumpedMatrix(this.verticesMatrix, ...jumps)
   }
 }

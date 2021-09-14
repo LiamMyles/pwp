@@ -1,4 +1,4 @@
-import { calcJumpedPoints } from "MatrixCalculations/calcJumpedPoints"
+import { calcJumpedMatrix } from "MatrixCalculations/calcJumpedMatrix"
 import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
 import type typeP5 from "p5"
@@ -30,7 +30,7 @@ export function sketch(p5: typeP5): void {
 
     const initialMatrix = calcNGonVertices(GlobalValues.vertices)
 
-    const jumpedMatrix = calcJumpedPoints(initialMatrix, ...GlobalValues.jumps)
+    const jumpedMatrix = calcJumpedMatrix(initialMatrix, ...GlobalValues.jumps)
     GlobalValues.matrix = jumpedMatrix
 
     const subdivisionMatrix = getSubdivisionMatrix(
