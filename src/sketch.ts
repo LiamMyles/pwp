@@ -1,10 +1,11 @@
 import { calcJumpedMatrix } from "MatrixCalculations/calcJumpedMatrix"
 import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
+import { calcPointsMatrix } from "MatrixCalculations/calcPointsMatrix"
+import { calcSubdivisionMatrix } from "MatrixCalculations/calcSubdivisionMatrix"
 import type typeP5 from "p5"
 
 import { GlobalValues } from "./globals"
-import { getPointsMatrix, getSubdivisionMatrix } from "./pwp"
 
 let speed = 20
 const size = 250
@@ -33,11 +34,11 @@ export function sketch(p5: typeP5): void {
     const jumpedMatrix = calcJumpedMatrix(initialMatrix, ...GlobalValues.jumps)
     GlobalValues.matrix = jumpedMatrix
 
-    const subdivisionMatrix = getSubdivisionMatrix(
+    const subdivisionMatrix = calcSubdivisionMatrix(
       GlobalValues.subdivisions,
       jumpedMatrix
     )
-    const pointsMatrix = getPointsMatrix(
+    const pointsMatrix = calcPointsMatrix(
       GlobalValues.vertices,
       GlobalValues.subdivisions,
       GlobalValues.points,

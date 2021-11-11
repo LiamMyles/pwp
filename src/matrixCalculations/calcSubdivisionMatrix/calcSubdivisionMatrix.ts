@@ -1,13 +1,9 @@
-interface verticesMatrix {
-  x: number
-  y: number
-}
+import type { VerticesMatrix } from "MatrixCalculations/types"
 
-//TODO: Move to it's own tested function
-export function getSubdivisionMatrix(
+export function calcSubdivisionMatrix(
   subdivisions: number,
-  matrix: verticesMatrix[]
-): verticesMatrix[] {
+  matrix: VerticesMatrix[]
+): VerticesMatrix[] {
   return matrix
     .map((_, index, passedMatrix) => {
       const startY = passedMatrix[index].y
@@ -33,22 +29,4 @@ export function getSubdivisionMatrix(
       })
     })
     .flat()
-}
-
-//TODO: Move to it's own tested function
-export function getPointsMatrix(
-  vertices: number,
-  subdivisions: number,
-  points: number,
-  subdivisionMatrix: verticesMatrix[],
-  ...jumps: number[]
-): verticesMatrix[] {
-  let totalPoints = vertices * subdivisions
-  if (jumps.length !== 0) {
-    totalPoints = jumps.length * vertices * subdivisions
-  }
-
-  return [...Array(totalPoints)].map((_, index) => {
-    return subdivisionMatrix[(index * points) % totalPoints]
-  })
 }

@@ -1,7 +1,7 @@
-import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import { InputSlider } from "Components/InputSlider"
 import { Navigation } from "Components/Navigation"
 import { P5Canvas } from "Components/P5Canvas"
+import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
