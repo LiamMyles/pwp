@@ -13,7 +13,7 @@ describe("NGon Class", () => {
     expect(NGonInstance.autoPoints).toEqual(false)
   })
 
-  it.skip("should update points when set", () => {
+  it("should update points when set", () => {
     const NGonInstance = new NGonSubdivisions()
     NGonInstance.setVertices(4)
 
@@ -28,6 +28,8 @@ describe("NGon Class", () => {
   })
 
   it.todo("should update subdivisions when set")
+
   it.todo("should update points automatically when autoPoints is true")
+
   it.todo("should NOT update points automatically when autoPoints is false")
 })
