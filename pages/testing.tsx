@@ -1,3 +1,3 @@
-import { Testing } from "Pages/testing"
+import { Home } from "Pages/testing"
 
-export default Testing
+export default Home

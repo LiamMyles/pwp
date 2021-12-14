@@ -31,7 +31,9 @@ interface InputSliderProps {
   title: string
   min: number
   max: number
-  setter: React.Dispatch<React.SetStateAction<number>>
+  setter:
+    | React.Dispatch<React.SetStateAction<number>>
+    | ((value: number) => void)
   currentValue: number
 }
 
