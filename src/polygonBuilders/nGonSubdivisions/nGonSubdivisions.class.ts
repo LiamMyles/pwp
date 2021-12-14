@@ -1,3 +1,5 @@
+import { calcJumpedMatrix } from "MatrixCalculations/calcJumpedMatrix"
+import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
 import { calcPointsMatrix } from "MatrixCalculations/calcPointsMatrix"
 import { calcSubdivisionMatrix } from "MatrixCalculations/calcSubdivisionMatrix"
 
@@ -8,25 +10,35 @@ export class NGonSubdivisions extends NGonJumps {
     super()
   }
 
-  subdivisions = 0
-  points = 0
+  subdivisions = 1
+  points = 1
   autoPoints = false
 
   setSubdivisions(subdivisions: number): void {
     this.subdivisions = subdivisions
-    this.verticesMatrix = calcSubdivisionMatrix(
-      subdivisions,
-      this.verticesMatrix
-    )
   }
 
   setPoints(points: number): void {
     this.points = points
-    this.verticesMatrix = calcPointsMatrix(
+  }
+
+  calculateVertexMatrix(): void {
+    const initialMatrix = calcNGonVertices(this.verticesAmount)
+
+    const jumpedMatrix = calcJumpedMatrix(initialMatrix, ...this.jumps)
+
+    const subdivisionMatrix = calcSubdivisionMatrix(
+      this.subdivisions,
+      jumpedMatrix
+    )
+
+    const pointsMatrix = calcPointsMatrix(
       this.verticesAmount,
       this.subdivisions,
-      points,
-      this.verticesMatrix
+      this.points,
+      subdivisionMatrix,
+      ...this.jumps
     )
+    this.verticesMatrix = pointsMatrix
   }
 }

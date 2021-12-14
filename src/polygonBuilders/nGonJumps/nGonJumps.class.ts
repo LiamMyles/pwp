@@ -1,5 +1,7 @@
 import { calcJumpedMatrix } from "MatrixCalculations/calcJumpedMatrix"
+import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
 
+import { Vertices } from "../n-gon.types"
 import { NGon } from "../nGon"
 
 export class NGonJumps extends NGon {
@@ -8,9 +10,15 @@ export class NGonJumps extends NGon {
   }
 
   jumps: number[] = []
+  initialJumpsVerticesMatrix: Vertices[] = []
 
   setJumps(jumps: number[]): void {
     this.jumps = jumps
-    this.verticesMatrix = calcJumpedMatrix(this.verticesMatrix, ...jumps)
+  }
+
+  calculateVertexMatrix(): void {
+    const initialMatrix = calcNGonVertices(this.verticesAmount)
+
+    this.verticesMatrix = calcJumpedMatrix(initialMatrix, ...this.jumps)
   }
 }

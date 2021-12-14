@@ -14,12 +14,14 @@ describe("NGon Class", () => {
     const NGonInstance = new NGonJumps()
 
     NGonInstance.setVertices(4)
+    NGonInstance.calculateVertexMatrix()
 
     expect(NGonInstance.verticesAmount).toEqual(4)
     expect(NGonInstance.verticesMatrix.length).toEqual(4)
     expect(NGonInstance.jumps).toEqual([])
 
     NGonInstance.setJumps([1, 2, 3])
+    NGonInstance.calculateVertexMatrix()
 
     expect(NGonInstance.verticesAmount).toEqual(4)
     expect(NGonInstance.verticesMatrix.length).toEqual(12)

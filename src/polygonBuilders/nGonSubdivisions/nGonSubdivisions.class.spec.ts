@@ -8,20 +8,22 @@ describe("NGon Class", () => {
     expect(NGonInstance.verticesMatrix).toEqual([])
     expect(NGonInstance.setVertices).toBeDefined()
     expect(NGonInstance.jumps).toEqual([])
-    expect(NGonInstance.points).toEqual(0)
-    expect(NGonInstance.subdivisions).toEqual(0)
+    expect(NGonInstance.points).toEqual(1)
+    expect(NGonInstance.subdivisions).toEqual(1)
     expect(NGonInstance.autoPoints).toEqual(false)
   })
 
   it("should update points when set", () => {
     const NGonInstance = new NGonSubdivisions()
     NGonInstance.setVertices(4)
+    NGonInstance.calculateVertexMatrix()
 
     const originalVertices = [...NGonInstance.verticesMatrix]
 
-    expect(NGonInstance.points).toEqual(0)
+    expect(NGonInstance.points).toEqual(1)
 
     NGonInstance.setPoints(11)
+    NGonInstance.calculateVertexMatrix()
 
     expect(NGonInstance.verticesMatrix).not.toEqual(originalVertices)
     expect(NGonInstance.points).toEqual(11)

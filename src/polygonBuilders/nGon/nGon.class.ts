@@ -8,6 +8,9 @@ export class NGon {
 
   setVertices(count: number): void {
     this.verticesAmount = count
-    this.verticesMatrix = calcNGonVertices(count)
+  }
+
+  calculateVertexMatrix(): void {
+    this.verticesMatrix = calcNGonVertices(this.verticesAmount)
   }
 }

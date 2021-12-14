@@ -11,6 +11,7 @@ describe("NGon Class", () => {
     const NGonInstance = new NGon()
 
     NGonInstance.setVertices(4)
+    NGonInstance.calculateVertexMatrix()
 
     expect(NGonInstance.verticesAmount).toEqual(4)
     expect(NGonInstance.verticesMatrix.length).toEqual(4)
@@ -27,6 +28,7 @@ describe("NGon Class", () => {
     const NGonInstance = new NGon()
 
     NGonInstance.setVertices(4)
+    NGonInstance.calculateVertexMatrix()
 
     expect(NGonInstance.verticesAmount).toEqual(4)
     expect(NGonInstance.verticesMatrix.length).toEqual(4)
@@ -40,6 +42,7 @@ describe("NGon Class", () => {
     )
 
     NGonInstance.setVertices(2)
+    NGonInstance.calculateVertexMatrix()
 
     expect(NGonInstance.verticesAmount).toEqual(2)
     expect(NGonInstance.verticesMatrix.length).toEqual(2)
