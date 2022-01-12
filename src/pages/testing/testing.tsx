@@ -7,7 +7,7 @@ import { useRouter } from "next/router"
 import type typeP5 from "p5"
 import { NGonSubdivisions } from "PolygonBuilders/nGonSubdivisions"
 import React, { useEffect, useRef, useState } from "react"
-import { sketchGeneral } from "Src/sketches/sketchGeneral"
+import { SketchNGonDrawer } from "Src/sketches/sketchGeneral"
 
 import {
   JumpsArea,
@@ -32,6 +32,7 @@ export function Home({
 }: Props): React.ReactElement {
   const NGonClass = useRef<NGonSubdivisions>()
   const NGonSketch = useRef<(p5: typeP5) => void>()
+
   useEffect(() => {
     NGonClass.current = new NGonSubdivisions()
     NGonClass.current.setVertices(initialVertices ?? 4)
@@ -40,7 +41,9 @@ export function Home({
     NGonClass.current.setJumps(initialJumps ?? [])
     NGonClass.current.calculateVertexMatrix()
 
-    NGonSketch.current = sketchGeneral(NGonClass.current)
+    NGonSketch.current = new SketchNGonDrawer({
+      NGon: NGonClass.current,
+    }).initializeSketch()
   }, [initialJumps, initialPoints, initialSubdivisions, initialJumps])
 
   const [vertices, setVertex] = useState(initialVertices ?? 4)
