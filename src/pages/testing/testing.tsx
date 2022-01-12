@@ -53,14 +53,20 @@ export function Home({
   useEffect(() => {
     setJumps((previousState) => {
       if (totalJumps >= previousState.length) {
-        const newArray = [...previousState]
+        const newJumps = [...previousState]
         const extraJumps = [...Array(totalJumps - previousState.length)].map(
           () => 1
         )
-        newArray.push(...extraJumps)
-        return newArray
+        newJumps.push(...extraJumps)
+        NGonClass.current?.setJumps(newJumps)
+        NGonClass.current?.calculateVertexMatrix()
+        return newJumps
       }
-      return [...previousState].slice(0, totalJumps)
+      const newJumps = [...previousState].slice(0, totalJumps)
+
+      NGonClass.current?.setJumps(newJumps)
+      NGonClass.current?.calculateVertexMatrix()
+      return newJumps
     })
   }, [totalJumps])
 
@@ -150,19 +156,16 @@ export function Home({
                     type="number"
                     name=""
                     id={`jump-${index}`}
+                    min="0"
                     defaultValue={jumps[index]}
                     onChange={({ currentTarget: { value } }) => {
                       setJumps((previousState) => {
-                        const newState = [...previousState]
-                        newState[index] = parseInt(value) || 1
-                        return newState
+                        const newJumps = [...previousState]
+                        newJumps[index] = parseInt(value) || 1
+                        NGonClass.current?.setJumps(newJumps)
+                        NGonClass.current?.calculateVertexMatrix()
+                        return newJumps
                       })
-
-                      const newJumps = [...(NGonClass.current?.jumps ?? [])]
-                      newJumps[index] = parseInt(value) || 1
-
-                      NGonClass.current?.setJumps(newJumps)
-                      NGonClass.current?.calculateVertexMatrix()
                     }}
                   />
                 </div>
