@@ -56,6 +56,9 @@ export function Home({
   const [jumps, setJumps] = useState(initialJumps ?? [])
   const [totalJumps, setTotalJumps] = useState(initialJumps?.length ?? 0)
 
+  const [linesPerDraw, setLinesPerDraw] = useState(1)
+  const [drawingSpeed, setDrawingSpeed] = useState(1)
+
   useEffect(() => {
     setJumps((previousState) => {
       if (totalJumps >= previousState.length) {
@@ -194,6 +197,28 @@ export function Home({
             <option value="frame-draw">frame-draw</option>
             <option value="overlay-draw">overlay-draw</option>
           </select>
+
+          <InputSlider
+            title="Drawn Lines"
+            min={1}
+            max={lineDensity}
+            setter={(value: number) => {
+              NGonDrawer.current?.setLinesPerDraw(value)
+              setLinesPerDraw(value)
+            }}
+            currentValue={linesPerDraw}
+          />
+
+          <InputSlider
+            title="Drawing Speed"
+            min={1}
+            max={lineDensity}
+            setter={(value: number) => {
+              NGonDrawer.current?.setSpeedOfDraw(value)
+              setDrawingSpeed(value)
+            }}
+            currentValue={drawingSpeed}
+          />
         </div>
       </LayoutDiv>
     </>

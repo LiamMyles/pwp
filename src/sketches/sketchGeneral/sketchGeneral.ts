@@ -44,6 +44,14 @@ export class SketchNGonDrawer {
     this.drawMode = drawMode
   }
 
+  setLinesPerDraw(numberOfLines: number): void {
+    this.linesPerDraw = numberOfLines
+  }
+
+  setSpeedOfDraw(speed: number): void {
+    this.speed = speed
+  }
+
   initializeSketch(): (p5: typeP5) => void {
     return (p5: typeP5) => {
       p5.setup = () => {
