@@ -40,5 +40,6 @@ module.exports = {
     ],
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
+    "jsx-a11y/no-onchange": "off",
   },
 }

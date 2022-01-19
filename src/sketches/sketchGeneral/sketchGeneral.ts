@@ -12,7 +12,7 @@ interface SketchNGonDrawerConstructor {
   NGon: NGonSubdivisions
 }
 
-type drawMode =
+export type DrawMode =
   | "static"
   | "full-draw"
   | "fade-draw"
@@ -22,15 +22,26 @@ type drawMode =
 export class SketchNGonDrawer {
   NGon: NGonSubdivisions
   currentLineDrawn = 0
-  drawMode: drawMode = "overlay-draw"
+  drawMode: DrawMode = "overlay-draw"
   drawFinishDelay = 2000
   pauseDrawing = false
   linesPerDraw = 3
   speed = 3
   background = 220
+  shouldResetDrawing = false
 
   constructor({ NGon }: SketchNGonDrawerConstructor) {
     this.NGon = NGon
+  }
+
+  resetDrawing(): void {
+    this.currentLineDrawn = 0
+    this.shouldResetDrawing = true
+  }
+
+  setDrawMode(drawMode: DrawMode): void {
+    this.resetDrawing()
+    this.drawMode = drawMode
   }
 
   initializeSketch(): (p5: typeP5) => void {
@@ -53,6 +64,11 @@ export class SketchNGonDrawer {
         p5.angleMode(p5.DEGREES)
         p5.translate(p5.width / 2, p5.height / 2)
         p5.scale(1, -1)
+
+        if (this.shouldResetDrawing === true) {
+          p5.background(this.background)
+          this.shouldResetDrawing = false
+        }
 
         if (this.drawMode === "static" || this.drawMode === "overlay-draw") {
           p5.background(this.background)

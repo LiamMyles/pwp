@@ -7,7 +7,7 @@ import { useRouter } from "next/router"
 import type typeP5 from "p5"
 import { NGonSubdivisions } from "PolygonBuilders/nGonSubdivisions"
 import React, { useEffect, useRef, useState } from "react"
-import { SketchNGonDrawer } from "Src/sketches/sketchGeneral"
+import { DrawMode, SketchNGonDrawer } from "Src/sketches/sketchGeneral"
 
 import {
   JumpsArea,
@@ -32,6 +32,7 @@ export function Home({
 }: Props): React.ReactElement {
   const NGonClass = useRef<NGonSubdivisions>()
   const NGonSketch = useRef<(p5: typeP5) => void>()
+  const NGonDrawer = useRef<SketchNGonDrawer>()
 
   useEffect(() => {
     NGonClass.current = new NGonSubdivisions()
@@ -41,9 +42,11 @@ export function Home({
     NGonClass.current.setJumps(initialJumps ?? [])
     NGonClass.current.calculateVertexMatrix()
 
-    NGonSketch.current = new SketchNGonDrawer({
+    NGonDrawer.current = new SketchNGonDrawer({
       NGon: NGonClass.current,
-    }).initializeSketch()
+    })
+
+    NGonSketch.current = NGonDrawer.current.initializeSketch()
   }, [initialJumps, initialPoints, initialSubdivisions, initialJumps])
 
   const [vertices, setVertex] = useState(initialVertices ?? 4)
@@ -175,6 +178,22 @@ export function Home({
               )
             })}
           </JumpsArea>
+
+          <label htmlFor="draw-mode">Drawing Mode</label>
+          <select
+            name="draw-mode"
+            id="draw-mode"
+            onChange={({ currentTarget: { value } }) => {
+              const drawMode = value as DrawMode
+              NGonDrawer.current?.setDrawMode(drawMode)
+            }}
+          >
+            <option value="static">Static</option>
+            <option value="full-draw">full-draw</option>
+            <option value="fade-draw">fade-draw</option>
+            <option value="frame-draw">frame-draw</option>
+            <option value="overlay-draw">overlay-draw</option>
+          </select>
         </div>
       </LayoutDiv>
     </>
