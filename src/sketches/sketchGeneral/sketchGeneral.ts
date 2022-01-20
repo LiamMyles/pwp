@@ -24,11 +24,12 @@ export class SketchNGonDrawer {
   currentLineDrawn = 0
   drawMode: DrawMode = "overlay-draw"
   drawFinishDelay = 2000
-  pauseDrawing = false
+  playDrawing = true
   linesPerDraw = 3
   speed = 3
   background = 220
   shouldResetDrawing = false
+  lineDensity = 0
 
   constructor({ NGon }: SketchNGonDrawerConstructor) {
     this.NGon = NGon
@@ -52,6 +53,31 @@ export class SketchNGonDrawer {
     this.speed = speed
   }
 
+  togglePlay(): void {
+    this.playDrawing = !this.playDrawing
+  }
+
+  stepBack(count: number): void {
+    const expectedNewCount = this.currentLineDrawn - count
+
+    if (expectedNewCount < 0) {
+      this.currentLineDrawn = this.lineDensity + expectedNewCount
+    } else {
+      this.currentLineDrawn = expectedNewCount
+    }
+  }
+
+  stepForward(count: number): void {
+    const expectedNewCount = this.currentLineDrawn + count
+    if (expectedNewCount === this.lineDensity) {
+      this.currentLineDrawn = 0
+    } else if (expectedNewCount > this.lineDensity) {
+      this.currentLineDrawn = expectedNewCount - this.lineDensity
+    } else {
+      this.currentLineDrawn = expectedNewCount
+    }
+  }
+
   initializeSketch(): (p5: typeP5) => void {
     return (p5: typeP5) => {
       p5.setup = () => {
@@ -62,7 +88,7 @@ export class SketchNGonDrawer {
 
       p5.draw = () => {
         p5.frameRate(this.speed)
-        const lineDensity = calcLineDensity({
+        this.lineDensity = calcLineDensity({
           vertices: this.NGon.verticesAmount,
           subdivisions: this.NGon.subdivisions,
           points: this.NGon.points,
@@ -80,24 +106,28 @@ export class SketchNGonDrawer {
 
         if (this.drawMode === "static" || this.drawMode === "overlay-draw") {
           p5.background(this.background)
-          this.NGon.verticesMatrix.slice(0, lineDensity).forEach((_, count) => {
-            const { x: subX, y: subY } = this.NGon.verticesMatrix[count]
-              ? this.NGon.verticesMatrix[count]
-              : this.NGon.verticesMatrix[this.NGon.verticesMatrix.length - 1]
-            const { x: pointX, y: pointY } = this.NGon.verticesMatrix[count + 1]
-              ? this.NGon.verticesMatrix[count + 1]
-              : this.NGon.verticesMatrix[0]
+          this.NGon.verticesMatrix
+            .slice(0, this.lineDensity)
+            .forEach((_, count) => {
+              const { x: subX, y: subY } = this.NGon.verticesMatrix[count]
+                ? this.NGon.verticesMatrix[count]
+                : this.NGon.verticesMatrix[this.NGon.verticesMatrix.length - 1]
+              const { x: pointX, y: pointY } = this.NGon.verticesMatrix[
+                count + 1
+              ]
+                ? this.NGon.verticesMatrix[count + 1]
+                : this.NGon.verticesMatrix[0]
 
-            p5.push()
-            p5.strokeWeight(0.2)
-            p5.line(
-              pointX * sketchGeneralOptions.size,
-              pointY * sketchGeneralOptions.size,
-              subX * sketchGeneralOptions.size,
-              subY * sketchGeneralOptions.size
-            )
-            p5.pop()
-          })
+              p5.push()
+              p5.strokeWeight(0.2)
+              p5.line(
+                pointX * sketchGeneralOptions.size,
+                pointY * sketchGeneralOptions.size,
+                subX * sketchGeneralOptions.size,
+                subY * sketchGeneralOptions.size
+              )
+              p5.pop()
+            })
         }
 
         // Background before Draw
@@ -136,11 +166,11 @@ export class SketchNGonDrawer {
               p5.pop()
             })
 
-          if (this.pauseDrawing === false) {
+          if (this.playDrawing) {
             this.currentLineDrawn++
           }
           if (
-            this.currentLineDrawn >= lineDensity ||
+            this.currentLineDrawn >= this.lineDensity ||
             this.currentLineDrawn >= this.NGon.verticesMatrix.length
           ) {
             p5.frameRate(0)
