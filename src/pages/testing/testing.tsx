@@ -10,6 +10,24 @@ import React, { useEffect, useRef, useState } from "react"
 import { DrawMode, SketchNGonDrawer } from "Src/sketches/sketchGeneral"
 import styled from "styled-components"
 
+const ContainerDiv = styled.div`
+  display: grid;
+  grid-gap: 10px;
+  width: 600px;
+  margin: 10px auto;
+`
+
+const PlaybackContainerDiv = styled.div`
+  display: grid;
+  grid-template-areas:
+    "hr hr hr"
+    "back play forward"
+    "timeline timeline timeline";
+  grid-gap: 10px;
+  width: 600px;
+  margin: 10px auto;
+`
+
 import {
   JumpsArea,
   LayoutDiv,
@@ -170,23 +188,24 @@ export function Home({
               )
             })}
           </JumpsArea>
-
-          <label htmlFor="draw-mode">Drawing Mode</label>
-          <select
-            name="draw-mode"
-            id="draw-mode"
-            defaultValue={drawMode}
-            onChange={({ currentTarget: { value } }) => {
-              const drawMode = value as DrawMode
-              setDrawMode(drawMode)
-            }}
-          >
-            <option value="static">Static</option>
-            <option value="full-draw">full-draw</option>
-            <option value="fade-draw">fade-draw</option>
-            <option value="frame-draw">frame-draw</option>
-            <option value="overlay-draw">overlay-draw</option>
-          </select>
+          <ContainerDiv>
+            <label htmlFor="draw-mode">Drawing Mode</label>
+            <select
+              name="draw-mode"
+              id="draw-mode"
+              defaultValue={drawMode}
+              onChange={({ currentTarget: { value } }) => {
+                const drawMode = value as DrawMode
+                setDrawMode(drawMode)
+              }}
+            >
+              <option value="static">Static</option>
+              <option value="full-draw">full-draw</option>
+              <option value="fade-draw">fade-draw</option>
+              <option value="frame-draw">frame-draw</option>
+              <option value="overlay-draw">overlay-draw</option>
+            </select>
+          </ContainerDiv>
 
           <InputSlider
             title="Drawn Lines"
@@ -207,36 +226,43 @@ export function Home({
             }}
             currentValue={speedOfDraw}
           />
-          <hr />
-          <button
-            onClick={() => {
-              NGonDrawer.current.stepBack(1)
-            }}
-          >
-            Step Back
-          </button>
-          <button
-            onClick={() => {
-              NGonDrawer.current.togglePlay()
-            }}
-          >
-            Pause/Play
-          </button>
-          <button
-            onClick={() => {
-              NGonDrawer.current.stepForward(1)
-            }}
-          >
-            Step Forward
-          </button>
-          {NGonDrawer.current && (
-            <TimeLine
-              drawingClass={
-                NGonDrawer as React.MutableRefObject<SketchNGonDrawer>
-              }
-              maxLines={lineDensity}
-            />
-          )}
+          <PlaybackContainerDiv>
+            <hr style={{ gridArea: "hr", width: "100%" }} />
+            <button
+              style={{ gridArea: "back" }}
+              onClick={() => {
+                NGonDrawer.current.stepBack(1)
+              }}
+            >
+              Step Back
+            </button>
+            <button
+              style={{ gridArea: "play" }}
+              onClick={() => {
+                NGonDrawer.current.togglePlay()
+              }}
+            >
+              Pause/Play
+            </button>
+            <button
+              style={{ gridArea: "forward" }}
+              onClick={() => {
+                NGonDrawer.current.stepForward(1)
+              }}
+            >
+              Step Forward
+            </button>
+            <div style={{ gridArea: "timeline", display: "grid" }}>
+              {NGonDrawer.current && (
+                <TimeLine
+                  drawingClass={
+                    NGonDrawer as React.MutableRefObject<SketchNGonDrawer>
+                  }
+                  maxLines={lineDensity}
+                />
+              )}
+            </div>
+          </PlaybackContainerDiv>
         </div>
       </LayoutDiv>
     </>
