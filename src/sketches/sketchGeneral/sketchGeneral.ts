@@ -1,6 +1,7 @@
 import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import type typeP5 from "p5"
 import type { NGonSubdivisions } from "PolygonBuilders/nGonSubdivisions"
+import { useEffect, useState } from "react"
 
 const sketchGeneralOptions = {
   slowDraw: false,
@@ -45,12 +46,45 @@ export class SketchNGonDrawer {
     this.drawMode = drawMode
   }
 
+  useDrawMode(
+    initialDrawMode: DrawMode
+  ): [DrawMode, React.Dispatch<React.SetStateAction<DrawMode>>] {
+    const [drawMode, setDrawMode] = useState(initialDrawMode)
+    useEffect(() => {
+      this.setDrawMode(drawMode)
+    }, [drawMode])
+
+    return [drawMode, setDrawMode]
+  }
+
   setLinesPerDraw(numberOfLines: number): void {
     this.linesPerDraw = numberOfLines
   }
 
+  useLinesPerDraw(
+    initialLinesPerDraw: number
+  ): [number, React.Dispatch<React.SetStateAction<number>>] {
+    const [linesPerDraw, setLinesPerDraw] = useState(initialLinesPerDraw)
+    useEffect(() => {
+      this.setLinesPerDraw(linesPerDraw)
+    }, [linesPerDraw])
+
+    return [linesPerDraw, setLinesPerDraw]
+  }
+
   setSpeedOfDraw(speed: number): void {
     this.speed = speed
+  }
+
+  useSpeedOfDraw(
+    initialSpeedOfDraw: number
+  ): [number, React.Dispatch<React.SetStateAction<number>>] {
+    const [speedOfDraw, setSpeedOfDraw] = useState(initialSpeedOfDraw)
+    useEffect(() => {
+      this.setSpeedOfDraw(speedOfDraw)
+    }, [speedOfDraw])
+
+    return [speedOfDraw, setSpeedOfDraw]
   }
 
   togglePlay(): void {
@@ -87,6 +121,7 @@ export class SketchNGonDrawer {
       }
 
       p5.draw = () => {
+        this.NGon.calculateVertexMatrix()
         p5.frameRate(this.speed)
         this.lineDensity = calcLineDensity({
           vertices: this.NGon.verticesAmount,

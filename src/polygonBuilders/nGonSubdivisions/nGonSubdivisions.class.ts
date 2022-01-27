@@ -2,6 +2,7 @@ import { calcJumpedMatrix } from "MatrixCalculations/calcJumpedMatrix"
 import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
 import { calcPointsMatrix } from "MatrixCalculations/calcPointsMatrix"
 import { calcSubdivisionMatrix } from "MatrixCalculations/calcSubdivisionMatrix"
+import { useEffect, useState } from "react"
 
 import { NGonJumps } from "../nGonJumps"
 
@@ -18,8 +19,32 @@ export class NGonSubdivisions extends NGonJumps {
     this.subdivisions = subdivisions
   }
 
+  useSubdivisions(
+    initialSubdivisions: number
+  ): [number, React.Dispatch<React.SetStateAction<number>>] {
+    const [subdivisions, setSubdivisions] = useState(initialSubdivisions)
+    useEffect(() => {
+      this.setSubdivisions(subdivisions)
+      this.calculateVertexMatrix()
+    }, [subdivisions])
+
+    return [subdivisions, setSubdivisions]
+  }
+
   setPoints(points: number): void {
     this.points = points
+  }
+
+  usePoints(
+    initialPoints: number
+  ): [number, React.Dispatch<React.SetStateAction<number>>] {
+    const [points, setPoints] = useState(initialPoints)
+    useEffect(() => {
+      this.setPoints(points)
+      this.calculateVertexMatrix()
+    }, [points])
+
+    return [points, setPoints]
   }
 
   calculateVertexMatrix(): void {

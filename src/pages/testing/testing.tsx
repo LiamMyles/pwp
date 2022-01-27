@@ -31,34 +31,30 @@ export function Home({
   initialSubdivisions,
   initialJumps,
 }: Props): React.ReactElement {
-  const NGonClass = useRef<NGonSubdivisions>()
-  const NGonSketch = useRef<(p5: typeP5) => void>()
-  const NGonDrawer = useRef<SketchNGonDrawer>()
-
-  useEffect(() => {
-    NGonClass.current = new NGonSubdivisions()
-    NGonClass.current.setVertices(initialVertices ?? 4)
-    NGonClass.current.setSubdivisions(initialSubdivisions ?? 12)
-    NGonClass.current.setPoints(initialPoints ?? 30)
-    NGonClass.current.setJumps(initialJumps ?? [])
-    NGonClass.current.calculateVertexMatrix()
-
-    NGonDrawer.current = new SketchNGonDrawer({
+  const NGonClass = useRef<NGonSubdivisions>(new NGonSubdivisions())
+  const NGonDrawer = useRef<SketchNGonDrawer>(
+    new SketchNGonDrawer({
       NGon: NGonClass.current,
     })
+  )
+  const NGonSketch = useRef<(p5: typeP5) => void>(
+    NGonDrawer.current.initializeSketch()
+  )
 
-    NGonSketch.current = NGonDrawer.current.initializeSketch()
-  }, [initialJumps, initialPoints, initialSubdivisions, initialJumps])
+  const [vertices, setVertex] = NGonClass.current.useVertices(
+    initialVertices ?? 4
+  )
+  const [jumps, setJumps] = NGonClass.current.useJumps(initialJumps ?? [])
+  const [subdivisions, setSubdivisions] = NGonClass.current.useSubdivisions(
+    initialSubdivisions ?? 12
+  )
+  const [points, setPoints] = NGonClass.current.usePoints(initialPoints ?? 30)
 
-  const [vertices, setVertex] = useState(initialVertices ?? 4)
-  const [subdivisions, setSubdivisions] = useState(initialSubdivisions ?? 12)
-  const [points, setPoints] = useState(initialPoints ?? 30)
+  const [drawMode, setDrawMode] = NGonDrawer.current.useDrawMode("overlay-draw")
+  const [linesPerDraw, setLinesPerDraw] = NGonDrawer.current.useLinesPerDraw(3)
+  const [speedOfDraw, setSpeedOfDraw] = NGonDrawer.current.useSpeedOfDraw(3)
 
-  const [jumps, setJumps] = useState(initialJumps ?? [])
   const [totalJumps, setTotalJumps] = useState(initialJumps?.length ?? 0)
-
-  const [linesPerDraw, setLinesPerDraw] = useState(3)
-  const [drawingSpeed, setDrawingSpeed] = useState(3)
 
   useEffect(() => {
     setJumps((previousState) => {
@@ -68,14 +64,14 @@ export function Home({
           () => 1
         )
         newJumps.push(...extraJumps)
-        NGonClass.current?.setJumps(newJumps)
-        NGonClass.current?.calculateVertexMatrix()
+        NGonClass.current.setJumps(newJumps)
+        NGonClass.current.calculateVertexMatrix()
         return newJumps
       }
       const newJumps = [...previousState].slice(0, totalJumps)
 
-      NGonClass.current?.setJumps(newJumps)
-      NGonClass.current?.calculateVertexMatrix()
+      NGonClass.current.setJumps(newJumps)
+      NGonClass.current.calculateVertexMatrix()
       return newJumps
     })
   }, [totalJumps])
@@ -115,8 +111,6 @@ export function Home({
             title="N-Gon"
             setter={(value: number) => {
               setVertex(value)
-              NGonClass.current?.setVertices(value)
-              NGonClass.current?.calculateVertexMatrix()
             }}
             min={1}
             max={36}
@@ -127,8 +121,6 @@ export function Home({
             min={1}
             max={50}
             setter={(value: number) => {
-              NGonClass.current?.setSubdivisions(value)
-              NGonClass.current?.calculateVertexMatrix()
               setSubdivisions(value)
             }}
             currentValue={subdivisions}
@@ -138,8 +130,6 @@ export function Home({
             min={1}
             max={Math.floor((vertices * subdivisions) / 2)}
             setter={(value: number) => {
-              NGonClass.current?.setPoints(value)
-              NGonClass.current?.calculateVertexMatrix()
               setPoints(value)
             }}
             currentValue={points}
@@ -172,8 +162,6 @@ export function Home({
                       setJumps((previousState) => {
                         const newJumps = [...previousState]
                         newJumps[index] = parseInt(value) || 1
-                        NGonClass.current?.setJumps(newJumps)
-                        NGonClass.current?.calculateVertexMatrix()
                         return newJumps
                       })
                     }}
@@ -187,10 +175,10 @@ export function Home({
           <select
             name="draw-mode"
             id="draw-mode"
-            defaultValue={"overlay-draw"}
+            defaultValue={drawMode}
             onChange={({ currentTarget: { value } }) => {
               const drawMode = value as DrawMode
-              NGonDrawer.current?.setDrawMode(drawMode)
+              setDrawMode(drawMode)
             }}
           >
             <option value="static">Static</option>
@@ -205,7 +193,6 @@ export function Home({
             min={1}
             max={lineDensity}
             setter={(value: number) => {
-              NGonDrawer.current?.setLinesPerDraw(value)
               setLinesPerDraw(value)
             }}
             currentValue={linesPerDraw}
@@ -214,31 +201,30 @@ export function Home({
           <InputSlider
             title="Drawing Speed"
             min={1}
-            max={lineDensity}
+            max={lineDensity < 60 ? lineDensity : 60}
             setter={(value: number) => {
-              NGonDrawer.current?.setSpeedOfDraw(value)
-              setDrawingSpeed(value)
+              setSpeedOfDraw(value)
             }}
-            currentValue={drawingSpeed}
+            currentValue={speedOfDraw}
           />
           <hr />
           <button
             onClick={() => {
-              NGonDrawer.current?.stepBack(1)
+              NGonDrawer.current.stepBack(1)
             }}
           >
             Step Back
           </button>
           <button
             onClick={() => {
-              NGonDrawer.current?.togglePlay()
+              NGonDrawer.current.togglePlay()
             }}
           >
             Pause/Play
           </button>
           <button
             onClick={() => {
-              NGonDrawer.current?.stepForward(1)
+              NGonDrawer.current.stepForward(1)
             }}
           >
             Step Forward
