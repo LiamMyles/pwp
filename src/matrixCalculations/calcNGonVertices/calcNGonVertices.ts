@@ -1,3 +1,4 @@
+import _reverse from "lodash.reverse"
 import type { VerticesMatrix } from "MatrixCalculations/types"
 
 export function calcNGonVertices(vertices: number): VerticesMatrix[] {
@@ -16,5 +17,9 @@ export function calcNGonVertices(vertices: number): VerticesMatrix[] {
     return { x, y }
   })
 
-  return initialVertices
+  const firstItem = initialVertices[0]
+  const array = _reverse(initialVertices)
+  array.unshift(firstItem)
+  array.pop()
+  return array
 }

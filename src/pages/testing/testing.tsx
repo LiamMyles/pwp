@@ -285,6 +285,22 @@ export function Home({
               <button>Copy Link To Shape</button>
             </CopyToClipboard>
           </ContainerDiv>
+          <ContainerDiv>
+            <button
+              onClick={() => {
+                NGonDrawer.current.toggleVertices()
+              }}
+            >
+              Toggle Vertices
+            </button>
+            <button
+              onClick={() => {
+                NGonDrawer.current.toggleSubdivisions()
+              }}
+            >
+              Toggle Subdivisions
+            </button>
+          </ContainerDiv>
         </div>
       </LayoutDiv>
     </>

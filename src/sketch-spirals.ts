@@ -25,7 +25,7 @@ export function sketch(p5: typeP5): void {
     }
     p5.angleMode(p5.DEGREES)
     p5.translate(p5.width / 2, p5.height / 2)
-    p5.scale(1, -1)
+    p5.rotate(180)
 
     const initialMatrix = calcNGonVertices(GlobalValues.vertices)
     const jumpedMatrix = calcJumpedMatrix(initialMatrix, ...GlobalValues.jumps)

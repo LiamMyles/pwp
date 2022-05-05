@@ -31,6 +31,8 @@ export class SketchNGonDrawer {
   background = 220
   shouldResetDrawing = false
   lineDensity = 0
+  showVertices = false
+  showSubdivisions = false
 
   constructor({ NGon }: SketchNGonDrawerConstructor) {
     this.NGon = NGon
@@ -91,6 +93,13 @@ export class SketchNGonDrawer {
     this.playDrawing = !this.playDrawing
   }
 
+  toggleVertices(): void {
+    this.showVertices = !this.showVertices
+  }
+  toggleSubdivisions(): void {
+    this.showSubdivisions = !this.showSubdivisions
+  }
+
   stepBack(count: number): void {
     const expectedNewCount = this.currentLineDrawn - count
 
@@ -132,7 +141,7 @@ export class SketchNGonDrawer {
 
         p5.angleMode(p5.DEGREES)
         p5.translate(p5.width / 2, p5.height / 2)
-        p5.scale(1, -1)
+        p5.rotate(180)
 
         if (this.shouldResetDrawing === true) {
           p5.background(this.background)
@@ -168,7 +177,7 @@ export class SketchNGonDrawer {
         // Background before Draw
         switch (this.drawMode) {
           case "fade-draw":
-            p5.background(this.background, 100)
+            p5.background(this.background, 10)
             break
           case "frame-draw":
             p5.background(this.background)
@@ -202,7 +211,16 @@ export class SketchNGonDrawer {
             })
 
           if (this.playDrawing) {
-            this.currentLineDrawn++
+            switch (this.drawMode) {
+              case "fade-draw":
+              case "full-draw":
+                this.currentLineDrawn =
+                  this.linesPerDraw + this.currentLineDrawn
+                break
+              default:
+                this.currentLineDrawn++
+                break
+            }
           }
           if (
             this.currentLineDrawn >= this.lineDensity ||
@@ -222,6 +240,51 @@ export class SketchNGonDrawer {
               p5.frameRate(sketchGeneralOptions.speed)
             }
           }
+        }
+        if (this.showSubdivisions) {
+          this.NGon.subdivisionMatrix.forEach(({ x, y }) => {
+            p5.push()
+            p5.stroke("purple")
+            p5.strokeWeight(5)
+            p5.point(
+              x * sketchGeneralOptions.size,
+              y * sketchGeneralOptions.size
+            )
+            p5.pop()
+          })
+        }
+
+        if (this.showVertices) {
+          this.NGon.initialMatrix.forEach(({ x, y }, index) => {
+            p5.push()
+            if (index === 0) {
+              p5.stroke("blue")
+            } else {
+              p5.stroke("green")
+            }
+            p5.strokeWeight(20)
+            p5.point(
+              x * sketchGeneralOptions.size,
+              y * sketchGeneralOptions.size
+            )
+            p5.pop()
+            if (this.NGon.initialMatrix.length <= 100) {
+              p5.push()
+              p5.translate(
+                x * sketchGeneralOptions.size,
+                y * sketchGeneralOptions.size
+              )
+              p5.rotate(-180)
+              p5.strokeWeight(1)
+
+              p5.fill("white")
+              p5.textAlign(p5.CENTER)
+              p5.textSize(15)
+              p5.text(index, 0, 5)
+
+              p5.pop()
+            }
+          })
         }
       }
     }

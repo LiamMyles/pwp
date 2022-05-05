@@ -2,6 +2,7 @@ import { calcJumpedMatrix } from "MatrixCalculations/calcJumpedMatrix"
 import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
 import { calcPointsMatrix } from "MatrixCalculations/calcPointsMatrix"
 import { calcSubdivisionMatrix } from "MatrixCalculations/calcSubdivisionMatrix"
+import type { VerticesMatrix } from "MatrixCalculations/types"
 import { useEffect, useState } from "react"
 
 import { NGonJumps } from "../nGonJumps"
@@ -14,6 +15,8 @@ export class NGonSubdivisions extends NGonJumps {
   subdivisions = 1
   points = 1
   autoPoints = false
+  subdivisionMatrix: VerticesMatrix[] = [{ x: 0, y: 0 }]
+  initialMatrix: VerticesMatrix[] = [{ x: 0, y: 0 }]
 
   setSubdivisions(subdivisions: number): void {
     this.subdivisions = subdivisions
@@ -48,11 +51,11 @@ export class NGonSubdivisions extends NGonJumps {
   }
 
   calculateVertexMatrix(): void {
-    const initialMatrix = calcNGonVertices(this.verticesAmount)
+    this.initialMatrix = calcNGonVertices(this.verticesAmount)
 
-    const jumpedMatrix = calcJumpedMatrix(initialMatrix, ...this.jumps)
+    const jumpedMatrix = calcJumpedMatrix(this.initialMatrix, ...this.jumps)
 
-    const subdivisionMatrix = calcSubdivisionMatrix(
+    this.subdivisionMatrix = calcSubdivisionMatrix(
       this.subdivisions,
       jumpedMatrix
     )
@@ -61,7 +64,7 @@ export class NGonSubdivisions extends NGonJumps {
       this.verticesAmount,
       this.subdivisions,
       this.points,
-      subdivisionMatrix,
+      this.subdivisionMatrix,
       ...this.jumps
     )
     this.verticesMatrix = pointsMatrix
