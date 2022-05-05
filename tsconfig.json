@@ -8,6 +8,7 @@
       "MatrixCalculations/*": ["src/matrixCalculations/*"],
       "Src/*": ["src/*"],
       "PolygonBuilders/*": ["src/polygonBuilders/*"],
+      "Helpers/*": ["src/helpers/*"],
     },
     "lib": [
       "dom",

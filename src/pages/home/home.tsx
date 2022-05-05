@@ -166,6 +166,7 @@ export function Home({
   ])
 
   const { basePath } = useRouter()
+  console.log(basePath)
 
   const { lineDensity, subdivisionCommonFactor, verticesCommonFactor } =
     calcLineDensity({ vertices, subdivisions, points, jumps })

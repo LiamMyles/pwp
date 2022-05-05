@@ -8,6 +8,7 @@ module.exports = {
     "^Pages(.*)$": "<rootDir>/src/pages$1",
     "^MatrixCalculations(.*)$": "<rootDir>/src/matrixCalculations$1",
     "^PolygonBuilders(.*)$": "<rootDir>/src/polygonBuilders$1",
+    "^Helpers(.*)$": "<rootDir>/src/helpers$1",
     "^Src(.*)$": "<rootDir>/src$1",
   },
   collectCoverageFrom: [

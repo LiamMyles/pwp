@@ -7,6 +7,8 @@ import { useRouter } from "next/router"
 import type typeP5 from "p5"
 import { NGonSubdivisions } from "PolygonBuilders/nGonSubdivisions"
 import React, { useEffect, useRef, useState } from "react"
+import CopyToClipboard from "react-copy-to-clipboard"
+import { getUrl } from "Src/helpers/getUrl"
 import { DrawMode, SketchNGonDrawer } from "Src/sketches/sketchGeneral"
 import styled from "styled-components"
 
@@ -49,6 +51,12 @@ export function Home({
   initialSubdivisions,
   initialJumps,
 }: Props): React.ReactElement {
+  console.log({
+    initialVertices,
+    initialPoints,
+    initialSubdivisions,
+    initialJumps,
+  })
   const NGonClass = useRef<NGonSubdivisions>(new NGonSubdivisions())
   const NGonDrawer = useRef<SketchNGonDrawer>(
     new SketchNGonDrawer({
@@ -94,7 +102,8 @@ export function Home({
     })
   }, [totalJumps])
 
-  const { basePath } = useRouter()
+  const { basePath, pathname } = useRouter()
+  console.log({ basePath, pathname })
 
   const { lineDensity, subdivisionCommonFactor, verticesCommonFactor } =
     calcLineDensity({ vertices, subdivisions, points, jumps })
@@ -263,6 +272,19 @@ export function Home({
               )}
             </div>
           </PlaybackContainerDiv>
+          <ContainerDiv>
+            <CopyToClipboard
+              text={getUrl({
+                path: `${basePath}${pathname}`,
+                vertices,
+                subdivisions,
+                points,
+                jumps,
+              })}
+            >
+              <button>Copy Link To Shape</button>
+            </CopyToClipboard>
+          </ContainerDiv>
         </div>
       </LayoutDiv>
     </>
