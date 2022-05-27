@@ -1,87 +1,32 @@
+import { DrawingControls } from "Components/DrawingControls"
 import { InputSlider } from "Components/InputSlider"
 import { Navigation } from "Components/Navigation"
 import { P5Canvas } from "Components/P5Canvas"
+import { PolygonJumps } from "Components/PolygonJumps"
+import { PolygonMetaTitle } from "Components/PolygonMetaTitle"
 import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import React, { useEffect, useRef, useState } from "react"
+import type typeP5 from "p5"
+import { NGonSubdivisions } from "PolygonBuilders/nGonSubdivisions"
+import React, { useRef, useState } from "react"
 import CopyToClipboard from "react-copy-to-clipboard"
-import { GlobalValues } from "Src/globals"
-import { sketch } from "Src/sketch"
+import { getUrl } from "Src/helpers/getUrl"
+import { DrawMode, SketchNGonDrawer } from "Src/sketches/sketchGeneral"
 import styled from "styled-components"
 
-interface Props {
-  initialVertices: number | null
-  initialSubdivisions: number | null
-  initialPoints: number | null
-  initialJumps: number[] | null
-}
-
-const StyledP5Canvas = styled(P5Canvas)`
-  margin: 10px auto;
-  width: 600px;
-  height: 600px;
-`
-
-const StyledWrapperDiv = styled.div`
+const ContainerDiv = styled.div`
   display: grid;
   grid-gap: 10px;
   width: 600px;
   margin: 10px auto;
-  h1 {
-    font-size: xx-large;
-  }
-  p {
-    font-size: large;
-  }
 `
 
-const ToggleBox = styled.div`
-  margin: 10px 0;
-`
-const ToggleArea = styled(StyledWrapperDiv)`
-  grid-template-columns: 1fr 1fr 1fr;
-  justify-items: center;
+export const StyledP5Canvas = styled(P5Canvas)`
   margin: 10px auto;
-  border-top: solid grey 2px;
-  border-bottom: solid grey 2px;
-`
-const JumpsArea = styled(StyledWrapperDiv)`
-  grid-template-columns: repeat(5, 1fr);
-  border-bottom: solid grey 2px;
-  padding: 10px 0;
-  & label {
-    display: inline-block;
-    margin-bottom: 5px;
-  }
-
-  & input {
-    width: calc(100% - 10px);
-  }
-`
-const TotalJumps = styled.div`
-  grid-column: 1/6;
-  display: grid;
-`
-const Title = styled.h1`
-  font-size: 20px;
   width: 600px;
-  margin: 5px auto;
-  padding: 0 0 10px;
-  border-bottom: solid grey 2px;
-`
-const CopyWrapper = styled(StyledWrapperDiv)`
-  & button {
-    padding: 10px;
-    background: #e0e0e0;
-    border: 2px solid grey;
-    border-radius: 5px;
-    &:focus,
-    &:hover {
-      box-shadow: 0px 0 3px 0 #3167ff;
-    }
-  }
+  height: 600px;
 `
 
 const LayoutDiv = styled.div`
@@ -103,73 +48,54 @@ const LayoutDiv = styled.div`
   }
 `
 
+interface Props {
+  initialVertices: number | null
+  initialSubdivisions: number | null
+  initialPoints: number | null
+  initialJumps: number[] | null
+}
+
 export function Home({
   initialVertices,
   initialPoints,
   initialSubdivisions,
   initialJumps,
 }: Props): React.ReactElement {
-  const [vertices, setVertex] = useState(
-    initialVertices ?? GlobalValues.vertices
-  )
-  const [subdivisions, setSubdivisions] = useState(
-    initialSubdivisions ?? GlobalValues.subdivisions
-  )
-  const [points, setPoints] = useState(initialPoints ?? GlobalValues.points)
-  const [showSubdivisions, setShowSubdivisions] = useState(
-    GlobalValues.showSubdivisions
-  )
-  const [showVertices, setShowVertices] = useState(GlobalValues.showVertices)
-  const [jumps, setJumps] = useState(initialJumps ?? GlobalValues.jumps)
-  const [totalJumps, setTotalJumps] = useState(initialJumps?.length ?? 0)
-  const [shouldSlowDraw, setShouldSlowDraw] = useState(GlobalValues.slowDraw)
-  const [generatedLink, setGeneratedLink] = useState("")
-  const globalValues = useRef(GlobalValues)
-
-  useEffect(() => {
-    setJumps((previousState) => {
-      if (totalJumps >= previousState.length) {
-        const newArray = [...previousState]
-        const extraJumps = [...Array(totalJumps - previousState.length)].map(
-          () => 1
-        )
-        newArray.push(...extraJumps)
-        return newArray
-      }
-      return [...previousState].slice(0, totalJumps)
+  const NGonClass = useRef<NGonSubdivisions>(new NGonSubdivisions())
+  const NGonDrawer = useRef<SketchNGonDrawer>(
+    new SketchNGonDrawer({
+      NGon: NGonClass.current,
     })
-  }, [totalJumps])
+  )
+  const NGonSketch = useRef<(p5: typeP5) => void>(
+    NGonDrawer.current.initializeSketch()
+  )
 
-  useEffect(() => {
-    globalValues.current.vertices = vertices
-    globalValues.current.subdivisions = subdivisions
-    globalValues.current.points = points
-    globalValues.current.showSubdivisions = showSubdivisions
-    globalValues.current.showVertices = showVertices
-    globalValues.current.jumps = jumps
-    globalValues.current.slowDraw = shouldSlowDraw
-    setGeneratedLink(
-      `${
-        window?.location.origin
-      }${basePath}?vertex=${vertices}&subdivisions=${subdivisions}&points=${points}${
-        totalJumps !== 0 ? `&jumps=${jumps.join("&jumps=")}` : ""
-      }`
-    )
-  }, [
+  const [vertices, setVertex] = NGonClass.current.useVertices(
+    initialVertices ?? 4
+  )
+
+  const [subdivisions, setSubdivisions] = NGonClass.current.useSubdivisions(
+    initialSubdivisions ?? 12
+  )
+  const [points, setPoints] = NGonClass.current.usePoints(initialPoints ?? 30)
+
+  const [totalJumps, setTotalJumps] = useState(initialJumps?.length ?? 0)
+  const [jumps, setJumps] = NGonClass.current.useJumps(initialJumps ?? [])
+
+  const [drawMode, setDrawMode] = NGonDrawer.current.useDrawMode("static")
+  const [linesPerDraw, setLinesPerDraw] = NGonDrawer.current.useLinesPerDraw(3)
+  const [speedOfDraw, setSpeedOfDraw] = NGonDrawer.current.useSpeedOfDraw(3)
+
+  const { basePath, pathname } = useRouter()
+
+  const { lineDensity } = calcLineDensity({
     vertices,
     subdivisions,
     points,
-    showSubdivisions,
-    showVertices,
     jumps,
-    shouldSlowDraw,
-  ])
+  })
 
-  const { basePath } = useRouter()
-  console.log(basePath)
-
-  const { lineDensity, subdivisionCommonFactor, verticesCommonFactor } =
-    calcLineDensity({ vertices, subdivisions, points, jumps })
   return (
     <>
       <Head>
@@ -186,19 +112,22 @@ export function Home({
           crossOrigin="anonymous"
         />
       </Head>
+
       <Navigation />
       <LayoutDiv>
-        <StyledP5Canvas sketch={sketch} />
+        {NGonSketch.current && <StyledP5Canvas sketch={NGonSketch.current} />}
         <div>
-          <Title>
-            Polygon: ({vertices},{subdivisions},{points}
-            {jumps.length > 0 && `,J(${jumps?.join(",")})`}) - Lines:{" "}
-            {lineDensity}, VCF: {verticesCommonFactor}, SCF:{" "}
-            {subdivisionCommonFactor}
-          </Title>
+          <PolygonMetaTitle
+            vertices={vertices}
+            subdivisions={subdivisions}
+            points={points}
+            jumps={jumps}
+          />
           <InputSlider
             title="N-Gon"
-            setter={setVertex}
+            setter={(value: number) => {
+              setVertex(value)
+            }}
             min={1}
             max={36}
             currentValue={vertices}
@@ -207,103 +136,96 @@ export function Home({
             title="Subdivision"
             min={1}
             max={50}
-            setter={setSubdivisions}
+            setter={(value: number) => {
+              setSubdivisions(value)
+            }}
             currentValue={subdivisions}
           />
           <InputSlider
             title="Points"
             min={1}
             max={Math.floor((vertices * subdivisions) / 2)}
-            setter={setPoints}
+            setter={(value: number) => {
+              setPoints(value)
+            }}
             currentValue={points}
           />
-          <ToggleArea>
-            <ToggleBox>
-              <input
-                type="checkbox"
-                id="toggle-subdivisions"
-                value={`${showSubdivisions}`}
-                onChange={({ currentTarget: { checked } }) => {
-                  setShowSubdivisions(checked)
-                }}
-              />
-              <label htmlFor="toggle-subdivisions">Toggle Subdivisions</label>
-            </ToggleBox>
-            <ToggleBox>
-              <input
-                type="checkbox"
-                id="toggle-vertices"
-                value={`${showVertices}`}
-                onChange={({ currentTarget: { checked } }) => {
-                  setShowVertices(checked)
-                }}
-              />
-              <label htmlFor="toggle-vertices">Toggle Vertices</label>
-            </ToggleBox>
-            <ToggleBox>
-              <input
-                type="checkbox"
-                id="toggle-slow-draw"
-                value={`${shouldSlowDraw}`}
-                onChange={({ currentTarget: { checked } }) => {
-                  setShouldSlowDraw(checked)
-                }}
-              />
-              <label htmlFor="toggle-slow-draw">Toggle Drawing</label>
-            </ToggleBox>
-          </ToggleArea>
-          <JumpsArea>
-            <TotalJumps>
-              <label htmlFor="total-jumps">Total Jumps</label>
-              <input
-                type="number"
-                id="total-jumps"
-                min={1}
-                onChange={({ currentTarget: { value } }) => {
-                  setTotalJumps(parseInt(value) || 0)
-                }}
-                value={totalJumps}
-              />
-            </TotalJumps>
-            {[...Array(totalJumps)].map((_, index) => {
-              return (
-                <div key={`jump-${index}`}>
-                  <label htmlFor={`jump-${index}`}>Jump {index + 1}</label>
-                  <input
-                    type="number"
-                    name=""
-                    id={`jump-${index}`}
-                    defaultValue={jumps[index]}
-                    onChange={({ currentTarget: { value } }) => {
-                      setJumps((previousState) => {
-                        const newState = [...previousState]
-                        newState[index] = parseInt(value) || 1
-                        return newState
-                      })
-                    }}
-                  />
-                </div>
-              )
-            })}
-          </JumpsArea>
-          <CopyWrapper>
-            <CopyToClipboard text={generatedLink}>
-              <button type="button">Copy link To Shape</button>
+
+          <PolygonJumps
+            NGonClass={NGonClass.current}
+            totalJumps={totalJumps}
+            setTotalJumps={setTotalJumps}
+            setJumps={setJumps}
+            jumps={jumps}
+          />
+          <ContainerDiv>
+            <label htmlFor="draw-mode">Drawing Mode</label>
+            <select
+              name="draw-mode"
+              id="draw-mode"
+              defaultValue={drawMode}
+              onChange={({ currentTarget: { value } }) => {
+                const drawMode = value as DrawMode
+                setDrawMode(drawMode)
+              }}
+            >
+              <option value="static">No Drawing</option>
+              <option value="full-draw">Line Drawing</option>
+              <option value="fade-draw">Fading Lines Drawing</option>
+              <option value="frame-draw">Fixed Lines Drawing</option>
+              <option value="overlay-draw">Fixed Lines Overlaid Drawing</option>
+            </select>
+          </ContainerDiv>
+
+          <InputSlider
+            title="Drawn Lines"
+            min={1}
+            max={lineDensity}
+            setter={(value: number) => {
+              setLinesPerDraw(value)
+            }}
+            currentValue={linesPerDraw}
+          />
+
+          <InputSlider
+            title="Drawing Speed"
+            min={1}
+            max={lineDensity < 60 ? lineDensity : 60}
+            setter={(value: number) => {
+              setSpeedOfDraw(value)
+            }}
+            currentValue={speedOfDraw}
+          />
+          <DrawingControls NGonDrawer={NGonDrawer} lineDensity={lineDensity} />
+          <ContainerDiv>
+            <CopyToClipboard
+              text={getUrl({
+                path: `${basePath}${pathname}`,
+                vertices,
+                subdivisions,
+                points,
+                jumps,
+              })}
+            >
+              <button>Copy Link To Shape</button>
             </CopyToClipboard>
-          </CopyWrapper>
-          {/* <StyledWrapperDiv>
-            <p>List of vertices:</p>
-            <pre>
-              <code>
-                {globalValues.current.matrix.map((cords, index) => {
-                  return `${index} - X:${cords.x.toFixed(
-                    3
-                  )}, Y:${cords.y.toFixed(3)}, 
-`
-                })}
-              </code>
-            </pre>
-          </StyledWrapperDiv> */}
+          </ContainerDiv>
+          <ContainerDiv>
+            <button
+              onClick={() => {
+                NGonDrawer.current.toggleVertices()
+              }}
+            >
+              Toggle Vertices
+            </button>
+            <button
+              onClick={() => {
+                NGonDrawer.current.toggleSubdivisions()
+              }}
+            >
+              Toggle Subdivisions
+            </button>
+          </ContainerDiv>
         </div>
       </LayoutDiv>
     </>
