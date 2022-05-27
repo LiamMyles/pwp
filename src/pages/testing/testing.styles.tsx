@@ -30,30 +30,7 @@ export const ToggleArea = styled(StyledWrapperDiv)`
   border-top: solid grey 2px;
   border-bottom: solid grey 2px;
 `
-export const JumpsArea = styled(StyledWrapperDiv)`
-  grid-template-columns: repeat(5, 1fr);
-  border-bottom: solid grey 2px;
-  padding: 10px 0;
-  & label {
-    display: inline-block;
-    margin-bottom: 5px;
-  }
 
-  & input {
-    width: calc(100% - 10px);
-  }
-`
-export const TotalJumps = styled.div`
-  grid-column: 1/6;
-  display: grid;
-`
-export const Title = styled.h1`
-  font-size: 20px;
-  width: 600px;
-  margin: 5px auto;
-  padding: 0 0 10px;
-  border-bottom: solid grey 2px;
-`
 export const CopyWrapper = styled(StyledWrapperDiv)`
   & button {
     padding: 10px;
