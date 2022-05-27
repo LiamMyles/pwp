@@ -1,6 +1,7 @@
 import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import type typeP5 from "p5"
-import type { NGonSubdivisions } from "PolygonBuilders/nGonSubdivisions"
+import { NGonSpirals } from "PolygonBuilders/nGonSpirals"
+import { NGonSubdivisions } from "PolygonBuilders/nGonSubdivisions"
 import { useEffect, useState } from "react"
 
 const sketchGeneralOptions = {
@@ -10,7 +11,7 @@ const sketchGeneralOptions = {
 }
 
 interface SketchNGonDrawerConstructor {
-  NGon: NGonSubdivisions
+  NGon: NGonSubdivisions | NGonSpirals
 }
 
 export type DrawMode =
@@ -21,7 +22,7 @@ export type DrawMode =
   | "overlay-draw"
 
 export class SketchNGonDrawer {
-  NGon: NGonSubdivisions
+  NGon: NGonSubdivisions | NGonSpirals
   currentLineDrawn = 0
   drawMode: DrawMode = "overlay-draw"
   drawFinishDelay = 2000
@@ -132,12 +133,18 @@ export class SketchNGonDrawer {
       p5.draw = () => {
         this.NGon.calculateVertexMatrix()
         p5.frameRate(this.speed)
-        this.lineDensity = calcLineDensity({
-          vertices: this.NGon.verticesAmount,
-          subdivisions: this.NGon.subdivisions,
-          points: this.NGon.points,
-          jumps: this.NGon.jumps,
-        }).lineDensity
+
+        if (this.NGon instanceof NGonSpirals) {
+          this.lineDensity = this.NGon.verticesMatrix.length
+        }
+        if (this.NGon instanceof NGonSubdivisions) {
+          this.lineDensity = calcLineDensity({
+            vertices: this.NGon.verticesAmount,
+            subdivisions: this.NGon.subdivisions,
+            points: this.NGon.points,
+            jumps: this.NGon.jumps,
+          }).lineDensity
+        }
 
         p5.angleMode(p5.DEGREES)
         p5.translate(p5.width / 2, p5.height / 2)
@@ -150,28 +157,54 @@ export class SketchNGonDrawer {
 
         if (this.drawMode === "static" || this.drawMode === "overlay-draw") {
           p5.background(this.background)
-          this.NGon.verticesMatrix
-            .slice(0, this.lineDensity)
-            .forEach((_, count) => {
+
+          if (this.NGon instanceof NGonSpirals) {
+            this.NGon.verticesMatrix.forEach((_, count) => {
               const { x: subX, y: subY } = this.NGon.verticesMatrix[count]
                 ? this.NGon.verticesMatrix[count]
                 : this.NGon.verticesMatrix[this.NGon.verticesMatrix.length - 1]
-              const { x: pointX, y: pointY } = this.NGon.verticesMatrix[
-                count + 1
-              ]
-                ? this.NGon.verticesMatrix[count + 1]
-                : this.NGon.verticesMatrix[0]
+              const nextPoint = this.NGon.verticesMatrix[count + 1]
+              if (nextPoint) {
+                const { x: pointX, y: pointY } = nextPoint
 
-              p5.push()
-              p5.strokeWeight(0.2)
-              p5.line(
-                pointX * sketchGeneralOptions.size,
-                pointY * sketchGeneralOptions.size,
-                subX * sketchGeneralOptions.size,
-                subY * sketchGeneralOptions.size
-              )
-              p5.pop()
+                p5.push()
+                p5.strokeWeight(0.2)
+                p5.line(
+                  pointX * sketchGeneralOptions.size,
+                  pointY * sketchGeneralOptions.size,
+                  subX * sketchGeneralOptions.size,
+                  subY * sketchGeneralOptions.size
+                )
+                p5.pop()
+              }
             })
+          }
+          if (this.NGon instanceof NGonSubdivisions) {
+            this.NGon.verticesMatrix
+              .slice(0, this.lineDensity)
+              .forEach((_, count) => {
+                const { x: subX, y: subY } = this.NGon.verticesMatrix[count]
+                  ? this.NGon.verticesMatrix[count]
+                  : this.NGon.verticesMatrix[
+                      this.NGon.verticesMatrix.length - 1
+                    ]
+                const { x: pointX, y: pointY } = this.NGon.verticesMatrix[
+                  count + 1
+                ]
+                  ? this.NGon.verticesMatrix[count + 1]
+                  : this.NGon.verticesMatrix[0]
+
+                p5.push()
+                p5.strokeWeight(0.2)
+                p5.line(
+                  pointX * sketchGeneralOptions.size,
+                  pointY * sketchGeneralOptions.size,
+                  subX * sketchGeneralOptions.size,
+                  subY * sketchGeneralOptions.size
+                )
+                p5.pop()
+              })
+          }
         }
 
         // Background before Draw
@@ -185,30 +218,61 @@ export class SketchNGonDrawer {
         }
 
         if (this.drawMode !== "static") {
-          this.NGon.verticesMatrix
-            .slice(
-              this.currentLineDrawn,
-              this.currentLineDrawn + this.linesPerDraw
-            )
-            .forEach((_, count) => {
-              const { x: subX, y: subY } =
-                this.NGon.verticesMatrix[this.currentLineDrawn + count] ??
-                this.NGon.verticesMatrix[this.NGon.verticesMatrix.length - 1]
-              const { x: pointX, y: pointY } =
-                this.NGon.verticesMatrix[this.currentLineDrawn + count + 1] ??
-                this.NGon.verticesMatrix[0]
-
-              p5.push()
-              p5.strokeWeight(1.5)
-              p5.stroke(236, 157, 88)
-              p5.line(
-                pointX * sketchGeneralOptions.size,
-                pointY * sketchGeneralOptions.size,
-                subX * sketchGeneralOptions.size,
-                subY * sketchGeneralOptions.size
+          if (this.NGon instanceof NGonSpirals) {
+            this.NGon.verticesMatrix
+              .slice(
+                this.currentLineDrawn,
+                this.currentLineDrawn + this.linesPerDraw
               )
-              p5.pop()
-            })
+              .forEach((_, count) => {
+                const { x: subX, y: subY } =
+                  this.NGon.verticesMatrix[this.currentLineDrawn + count] ??
+                  this.NGon.verticesMatrix[this.NGon.verticesMatrix.length - 1]
+
+                const nextPoint =
+                  this.NGon.verticesMatrix[this.currentLineDrawn + count + 1]
+                if (nextPoint) {
+                  const { x: pointX, y: pointY } = nextPoint
+
+                  p5.push()
+                  p5.strokeWeight(1.5)
+                  p5.stroke(236, 157, 88)
+                  p5.line(
+                    pointX * sketchGeneralOptions.size,
+                    pointY * sketchGeneralOptions.size,
+                    subX * sketchGeneralOptions.size,
+                    subY * sketchGeneralOptions.size
+                  )
+                  p5.pop()
+                }
+              })
+          }
+          if (this.NGon instanceof NGonSubdivisions) {
+            this.NGon.verticesMatrix
+              .slice(
+                this.currentLineDrawn,
+                this.currentLineDrawn + this.linesPerDraw
+              )
+              .forEach((_, count) => {
+                const { x: subX, y: subY } =
+                  this.NGon.verticesMatrix[this.currentLineDrawn + count] ??
+                  this.NGon.verticesMatrix[this.NGon.verticesMatrix.length - 1]
+                const { x: pointX, y: pointY } =
+                  this.NGon.verticesMatrix[this.currentLineDrawn + count + 1] ??
+                  this.NGon.verticesMatrix[0]
+
+                p5.push()
+                p5.strokeWeight(1.5)
+                p5.stroke(236, 157, 88)
+                p5.line(
+                  pointX * sketchGeneralOptions.size,
+                  pointY * sketchGeneralOptions.size,
+                  subX * sketchGeneralOptions.size,
+                  subY * sketchGeneralOptions.size
+                )
+                p5.pop()
+              })
+          }
 
           if (this.playDrawing) {
             switch (this.drawMode) {
@@ -241,7 +305,7 @@ export class SketchNGonDrawer {
             }
           }
         }
-        if (this.showSubdivisions) {
+        if (this.showSubdivisions && this.NGon instanceof NGonSubdivisions) {
           this.NGon.subdivisionMatrix.forEach(({ x, y }) => {
             p5.push()
             p5.stroke("purple")

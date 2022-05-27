@@ -170,10 +170,10 @@ export function Home({
               }}
             >
               <option value="static">No Drawing</option>
-              <option value="full-draw">Line Drawing</option>
-              <option value="fade-draw">Fading Lines Drawing</option>
-              <option value="frame-draw">Fixed Lines Drawing</option>
-              <option value="overlay-draw">Fixed Lines Overlaid Drawing</option>
+              <option value="full-draw">Fixed Count Line Drawing</option>
+              <option value="fade-draw">Fixed Count Fading Line Drawing</option>
+              <option value="frame-draw">Single Line Drawing</option>
+              <option value="overlay-draw">SingleLines Overlaid Drawing</option>
             </select>
           </ContainerDiv>
 

@@ -1,7 +1,20 @@
-import { StyledWrapperDiv } from "Pages/testing/testing.styles"
+import { NGonSpirals } from "PolygonBuilders/nGonSpirals"
+import { NGonSubdivisions } from "PolygonBuilders/nGonSubdivisions"
 import { useEffect } from "react"
-import { NGonSubdivisions } from "Src/polygonBuilders/nGonSubdivisions"
 import styled from "styled-components"
+
+export const StyledWrapperDiv = styled.div`
+  display: grid;
+  grid-gap: 10px;
+  width: 600px;
+  margin: 10px auto;
+  h1 {
+    font-size: xx-large;
+  }
+  p {
+    font-size: large;
+  }
+`
 
 const JumpsArea = styled(StyledWrapperDiv)`
   grid-template-columns: repeat(5, 1fr);
@@ -22,7 +35,7 @@ const TotalJumps = styled.div`
 `
 
 interface PolygonJumpsProps {
-  NGonClass: NGonSubdivisions
+  NGonClass: NGonSubdivisions | NGonSpirals
   totalJumps: number
   setTotalJumps: React.Dispatch<React.SetStateAction<number>>
   setJumps: React.Dispatch<React.SetStateAction<number[]>>
