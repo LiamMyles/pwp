@@ -6,7 +6,9 @@ module.exports = {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
     "^Components(.*)$": "<rootDir>/src/components$1",
     "^Pages(.*)$": "<rootDir>/src/pages$1",
-    "^Calculations(.*)$": "<rootDir>/src/calculations$1",
+    "^MatrixCalculations(.*)$": "<rootDir>/src/matrixCalculations$1",
+    "^PolygonBuilders(.*)$": "<rootDir>/src/polygonBuilders$1",
+    "^Helpers(.*)$": "<rootDir>/src/helpers$1",
     "^Src(.*)$": "<rootDir>/src$1",
   },
   collectCoverageFrom: [

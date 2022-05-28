@@ -31,7 +31,9 @@ interface InputSliderProps {
   title: string
   min: number
   max: number
-  setter: React.Dispatch<React.SetStateAction<number>>
+  setter:
+    | React.Dispatch<React.SetStateAction<number>>
+    | ((value: number) => void)
   currentValue: number
 }
 
@@ -46,27 +48,27 @@ export function InputSlider({
     <StyledSlider>
       <div>
         <label
-          htmlFor={`${title.split(" ").join(" ").toLocaleLowerCase()}-slider`}
+          htmlFor={`${title.split(" ").join("-").toLocaleLowerCase()}-slider`}
         >
           {title}
         </label>
         <Slider
           min={min}
           max={max}
-          id={`${title.split(" ").join(" ").toLocaleLowerCase()}-slider`}
+          id={`${title.split(" ").join("-").toLocaleLowerCase()}-slider`}
           onChange={(value) => setter(value)}
           value={currentValue}
         />
       </div>
       <div>
         <label
-          htmlFor={`${title.split(" ").join(" ").toLocaleLowerCase()}-input`}
+          htmlFor={`${title.split(" ").join("-").toLocaleLowerCase()}-input`}
         >
           {title}
         </label>
         <input
           type="number"
-          id={`${title.split(" ").join(" ").toLocaleLowerCase()}-input`}
+          id={`${title.split(" ").join("-").toLocaleLowerCase()}-input`}
           min={1}
           onChange={({ currentTarget: { value } }) => {
             setter(parseInt(value) || 1)
