@@ -127,7 +127,7 @@ function TimeLine({ drawingClass, maxLines }: TimeLineProps) {
 
   return (
     <>
-      <label htmlFor="file">Drawing progress: {currentFrame}</label>
+      <label htmlFor="file">Drawing Progress: {currentFrame}</label>
       <StyledProgress id="file" max={maxLines - 1} value={currentFrame} />
     </>
   )
