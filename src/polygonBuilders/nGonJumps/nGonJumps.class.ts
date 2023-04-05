@@ -1,4 +1,5 @@
 import { calcJumpedMatrix } from "MatrixCalculations/calcJumpedMatrix"
+import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
 import { useEffect, useState } from "react"
 
@@ -20,6 +21,18 @@ export class NGonJumps extends NGon {
   calculateVertexMatrix(): void {
     const initialMatrix = calcNGonVertices(this.verticesAmount)
     this.verticesMatrix = calcJumpedMatrix(initialMatrix, ...this.jumps)
+
+    const { lineDensity, subdivisionCommonFactor, verticesCommonFactor } =
+      calcLineDensity({
+        vertices: this.verticesAmount,
+        subdivisions: 1,
+        points: 1,
+        jumps: this.jumps,
+      })
+
+    this.lineDensity = lineDensity
+    this.subdivisionCommonFactor = subdivisionCommonFactor
+    this.verticesCommonFactor = verticesCommonFactor
   }
 
   useJumps(

@@ -62,7 +62,6 @@ export class NGonSpirals extends NGonJumps {
       this.reduction,
       this.showMirror
     )
-    console.log(this.verticesMatrix)
     this.setLineDensity(this.verticesMatrix.length)
   }
 }

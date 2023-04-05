@@ -14,12 +14,27 @@ export function Navigation(): React.ReactElement {
       <NavUl>
         <li>
           <Link href="/">
-            <a>Home</a>
+            <a>NGon Animator</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/drawing-n-gon">
+            <a>Draw NGon</a>
           </Link>
         </li>
         <li>
           <Link href="/spirals">
-            <a>Spirals</a>
+            <a>Spirals Animator</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/drawing-spirals">
+            <a>Draw Spirals</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/sequence">
+            <a>Sequence Player</a>
           </Link>
         </li>
       </NavUl>

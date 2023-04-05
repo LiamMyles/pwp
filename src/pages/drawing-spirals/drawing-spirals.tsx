@@ -1,4 +1,3 @@
-import { DrawingControls } from "Components/DrawingControls"
 import { InputSlider } from "Components/InputSlider"
 import { Navigation } from "Components/Navigation"
 import { P5Canvas } from "Components/P5Canvas"
@@ -11,7 +10,7 @@ import React, { useRef, useState } from "react"
 import CopyToClipboard from "react-copy-to-clipboard"
 import { getUrl } from "Src/helpers/getUrl"
 import { NGonSpirals } from "Src/polygonBuilders/nGonSpirals"
-import { DrawMode, SpiralAnimator } from "Src/sketches/spiralAnimator"
+import { SpiralDrawer } from "Src/sketches/spiralDrawer"
 import styled from "styled-components"
 
 const ContainerDiv = styled.div`
@@ -69,8 +68,8 @@ export function Spirals({
   const [lineDensity, setLineDensity] = useState(0)
   console.log(lineDensity)
   const NGonClass = useRef<NGonSpirals>(new NGonSpirals({ setLineDensity }))
-  const NGonDrawer = useRef<SpiralAnimator>(
-    new SpiralAnimator({
+  const NGonDrawer = useRef<SpiralDrawer>(
+    new SpiralDrawer({
       spiral: NGonClass.current,
     })
   )
@@ -88,11 +87,6 @@ export function Spirals({
 
   const [totalJumps, setTotalJumps] = useState(initialJumps?.length ?? 0)
   const [jumps, setJumps] = NGonClass.current.useJumps(initialJumps ?? [])
-
-  const [drawMode, setDrawMode] = NGonDrawer.current.useDrawMode("static")
-  const [linesPerDraw, setLinesPerDraw] = NGonDrawer.current.useLinesPerDraw(3)
-  const [durationOfDraw, setDurationOfDraw] =
-    NGonDrawer.current.useDurationOfDraw(3)
 
   const { basePath, pathname } = useRouter()
 
@@ -147,50 +141,7 @@ export function Spirals({
             setJumps={setJumps}
             jumps={jumps}
           />
-          <ContainerDiv>
-            <label htmlFor="draw-mode">Drawing Mode</label>
-            <select
-              name="draw-mode"
-              id="draw-mode"
-              defaultValue={drawMode}
-              onChange={({ currentTarget: { value } }) => {
-                const drawMode = value as DrawMode
-                setDrawMode(drawMode)
-              }}
-            >
-              <option value="static">No Drawing</option>
-              <option value="full-draw">Fixed Count Line Drawing</option>
-              <option value="fade-draw">Fixed Count Fading Line Drawing</option>
-              <option value="frame-draw">Single Line Drawing</option>
-              <option value="overlay-draw">
-                Single Lines Overlaid Drawing
-              </option>
-            </select>
-          </ContainerDiv>
-          {drawMode !== "static" && (
-            <>
-              <InputSlider
-                title="Drawn Lines"
-                min={1}
-                max={lineDensity}
-                setter={(value: number) => {
-                  setLinesPerDraw(value)
-                }}
-                currentValue={linesPerDraw}
-              />
 
-              <InputSlider
-                title="Drawing Duration (seconds)"
-                min={1}
-                max={10}
-                setter={(value: number) => {
-                  setDurationOfDraw(value)
-                }}
-                currentValue={durationOfDraw}
-              />
-              <DrawingControls NGonAnimator={NGonDrawer} />
-            </>
-          )}
           <ContainerDiv>
             <CopyToClipboard
               text={getUrl({

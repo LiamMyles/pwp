@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
-import { SketchNGonDrawer } from "Src/sketches/sketchGeneral"
+import { NGonAnimator } from "Src/sketches/nGonAnimator"
+import { SpiralAnimator } from "Src/sketches/spiralAnimator"
 import styled from "styled-components"
 
 const PlaybackContainerDiv = styled.div`
@@ -14,21 +15,22 @@ const PlaybackContainerDiv = styled.div`
 `
 
 interface DrawingControlsProps {
-  NGonDrawer: React.MutableRefObject<SketchNGonDrawer>
-  lineDensity: number
+  NGonAnimator:
+    | React.MutableRefObject<NGonAnimator>
+    | React.MutableRefObject<SpiralAnimator>
 }
 
 export function DrawingControls({
-  NGonDrawer,
-  lineDensity,
+  NGonAnimator,
 }: DrawingControlsProps): React.ReactElement {
+  const [isPlaying, togglePlaying] = NGonAnimator.current.useTogglePlaying()
   return (
     <PlaybackContainerDiv>
       <hr style={{ gridArea: "hr", width: "100%" }} />
       <button
         style={{ gridArea: "back" }}
         onClick={() => {
-          NGonDrawer.current.stepBack(1)
+          NGonAnimator.current.stepBack()
         }}
       >
         Step Back
@@ -36,26 +38,23 @@ export function DrawingControls({
       <button
         style={{ gridArea: "play" }}
         onClick={() => {
-          NGonDrawer.current.togglePlay()
+          togglePlaying()
         }}
       >
-        Pause/Play
+        {isPlaying ? "Pause" : "Play"}
       </button>
       <button
         style={{ gridArea: "forward" }}
         onClick={() => {
-          NGonDrawer.current.stepForward(1)
+          NGonAnimator.current.stepForward()
         }}
       >
         Step Forward
       </button>
       <div style={{ gridArea: "timeline", display: "grid" }}>
-        {NGonDrawer.current && (
+        {NGonAnimator.current && (
           <TimeLine
-            drawingClass={
-              NGonDrawer as React.MutableRefObject<SketchNGonDrawer>
-            }
-            maxLines={lineDensity}
+            NGonAnimator={NGonAnimator as React.MutableRefObject<NGonAnimator>}
           />
         )}
       </div>
@@ -81,36 +80,30 @@ const StyledProgress = styled.progress`
     transition: width 100ms;
     background-color: #1159a6;
   }
-  &::-moz-progress-bar {
-    transition: padding-bottom 100ms;
-    padding-left: 60px;
-    padding-bottom: var(--value);
-    background-color: #1159a6;
-    height: 0;
-    transform-origin: 0 0;
-    transform: rotate(-90deg) translateX(-60px);
-  }
   &::-ms-fill {
     background-color: #1159a6;
     border: 0;
   }
 `
 interface TimeLineProps {
-  drawingClass: React.MutableRefObject<SketchNGonDrawer>
-  maxLines: number
+  NGonAnimator: React.MutableRefObject<NGonAnimator>
 }
 
-function TimeLine({ drawingClass, maxLines }: TimeLineProps) {
+function TimeLine({ NGonAnimator }: TimeLineProps) {
   const requestedAnimationId = useRef(0)
-  const [currentFrame, setCurrentFrame] = useState(0)
+  const [currentFramePercent, setCurrentFramePercent] = useState(0)
 
   useEffect(() => {
     let previousTimestamp = 0
     function increaseProgress(timestamp: number) {
+      const currentPercentage =
+        (NGonAnimator.current.currentAnimationTick /
+          NGonAnimator.current.totalAnimationTicks) *
+        100
       if (timestamp - previousTimestamp > 50) {
         previousTimestamp = timestamp
-        if (currentFrame !== drawingClass.current.currentLineDrawn) {
-          setCurrentFrame(drawingClass.current.currentLineDrawn)
+        if (currentFramePercent !== currentPercentage) {
+          setCurrentFramePercent(currentPercentage)
         }
       }
 
@@ -123,12 +116,14 @@ function TimeLine({ drawingClass, maxLines }: TimeLineProps) {
     return () => {
       cancelAnimationFrame(requestedAnimationId.current)
     }
-  }, [currentFrame])
+  }, [currentFramePercent])
 
   return (
     <>
-      <label htmlFor="file">Drawing Progress: {currentFrame}</label>
-      <StyledProgress id="file" max={maxLines - 1} value={currentFrame} />
+      <label htmlFor="file">
+        Drawing Progress: {Math.ceil(currentFramePercent)}%
+      </label>
+      <StyledProgress id="file" max={100} value={currentFramePercent} />
     </>
   )
 }

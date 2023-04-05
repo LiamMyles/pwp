@@ -13,7 +13,7 @@ import { NGonSubdivisions } from "PolygonBuilders/nGonSubdivisions"
 import React, { useRef, useState } from "react"
 import CopyToClipboard from "react-copy-to-clipboard"
 import { getUrl } from "Src/helpers/getUrl"
-import { DrawMode, SketchNGonDrawer } from "Src/sketches/sketchGeneral"
+import { DrawMode, NGonAnimator } from "Src/sketches/nGonAnimator"
 import styled from "styled-components"
 
 const ContainerDiv = styled.div`
@@ -61,31 +61,46 @@ export function Home({
   initialSubdivisions,
   initialJumps,
 }: Props): React.ReactElement {
-  const NGonClass = useRef<NGonSubdivisions>(new NGonSubdivisions())
-  const NGonDrawer = useRef<SketchNGonDrawer>(
-    new SketchNGonDrawer({
-      NGon: NGonClass.current,
-    })
-  )
-  const NGonSketch = useRef<(p5: typeP5) => void>(
-    NGonDrawer.current.initializeSketch()
+  const NGonSubdivisionsInstance = useRef<NGonSubdivisions>(
+    new NGonSubdivisions()
   )
 
-  const [vertices, setVertex] = NGonClass.current.useVertices(
+  const NGonAnimatorInstance = useRef<NGonAnimator>(
+    new NGonAnimator({
+      NGon: NGonSubdivisionsInstance.current,
+    })
+  )
+
+  const NGonAnimatorSketch = useRef<(p5: typeP5) => void>(
+    NGonAnimatorInstance.current.initializeSketch()
+  )
+
+  const [vertices, setVertex] = NGonSubdivisionsInstance.current.useVertices(
     initialVertices ?? 4
   )
 
-  const [subdivisions, setSubdivisions] = NGonClass.current.useSubdivisions(
-    initialSubdivisions ?? 12
+  const [subdivisions, setSubdivisions] =
+    NGonSubdivisionsInstance.current.useSubdivisions(initialSubdivisions ?? 12)
+  const [points, setPoints] = NGonSubdivisionsInstance.current.usePoints(
+    initialPoints ?? 30
   )
-  const [points, setPoints] = NGonClass.current.usePoints(initialPoints ?? 30)
 
   const [totalJumps, setTotalJumps] = useState(initialJumps?.length ?? 0)
-  const [jumps, setJumps] = NGonClass.current.useJumps(initialJumps ?? [])
+  const [jumps, setJumps] = NGonSubdivisionsInstance.current.useJumps(
+    initialJumps ?? []
+  )
 
-  const [drawMode, setDrawMode] = NGonDrawer.current.useDrawMode("static")
-  const [linesPerDraw, setLinesPerDraw] = NGonDrawer.current.useLinesPerDraw(3)
-  const [speedOfDraw, setSpeedOfDraw] = NGonDrawer.current.useSpeedOfDraw(3)
+  const [drawMode, setDrawMode] = NGonAnimatorInstance.current.useDrawMode(
+    NGonAnimatorInstance.current.drawMode
+  )
+  const [linesPerDraw, setLinesPerDraw] =
+    NGonAnimatorInstance.current.useLinesPerDraw(
+      NGonAnimatorInstance.current.linesPerDraw
+    )
+  const [durationOfDraw, setDurationOfDraw] =
+    NGonAnimatorInstance.current.useDurationOfDraw(
+      NGonAnimatorInstance.current.animationDurationSeconds
+    )
 
   const { basePath, pathname } = useRouter()
 
@@ -115,7 +130,9 @@ export function Home({
 
       <Navigation />
       <LayoutDiv>
-        {NGonSketch.current && <StyledP5Canvas sketch={NGonSketch.current} />}
+        {NGonAnimatorSketch.current && (
+          <StyledP5Canvas sketch={NGonAnimatorSketch.current} />
+        )}
         <div>
           <PolygonMetaTitle
             vertices={vertices}
@@ -152,7 +169,7 @@ export function Home({
           />
 
           <PolygonJumps
-            NGonClass={NGonClass.current}
+            NGonClass={NGonSubdivisionsInstance.current}
             totalJumps={totalJumps}
             setTotalJumps={setTotalJumps}
             setJumps={setJumps}
@@ -173,30 +190,35 @@ export function Home({
               <option value="full-draw">Fixed Count Line Drawing</option>
               <option value="fade-draw">Fixed Count Fading Line Drawing</option>
               <option value="frame-draw">Single Line Drawing</option>
-              <option value="overlay-draw">SingleLines Overlaid Drawing</option>
+              <option value="overlay-draw">
+                Single Lines Overlaid Drawing
+              </option>
             </select>
           </ContainerDiv>
+          {drawMode !== "static" && (
+            <>
+              <InputSlider
+                title="Drawn Lines"
+                min={1}
+                max={lineDensity}
+                setter={(value: number) => {
+                  setLinesPerDraw(value)
+                }}
+                currentValue={linesPerDraw}
+              />
 
-          <InputSlider
-            title="Drawn Lines"
-            min={1}
-            max={lineDensity}
-            setter={(value: number) => {
-              setLinesPerDraw(value)
-            }}
-            currentValue={linesPerDraw}
-          />
-
-          <InputSlider
-            title="Drawing Speed"
-            min={1}
-            max={lineDensity < 60 ? lineDensity : 60}
-            setter={(value: number) => {
-              setSpeedOfDraw(value)
-            }}
-            currentValue={speedOfDraw}
-          />
-          <DrawingControls NGonDrawer={NGonDrawer} lineDensity={lineDensity} />
+              <InputSlider
+                title="Drawing Duration (seconds)"
+                min={1}
+                max={10}
+                setter={(value: number) => {
+                  setDurationOfDraw(value)
+                }}
+                currentValue={durationOfDraw}
+              />
+              <DrawingControls NGonAnimator={NGonAnimatorInstance} />
+            </>
+          )}
           <ContainerDiv>
             <CopyToClipboard
               text={getUrl({
@@ -213,14 +235,14 @@ export function Home({
           <ContainerDiv>
             <button
               onClick={() => {
-                NGonDrawer.current.toggleVertices()
+                NGonAnimatorInstance.current.toggleVertices()
               }}
             >
               Toggle Vertices
             </button>
             <button
               onClick={() => {
-                NGonDrawer.current.toggleSubdivisions()
+                NGonAnimatorInstance.current.toggleSubdivisions()
               }}
             >
               Toggle Subdivisions

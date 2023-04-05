@@ -1,4 +1,5 @@
 import { calcJumpedMatrix } from "MatrixCalculations/calcJumpedMatrix"
+import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
 import { calcPointsMatrix } from "MatrixCalculations/calcPointsMatrix"
 import { calcSubdivisionMatrix } from "MatrixCalculations/calcSubdivisionMatrix"
@@ -68,5 +69,17 @@ export class NGonSubdivisions extends NGonJumps {
       ...this.jumps
     )
     this.verticesMatrix = pointsMatrix
+
+    const { lineDensity, subdivisionCommonFactor, verticesCommonFactor } =
+      calcLineDensity({
+        vertices: this.verticesAmount,
+        subdivisions: this.subdivisions,
+        points: this.points,
+        jumps: this.jumps,
+      })
+
+    this.lineDensity = lineDensity
+    this.subdivisionCommonFactor = subdivisionCommonFactor
+    this.verticesCommonFactor = verticesCommonFactor
   }
 }
