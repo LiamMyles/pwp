@@ -32,11 +32,6 @@ export function Navigation(): React.ReactElement {
             <a>Draw Spirals</a>
           </Link>
         </li>
-        <li>
-          <Link href="/sequence">
-            <a>Sequence Player</a>
-          </Link>
-        </li>
       </NavUl>
     </nav>
   )
