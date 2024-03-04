@@ -8,9 +8,35 @@ const NavUl = styled.ul`
   margin: 10px auto;
 `
 
+const Nav = styled.nav`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const BuyLink = styled.a`
+  padding: 10px;
+  border: solid 1px white;
+  background: teal;
+  color: white;
+  border-radius: 999px;
+  margin: 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  outline: none;
+  &:focus,
+  &:hover {
+    background: white;
+    color: teal;
+    border-color: teal;
+  }
+`
+
 export function Navigation(): React.ReactElement {
   return (
-    <nav>
+    <Nav>
       <NavUl>
         <li>
           <Link href="/">
@@ -33,6 +59,10 @@ export function Navigation(): React.ReactElement {
           </Link>
         </li>
       </NavUl>
-    </nav>
+
+      <BuyLink href="https://www.routledge.com/Electronic-String-Art-Rhythmic-Mathematics/Erfle/p/book/9781032512730">
+        Buy the Book
+      </BuyLink>
+    </Nav>
   )
 }
