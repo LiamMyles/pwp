@@ -1,4 +1,5 @@
 import { calcJumpedMatrix } from "MatrixCalculations/calcJumpedMatrix"
+import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import { calcNGonVertices } from "MatrixCalculations/calcNGonVertices"
 import { calcPointsMatrix } from "MatrixCalculations/calcPointsMatrix"
 import { calcSubdivisionMatrix } from "MatrixCalculations/calcSubdivisionMatrix"
@@ -10,6 +11,8 @@ import { NGonJumps } from "../nGonJumps"
 export class NGonSubdivisions extends NGonJumps {
   constructor() {
     super()
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    this.listenToPoints = undefined
   }
 
   subdivisions = 1
@@ -17,6 +20,8 @@ export class NGonSubdivisions extends NGonJumps {
   autoPoints = false
   subdivisionMatrix: VerticesMatrix[] = [{ x: 0, y: 0 }]
   initialMatrix: VerticesMatrix[] = [{ x: 0, y: 0 }]
+
+  listenToPoints: ((points: number) => void) | undefined
 
   setSubdivisions(subdivisions: number): void {
     this.subdivisions = subdivisions
@@ -34,8 +39,11 @@ export class NGonSubdivisions extends NGonJumps {
     return [subdivisions, setSubdivisions]
   }
 
-  setPoints(points: number): void {
+  setPoints(points: number, updateState = true): void {
     this.points = points
+    if (updateState === true && this.listenToPoints !== undefined) {
+      this.listenToPoints(points)
+    }
   }
 
   usePoints(
@@ -43,11 +51,21 @@ export class NGonSubdivisions extends NGonJumps {
   ): [number, React.Dispatch<React.SetStateAction<number>>] {
     const [points, setPoints] = useState(initialPoints)
     useEffect(() => {
-      this.setPoints(points)
+      this.setPoints(points, false)
       this.calculateVertexMatrix()
+      if (this.listenToPoints !== undefined) {
+        this.listenToPoints(points)
+      }
     }, [points])
 
     return [points, setPoints]
+  }
+
+  usePointsLister(): number {
+    const [points, setPoints] = useState(this.points)
+    this.listenToPoints = setPoints
+
+    return points
   }
 
   calculateVertexMatrix(): void {
@@ -68,5 +86,17 @@ export class NGonSubdivisions extends NGonJumps {
       ...this.jumps
     )
     this.verticesMatrix = pointsMatrix
+
+    const { lineDensity, subdivisionCommonFactor, verticesCommonFactor } =
+      calcLineDensity({
+        vertices: this.verticesAmount,
+        subdivisions: this.subdivisions,
+        points: this.points,
+        jumps: this.jumps,
+      })
+
+    this.lineDensity = lineDensity
+    this.subdivisionCommonFactor = subdivisionCommonFactor
+    this.verticesCommonFactor = verticesCommonFactor
   }
 }

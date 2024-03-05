@@ -2,15 +2,66 @@
 
 A project created for the fun of creating cool patterns with maths 🔢
 
+## Glass Diagrams
+
+```mermaid
+ classDiagram
+    NGonDrawer --|> NGonAnimator
+    note for NGonDrawer "Constructed with the NGon shape \n and provides all the methods used \n by the canvas to draw the NGon"
+    NGonDrawer --|> NGonSequence
+    SpiralsDrawer --|> SpiralsAnimator
+
+    class NGonDrawer{
+      NGonSubdivisions: NGon
+      String: background
+      Boolean: showVertices
+      Boolean: showSubdivisions
+      number: size    
+      toggleVertices()
+      toggleSubdivisions()
+      -alignDrawing()
+      -drawSubdivisions()
+      -drawVertices()
+      -drawNGon()
+      -drawLoop()
+      +initializeSketch()
+    }
+
+    class NGonAnimator{
+      DrawMode: drawMode
+      Number: timeSinceLastIncrement
+      Number: currentLineDrawn
+      Number: currentAnimationTick
+      Number: linesPerDraw
+      Number: animationDurationSeconds
+      Number: totalAnimationTicks
+      Boolean: isPlaying
+      +reset()
+      +setLinePerDraw()
+      +useLinesPerDraw()
+      +setDrawMode()
+      +useDrawMode()
+      +setDurationOfDraw()
+      +useDurationOfDraw()
+      -drawActiveLines()
+      +incrementDrawing()
+      +stepForward()
+      +stepBack()
+      +useTogglePlaying()
+      -drawBackground()
+      -drawLoop()
+    }
+```
+
 ## Sequences to create different variation's
 
 ### Get Shape Classes
 
 ```mermaid
   classDiagram
-    NGon <|-- NGonJumps
-    NGonJumps <|-- NGonSubdivisions
-    NGonJumps <|-- NGonSpirals
+    NGon --|> NGonJumps
+    NGonJumps --|> NGonSubdivisions
+    NGonJumps --|> NGonSpirals
 
     class NGon {
       Number verticesAmount
@@ -28,7 +79,10 @@ A project created for the fun of creating cool patterns with maths 🔢
       Number points
       Boolean autoPoints
       setSubdivisions(Number) void
+      useSubdivisions(Number)
       setPoints(Number) void
+      usePoints(Number) void
+      calculateVertexMatrix() void
     }
 
     class NGonSpirals{

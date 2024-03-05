@@ -1,8 +1,8 @@
-import { DrawingControls } from "Components/DrawingControls"
 import { InputSlider } from "Components/InputSlider"
 import { Navigation } from "Components/Navigation"
 import { P5Canvas } from "Components/P5Canvas"
 import { PolygonJumps } from "Components/PolygonJumps"
+import { PolygonMetaTitle } from "Components/PolygonMetaTitle"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
@@ -10,21 +10,21 @@ import type typeP5 from "p5"
 import React, { useRef, useState } from "react"
 import CopyToClipboard from "react-copy-to-clipboard"
 import { getUrl } from "Src/helpers/getUrl"
-import { NGonSpirals } from "Src/polygonBuilders/nGonSpirals"
-import { DrawMode, SpiralAnimator } from "Src/sketches/spiralAnimator"
+import { NGonSubdivisionsSequence } from "Src/polygonBuilders/nGonSubdivisionsSequence"
+import { NGonDrawer } from "Src/sketches/nGonDrawer"
 import styled from "styled-components"
+
+export const StyledP5Canvas = styled(P5Canvas)`
+  margin: 10px auto;
+  width: 600px;
+  height: 600px;
+`
 
 const ContainerDiv = styled.div`
   display: grid;
   grid-gap: 10px;
   width: 600px;
   margin: 10px auto;
-`
-
-export const StyledP5Canvas = styled(P5Canvas)`
-  margin: 10px auto;
-  width: 600px;
-  height: 600px;
 `
 
 const LayoutDiv = styled.div`
@@ -45,54 +45,46 @@ const LayoutDiv = styled.div`
     }
   }
 `
-const TitleH1 = styled.h1`
-  font-size: 20px;
-  width: 600px;
-  margin: 5px auto;
-  padding: 0 0 10px;
-  border-bottom: solid grey 2px;
-`
 
 interface Props {
   initialVertices: number | null
   initialSubdivisions: number | null
   initialPoints: number | null
   initialJumps: number[] | null
-  initialReduction: number | null
 }
 
-export function Spirals({
+export function Sequence({
   initialVertices,
+  initialPoints,
+  initialSubdivisions,
   initialJumps,
-  initialReduction,
 }: Props): React.ReactElement {
-  const [lineDensity, setLineDensity] = useState(0)
-  console.log(lineDensity)
-  const NGonClass = useRef<NGonSpirals>(new NGonSpirals({ setLineDensity }))
-  const NGonDrawer = useRef<SpiralAnimator>(
-    new SpiralAnimator({
-      spiral: NGonClass.current,
+  const NGonClass = useRef<NGonSubdivisionsSequence>(
+    new NGonSubdivisionsSequence()
+  )
+  const NGonDrawerSketch = useRef<NGonDrawer>(
+    new NGonDrawer({
+      NGon: NGonClass.current,
     })
   )
   const NGonSketch = useRef<(p5: typeP5) => void>(
-    NGonDrawer.current.initializeSketch()
+    NGonDrawerSketch.current.initializeSketch()
   )
 
   const [vertices, setVertex] = NGonClass.current.useVertices(
     initialVertices ?? 4
   )
-  const [reduction, setReduction] = NGonClass.current.useReduction(
-    initialReduction ?? 12
+
+  const [subdivisions, setSubdivisions] = NGonClass.current.useSubdivisions(
+    initialSubdivisions ?? 12
   )
-  const setShowMirror = NGonClass.current.useShowMirror(false)[1]
+  const [points, setPoints] = NGonClass.current.usePoints(initialPoints ?? 30)
+  const listenOnlyPoints = NGonClass.current.usePointsLister()
 
   const [totalJumps, setTotalJumps] = useState(initialJumps?.length ?? 0)
   const [jumps, setJumps] = NGonClass.current.useJumps(initialJumps ?? [])
 
-  const [drawMode, setDrawMode] = NGonDrawer.current.useDrawMode("static")
-  const [linesPerDraw, setLinesPerDraw] = NGonDrawer.current.useLinesPerDraw(3)
-  const [durationOfDraw, setDurationOfDraw] =
-    NGonDrawer.current.useDurationOfDraw(3)
+  const [speedMs, setSpeedMs] = NGonClass.current.useSpeedMs(100)
 
   const { basePath, pathname } = useRouter()
 
@@ -114,13 +106,53 @@ export function Spirals({
       </Head>
 
       <Navigation />
+
       <LayoutDiv>
-        {NGonSketch.current && <StyledP5Canvas sketch={NGonSketch.current} />}
         <div>
-          <TitleH1>
-            Spirals: (N:{vertices}, R:{reduction}
-            {jumps.length > 0 && `,J(${jumps?.join(",")})`})
-          </TitleH1>
+          {NGonSketch.current && <StyledP5Canvas sketch={NGonSketch.current} />}
+        </div>
+        <div>
+          <PolygonMetaTitle
+            vertices={vertices}
+            subdivisions={subdivisions}
+            points={listenOnlyPoints}
+            jumps={jumps}
+          />
+          <div style={{ display: "flex", gap: "10px", margin: "auto" }}>
+            <button
+              style={{
+                width: "max-content",
+                textAlign: "center",
+                justifySelf: "start",
+              }}
+              onClick={() => {
+                NGonClass.current.playAnimation = true
+                NGonClass.current.animateSequence()
+              }}
+            >
+              Play Sequence
+            </button>
+            <button
+              style={{
+                width: "max-content",
+                textAlign: "center",
+              }}
+              onClick={() => {
+                NGonClass.current.playAnimation = false
+              }}
+            >
+              Stop Sequence
+            </button>
+          </div>
+          <InputSlider
+            title="Speed "
+            min={100}
+            max={500}
+            setter={(value: number) => {
+              setSpeedMs(value)
+            }}
+            currentValue={speedMs}
+          />
           <InputSlider
             title="N-Gon"
             setter={(value: number) => {
@@ -131,15 +163,23 @@ export function Spirals({
             currentValue={vertices}
           />
           <InputSlider
-            title="Reductions"
-            setter={(value: number) => {
-              setReduction(value)
-            }}
+            title="Subdivision"
             min={1}
-            max={400}
-            currentValue={reduction}
+            max={50}
+            setter={(value: number) => {
+              setSubdivisions(value)
+            }}
+            currentValue={subdivisions}
           />
-
+          <InputSlider
+            title="Start Points"
+            min={1}
+            max={Math.floor((vertices * subdivisions) / 2)}
+            setter={(value: number) => {
+              setPoints(value)
+            }}
+            currentValue={points}
+          />
           <PolygonJumps
             NGonClass={NGonClass.current}
             totalJumps={totalJumps}
@@ -148,80 +188,17 @@ export function Spirals({
             jumps={jumps}
           />
           <ContainerDiv>
-            <label htmlFor="draw-mode">Drawing Mode</label>
-            <select
-              name="draw-mode"
-              id="draw-mode"
-              defaultValue={drawMode}
-              onChange={({ currentTarget: { value } }) => {
-                const drawMode = value as DrawMode
-                setDrawMode(drawMode)
-              }}
-            >
-              <option value="static">No Drawing</option>
-              <option value="full-draw">Fixed Count Line Drawing</option>
-              <option value="fade-draw">Fixed Count Fading Line Drawing</option>
-              <option value="frame-draw">Single Line Drawing</option>
-              <option value="overlay-draw">
-                Single Lines Overlaid Drawing
-              </option>
-            </select>
-          </ContainerDiv>
-          {drawMode !== "static" && (
-            <>
-              <InputSlider
-                title="Drawn Lines"
-                min={1}
-                max={lineDensity}
-                setter={(value: number) => {
-                  setLinesPerDraw(value)
-                }}
-                currentValue={linesPerDraw}
-              />
-
-              <InputSlider
-                title="Drawing Duration (seconds)"
-                min={1}
-                max={10}
-                setter={(value: number) => {
-                  setDurationOfDraw(value)
-                }}
-                currentValue={durationOfDraw}
-              />
-              <DrawingControls NGonAnimator={NGonDrawer} />
-            </>
-          )}
-          <ContainerDiv>
             <CopyToClipboard
               text={getUrl({
                 path: `${basePath}${pathname}`,
                 vertices,
+                subdivisions,
+                points,
                 jumps,
-                reduction,
               })}
             >
               <button>Copy Link To Shape</button>
             </CopyToClipboard>
-          </ContainerDiv>
-          <ContainerDiv>
-            <button
-              onClick={() => {
-                NGonDrawer.current.toggleVertices()
-              }}
-            >
-              Toggle Vertices
-            </button>
-          </ContainerDiv>
-          <ContainerDiv>
-            <button
-              onClick={() => {
-                setShowMirror((previousState) => {
-                  return !previousState
-                })
-              }}
-            >
-              Toggle Show Mirror
-            </button>
           </ContainerDiv>
         </div>
       </LayoutDiv>
@@ -262,15 +239,13 @@ function validateToNumberArray(
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { vertex, subdivisions, points, jumps, reduction } = context.query
-
+  const { vertex, subdivisions, points, jumps } = context.query
   return {
     props: {
       initialVertices: validateToNumber(vertex),
       initialSubdivisions: validateToNumber(subdivisions),
       initialPoints: validateToNumber(points),
       initialJumps: validateToNumberArray(jumps),
-      initialReduction: validateToNumber(reduction),
     },
   }
 }
