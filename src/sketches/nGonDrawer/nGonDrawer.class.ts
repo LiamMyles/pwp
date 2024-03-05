@@ -3,17 +3,38 @@ import type { NGonSubdivisions } from "PolygonBuilders/nGonSubdivisions"
 
 interface NGonDrawerConstructor {
   NGon: NGonSubdivisions
+  mini?: boolean
+  background?: string
+  lineStyle?: {
+    strokeColour: string
+    strokeWeight: number
+  }
 }
 
 export class NGonDrawer {
   NGon: NGonSubdivisions
-  background = 220
+  background = "#dcdcdc"
   showVertices = false
   showSubdivisions = false
-  size = 250
+  drawingSize = 250
+  canvasSize = 600
+  lineStyle = {
+    strokeColour: "grey",
+    strokeWeight: 0.2,
+  }
 
-  constructor({ NGon }: NGonDrawerConstructor) {
+  constructor({ NGon, mini, background, lineStyle }: NGonDrawerConstructor) {
     this.NGon = NGon
+    if (mini) {
+      this.drawingSize = 140
+      this.canvasSize = 300
+    }
+    if (background) {
+      this.background = background
+    }
+    if (lineStyle) {
+      this.lineStyle = lineStyle
+    }
   }
 
   toggleVertices(): void {
@@ -34,7 +55,7 @@ export class NGonDrawer {
       p5.push()
       p5.stroke("purple")
       p5.strokeWeight(5)
-      p5.point(x * this.size, y * this.size)
+      p5.point(x * this.drawingSize, y * this.drawingSize)
       p5.pop()
     })
   }
@@ -48,11 +69,11 @@ export class NGonDrawer {
         p5.stroke("green")
       }
       p5.strokeWeight(20)
-      p5.point(x * this.size, y * this.size)
+      p5.point(x * this.drawingSize, y * this.drawingSize)
       p5.pop()
       if (this.NGon.initialMatrix.length <= 100) {
         p5.push()
-        p5.translate(x * this.size, y * this.size)
+        p5.translate(x * this.drawingSize, y * this.drawingSize)
         p5.rotate(-180)
         p5.strokeWeight(1)
 
@@ -78,12 +99,13 @@ export class NGonDrawer {
           : this.NGon.verticesMatrix[0]
 
         p5.push()
-        p5.strokeWeight(0.2)
+        p5.strokeWeight(this.lineStyle.strokeWeight)
+        p5.stroke(this.lineStyle.strokeColour)
         p5.line(
-          pointX * this.size,
-          pointY * this.size,
-          subX * this.size,
-          subY * this.size
+          pointX * this.drawingSize,
+          pointY * this.drawingSize,
+          subX * this.drawingSize,
+          subY * this.drawingSize
         )
         p5.pop()
       })
@@ -98,7 +120,7 @@ export class NGonDrawer {
   initializeSketch(): (p5: typeP5) => void {
     return (p5: typeP5) => {
       p5.setup = () => {
-        p5.createCanvas(600, 600)
+        p5.createCanvas(this.canvasSize, this.canvasSize)
         p5.background(this.background)
       }
 

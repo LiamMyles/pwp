@@ -98,10 +98,10 @@ export class NGonAnimator extends NGonDrawer {
         p5.strokeWeight(1.5)
         p5.stroke(236, 157, 88)
         p5.line(
-          pointX * this.size,
-          pointY * this.size,
-          subX * this.size,
-          subY * this.size
+          pointX * this.drawingSize,
+          pointY * this.drawingSize,
+          subX * this.drawingSize,
+          subY * this.drawingSize
         )
         p5.pop()
       })

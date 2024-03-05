@@ -1,11 +1,16 @@
+import { InputSlider } from "Components/InputSlider"
 import { Navigation } from "Components/Navigation"
 import { P5Canvas } from "Components/P5Canvas"
-import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
+import { PolygonJumps } from "Components/PolygonJumps"
+import { PolygonMetaTitle } from "Components/PolygonMetaTitle"
+import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import type typeP5 from "p5"
-import { NGonSubdivisions } from "PolygonBuilders/nGonSubdivisions"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
+import CopyToClipboard from "react-copy-to-clipboard"
+import { getUrl } from "Src/helpers/getUrl"
+import { NGonSubdivisionsSequence } from "Src/polygonBuilders/nGonSubdivisionsSequence"
 import { NGonDrawer } from "Src/sketches/nGonDrawer"
 import styled from "styled-components"
 
@@ -15,23 +20,16 @@ export const StyledP5Canvas = styled(P5Canvas)`
   height: 600px;
 `
 
+const ContainerDiv = styled.div`
+  display: grid;
+  grid-gap: 10px;
+  width: 600px;
+  margin: 10px auto;
+`
+
 const LayoutDiv = styled.div`
   display: grid;
-  margin: 10px 0;
-  grid-gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
-
-  @media screen and (min-width: 1250px) {
-    & > *:first-child {
-      justify-self: right;
-    }
-    & > *:last-child {
-      justify-self: left;
-    }
-    ${StyledP5Canvas} {
-      margin: 0;
-    }
-  }
+  margin: 10px auto;
 `
 
 interface Props {
@@ -41,37 +39,15 @@ interface Props {
   initialJumps: number[] | null
 }
 
-const nGonSynced = (
-  obj: NGonSubdivisions,
-  vert2: number,
-  sub: number,
-  points: number
-) => {
-  return new Promise((resolve, reject) => {
-    const interval = setInterval(() => {
-      if (
-        obj.verticesAmount === vert2 &&
-        obj.subdivisions === sub &&
-        obj.points === points
-      ) {
-        clearInterval(interval)
-        resolve(1)
-      } else {
-        console.log("failed")
-      }
-    }, 1)
-  })
-}
-
 export function Sequence({
   initialVertices,
   initialPoints,
   initialSubdivisions,
   initialJumps,
 }: Props): React.ReactElement {
-  const [drawCount, setDrawCount] = useState(0)
-
-  const NGonClass = useRef<NGonSubdivisions>(new NGonSubdivisions())
+  const NGonClass = useRef<NGonSubdivisionsSequence>(
+    new NGonSubdivisionsSequence()
+  )
   const NGonDrawerSketch = useRef<NGonDrawer>(
     new NGonDrawer({
       NGon: NGonClass.current,
@@ -89,50 +65,14 @@ export function Sequence({
     initialSubdivisions ?? 12
   )
   const [points, setPoints] = NGonClass.current.usePoints(initialPoints ?? 30)
+  const listenOnlyPoints = NGonClass.current.usePointsLister()
 
   const [totalJumps, setTotalJumps] = useState(initialJumps?.length ?? 0)
   const [jumps, setJumps] = NGonClass.current.useJumps(initialJumps ?? [])
 
+  const [speedMs, setSpeedMs] = NGonClass.current.useSpeedMs(100)
+
   const { basePath, pathname } = useRouter()
-
-  const { lineDensity } = calcLineDensity({
-    vertices,
-    subdivisions,
-    points,
-    jumps,
-  })
-
-  // useEffect(() => {
-  //   setLinesPerDraw(Math.ceil(lineDensity / 100))
-  //   setSpeedOfDraw(24)
-  // }, [lineDensity])
-
-  // useEffect(() => {
-  //   const array = [
-  //     { vert: 29, sub: 28, points: 346, jumps: [5, 6, 10] },
-  //     { vert: 30, sub: 28, points: 346 },
-  //     { vert: 40, sub: 28, points: 346 },
-  //     { vert: 50, sub: 28, points: 346 },
-  //   ]
-  //   const object = array[drawCount % array.length]
-  //   console.log(object)
-  //   if (drawCount !== 0 && object === undefined) {
-  //     NGonDrawer.current.togglePlay()
-  //   }
-
-  //   if (drawCount !== 0 && object !== undefined) {
-  //     setVertex(object.vert)
-  //     setSubdivisions(object.sub)
-  //     setPoints(object.points)
-  //     if (object.jumps) {
-  //       setTotalJumps(object.jumps.length)
-  //       setJumps(object.jumps)
-  //     } else {
-  //       setTotalJumps(0)
-  //       setJumps([])
-  //     }
-  //   }
-  // }, [drawCount])
 
   return (
     <>
@@ -152,16 +92,141 @@ export function Sequence({
       </Head>
 
       <Navigation />
-      <button
-        onClick={() => {
-          console.log(drawCount)
-        }}
-      >
-        Hello
-      </button>
+      <PolygonMetaTitle
+        vertices={vertices}
+        subdivisions={subdivisions}
+        points={listenOnlyPoints}
+        jumps={jumps}
+      />
       <LayoutDiv>
+        <div style={{ display: "flex", gap: "10px", margin: "auto" }}>
+          <button
+            style={{
+              width: "max-content",
+              textAlign: "center",
+              justifySelf: "start",
+            }}
+            onClick={() => {
+              NGonClass.current.playAnimation = true
+              NGonClass.current.animateSequence()
+            }}
+          >
+            Play Sequence
+          </button>
+          <button
+            style={{
+              width: "max-content",
+              textAlign: "center",
+            }}
+            onClick={() => {
+              NGonClass.current.playAnimation = false
+            }}
+          >
+            Stop Sequence
+          </button>
+        </div>
         {NGonSketch.current && <StyledP5Canvas sketch={NGonSketch.current} />}
+        <InputSlider
+          title="Speed "
+          min={100}
+          max={500}
+          setter={(value: number) => {
+            setSpeedMs(value)
+          }}
+          currentValue={speedMs}
+        />
+        <InputSlider
+          title="N-Gon"
+          setter={(value: number) => {
+            setVertex(value)
+          }}
+          min={1}
+          max={36}
+          currentValue={vertices}
+        />
+        <InputSlider
+          title="Subdivision"
+          min={1}
+          max={50}
+          setter={(value: number) => {
+            setSubdivisions(value)
+          }}
+          currentValue={subdivisions}
+        />
+        <InputSlider
+          title="Start Points"
+          min={1}
+          max={Math.floor((vertices * subdivisions) / 2)}
+          setter={(value: number) => {
+            setPoints(value)
+          }}
+          currentValue={points}
+        />
+        <PolygonJumps
+          NGonClass={NGonClass.current}
+          totalJumps={totalJumps}
+          setTotalJumps={setTotalJumps}
+          setJumps={setJumps}
+          jumps={jumps}
+        />
+        <ContainerDiv>
+          <CopyToClipboard
+            text={getUrl({
+              path: `${basePath}${pathname}`,
+              vertices,
+              subdivisions,
+              points,
+              jumps,
+            })}
+          >
+            <button>Copy Link To Shape</button>
+          </CopyToClipboard>
+        </ContainerDiv>
       </LayoutDiv>
     </>
   )
+}
+
+function validateToNumber(value: string | string[] | undefined): number | null {
+  if (typeof value === "string") {
+    if (!isNaN(parseInt(value))) {
+      return parseInt(value) ?? null
+    }
+  }
+  return null
+}
+
+function validateToNumberArray(
+  value: string | string[] | undefined
+): number[] | null {
+  if (Array.isArray(value)) {
+    const result = value
+      .map(validateToNumber)
+      .filter(
+        (numberOrUndefined): numberOrUndefined is number =>
+          numberOrUndefined !== null
+      )
+    return result
+  } else if (typeof value === "string") {
+    const validValue = validateToNumber(value)
+    if (validValue !== null) {
+      return [validValue]
+    }
+  }
+
+  return null
+}
+
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
+  const { vertex, subdivisions, points, jumps } = context.query
+  return {
+    props: {
+      initialVertices: validateToNumber(vertex),
+      initialSubdivisions: validateToNumber(subdivisions),
+      initialPoints: validateToNumber(points),
+      initialJumps: validateToNumberArray(jumps),
+    },
+  }
 }

@@ -12,6 +12,7 @@ const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 `
 
 const BuyLink = styled.a`
@@ -20,12 +21,15 @@ const BuyLink = styled.a`
   background: teal;
   color: white;
   border-radius: 999px;
-  margin: 10px;
+  margin: 5px;
   font-size: 0.8rem;
   cursor: pointer;
   font-weight: bold;
   text-decoration: none;
   outline: none;
+  position: absolute;
+  right: 0;
+  top: 1px;
   &:focus,
   &:hover {
     background: white;
@@ -40,22 +44,12 @@ export function Navigation(): React.ReactElement {
       <NavUl>
         <li>
           <Link href="/">
-            <a>NGon Animator</a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/drawing-n-gon">
-            <a>Draw NGon</a>
+            <a>Home</a>
           </Link>
         </li>
         <li>
           <Link href="/spirals">
-            <a>Spirals Animator</a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/drawing-spirals">
-            <a>Draw Spirals</a>
+            <a>Spirals</a>
           </Link>
         </li>
       </NavUl>
