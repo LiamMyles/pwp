@@ -52,6 +52,16 @@ export function Navigation(): React.ReactElement {
             <a>Spirals</a>
           </Link>
         </li>
+        <li>
+          <Link href="/sequence">
+            <a>Sequence Player</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/picked-sequences">
+            <a>Picked Sequences</a>
+          </Link>
+        </li>
       </NavUl>
 
       <BuyLink href="https://www.routledge.com/Electronic-String-Art-Rhythmic-Mathematics/Erfle/p/book/9781032512730">

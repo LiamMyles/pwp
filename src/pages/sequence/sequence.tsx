@@ -29,7 +29,21 @@ const ContainerDiv = styled.div`
 
 const LayoutDiv = styled.div`
   display: grid;
-  margin: 10px auto;
+  margin: 10px 0;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
+
+  @media screen and (min-width: 1250px) {
+    & > *:first-child {
+      justify-self: right;
+    }
+    & > *:last-child {
+      justify-self: left;
+    }
+    ${StyledP5Canvas} {
+      margin: 0;
+    }
+  }
 `
 
 interface Props {
@@ -92,96 +106,101 @@ export function Sequence({
       </Head>
 
       <Navigation />
-      <PolygonMetaTitle
-        vertices={vertices}
-        subdivisions={subdivisions}
-        points={listenOnlyPoints}
-        jumps={jumps}
-      />
+
       <LayoutDiv>
-        <div style={{ display: "flex", gap: "10px", margin: "auto" }}>
-          <button
-            style={{
-              width: "max-content",
-              textAlign: "center",
-              justifySelf: "start",
-            }}
-            onClick={() => {
-              NGonClass.current.playAnimation = true
-              NGonClass.current.animateSequence()
-            }}
-          >
-            Play Sequence
-          </button>
-          <button
-            style={{
-              width: "max-content",
-              textAlign: "center",
-            }}
-            onClick={() => {
-              NGonClass.current.playAnimation = false
-            }}
-          >
-            Stop Sequence
-          </button>
+        <div>
+          {NGonSketch.current && <StyledP5Canvas sketch={NGonSketch.current} />}
         </div>
-        {NGonSketch.current && <StyledP5Canvas sketch={NGonSketch.current} />}
-        <InputSlider
-          title="Speed "
-          min={100}
-          max={500}
-          setter={(value: number) => {
-            setSpeedMs(value)
-          }}
-          currentValue={speedMs}
-        />
-        <InputSlider
-          title="N-Gon"
-          setter={(value: number) => {
-            setVertex(value)
-          }}
-          min={1}
-          max={36}
-          currentValue={vertices}
-        />
-        <InputSlider
-          title="Subdivision"
-          min={1}
-          max={50}
-          setter={(value: number) => {
-            setSubdivisions(value)
-          }}
-          currentValue={subdivisions}
-        />
-        <InputSlider
-          title="Start Points"
-          min={1}
-          max={Math.floor((vertices * subdivisions) / 2)}
-          setter={(value: number) => {
-            setPoints(value)
-          }}
-          currentValue={points}
-        />
-        <PolygonJumps
-          NGonClass={NGonClass.current}
-          totalJumps={totalJumps}
-          setTotalJumps={setTotalJumps}
-          setJumps={setJumps}
-          jumps={jumps}
-        />
-        <ContainerDiv>
-          <CopyToClipboard
-            text={getUrl({
-              path: `${basePath}${pathname}`,
-              vertices,
-              subdivisions,
-              points,
-              jumps,
-            })}
-          >
-            <button>Copy Link To Shape</button>
-          </CopyToClipboard>
-        </ContainerDiv>
+        <div>
+          <PolygonMetaTitle
+            vertices={vertices}
+            subdivisions={subdivisions}
+            points={listenOnlyPoints}
+            jumps={jumps}
+          />
+          <div style={{ display: "flex", gap: "10px", margin: "auto" }}>
+            <button
+              style={{
+                width: "max-content",
+                textAlign: "center",
+                justifySelf: "start",
+              }}
+              onClick={() => {
+                NGonClass.current.playAnimation = true
+                NGonClass.current.animateSequence()
+              }}
+            >
+              Play Sequence
+            </button>
+            <button
+              style={{
+                width: "max-content",
+                textAlign: "center",
+              }}
+              onClick={() => {
+                NGonClass.current.playAnimation = false
+              }}
+            >
+              Stop Sequence
+            </button>
+          </div>
+          <InputSlider
+            title="Speed "
+            min={100}
+            max={500}
+            setter={(value: number) => {
+              setSpeedMs(value)
+            }}
+            currentValue={speedMs}
+          />
+          <InputSlider
+            title="N-Gon"
+            setter={(value: number) => {
+              setVertex(value)
+            }}
+            min={1}
+            max={36}
+            currentValue={vertices}
+          />
+          <InputSlider
+            title="Subdivision"
+            min={1}
+            max={50}
+            setter={(value: number) => {
+              setSubdivisions(value)
+            }}
+            currentValue={subdivisions}
+          />
+          <InputSlider
+            title="Start Points"
+            min={1}
+            max={Math.floor((vertices * subdivisions) / 2)}
+            setter={(value: number) => {
+              setPoints(value)
+            }}
+            currentValue={points}
+          />
+          <PolygonJumps
+            NGonClass={NGonClass.current}
+            totalJumps={totalJumps}
+            setTotalJumps={setTotalJumps}
+            setJumps={setJumps}
+            jumps={jumps}
+          />
+          <ContainerDiv>
+            <CopyToClipboard
+              text={getUrl({
+                path: `${basePath}${pathname}`,
+                vertices,
+                subdivisions,
+                points,
+                jumps,
+              })}
+            >
+              <button>Copy Link To Shape</button>
+            </CopyToClipboard>
+          </ContainerDiv>
+        </div>
       </LayoutDiv>
     </>
   )
