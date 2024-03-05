@@ -81,7 +81,7 @@ const sequenceOptions: OptionsJson[] = [
     nGon: [14, 19, [9], { start: 9, end: 300 }],
     styles: {
       background: "black",
-      lineStyle: { strokeColour: "#0D2149", strokeWeight: 0.4 },
+      lineStyle: { strokeColour: "#0D2149", strokeWeight: 0.6 },
     },
   },
   {

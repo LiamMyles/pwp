@@ -13,13 +13,13 @@ interface NGonDrawerConstructor {
 
 export class NGonDrawer {
   NGon: NGonSubdivisions
-  background = "#dcdcdc"
+  background = "#eeeeee"
   showVertices = false
   showSubdivisions = false
   drawingSize = 250
   canvasSize = 600
   lineStyle = {
-    strokeColour: "grey",
+    strokeColour: "black",
     strokeWeight: 0.2,
   }
 
