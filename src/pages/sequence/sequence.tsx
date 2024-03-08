@@ -72,17 +72,17 @@ export function Sequence({
   )
 
   const [vertices, setVertex] = NGonClass.current.useVertices(
-    initialVertices ?? 4
+    initialVertices ?? 12
   )
 
   const [subdivisions, setSubdivisions] = NGonClass.current.useSubdivisions(
-    initialSubdivisions ?? 12
+    initialSubdivisions ?? 41
   )
-  const [points, setPoints] = NGonClass.current.usePoints(initialPoints ?? 30)
+  const [points, setPoints] = NGonClass.current.usePoints(initialPoints ?? 1)
   const listenOnlyPoints = NGonClass.current.usePointsLister()
 
-  const [totalJumps, setTotalJumps] = useState(initialJumps?.length ?? 0)
-  const [jumps, setJumps] = NGonClass.current.useJumps(initialJumps ?? [])
+  const [totalJumps, setTotalJumps] = useState(initialJumps?.length ?? 1)
+  const [jumps, setJumps] = NGonClass.current.useJumps(initialJumps ?? [5])
 
   const [speedMs, setSpeedMs] = NGonClass.current.useSpeedMs(100)
 
