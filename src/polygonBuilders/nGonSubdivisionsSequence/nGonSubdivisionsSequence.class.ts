@@ -25,10 +25,10 @@ export class NGonSubdivisionsSequence extends NGonSubdivisions {
       this.setJumps(jumps)
     }
     if (pointsRange) {
+      this.pointsRangeConstructed = true
       this.setSequencePointsRange(pointsRange.start, pointsRange.end)
       this.setPoints(pointsRange.start)
     }
-
     this.calculateVertexMatrix()
   }
 
@@ -39,13 +39,41 @@ export class NGonSubdivisionsSequence extends NGonSubdivisions {
 
   pointsStartingRange = 1
   pointsEndingRange = 2000
+  pointsRangeConstructed = false
   targetSCF = 1
   speedMs = 100
   playAnimation = true
 
-  lastFrame = performance.now()
+  lastFrameDrawTime = performance.now()
   matchDepthCounter = 0
   lastAnimationFrame: undefined | number
+
+  autoSetPointsRange(): void {
+    if (this.pointsRangeConstructed === false) {
+      this.pointsEndingRange =
+        this.verticesAmount * this.subdivisions * this.jumps.length
+    }
+  }
+
+  /** overwrite parent functions to set points range */
+  setVertices(count: number): void {
+    super.setVertices(count)
+    this.autoSetPointsRange()
+    this.points = 1
+  }
+
+  setSubdivisions(subdivisions: number): void {
+    super.setSubdivisions(subdivisions)
+    this.autoSetPointsRange()
+    this.points = 1
+  }
+
+  setJumps(jumps: number[]): void {
+    super.setJumps(jumps)
+    this.autoSetPointsRange()
+    this.points = 1
+  }
+  /** end of overwrite parent functions to set points range */
 
   setSequencePointsRange(start: number, end: number): void {
     this.pointsStartingRange = start
@@ -120,8 +148,8 @@ export class NGonSubdivisionsSequence extends NGonSubdivisions {
       cancelAnimationFrame(this.lastAnimationFrame)
     }
     const animate = (timestamp: DOMHighResTimeStamp) => {
-      if (timestamp - this.lastFrame >= this.speedMs) {
-        this.lastFrame = timestamp
+      if (timestamp - this.lastFrameDrawTime >= this.speedMs) {
+        this.lastFrameDrawTime = timestamp
 
         const foundMatch = this.matchNextSCF()
 

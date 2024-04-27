@@ -86,6 +86,8 @@ export function Sequence({
 
   const [speedMs, setSpeedMs] = NGonClass.current.useSpeedMs(100)
 
+  const [isPlaying, setIsPlaying] = useState<boolean>(false)
+
   const { basePath, pathname } = useRouter()
 
   return (
@@ -118,7 +120,9 @@ export function Sequence({
             points={listenOnlyPoints}
             jumps={jumps}
           />
-          <div style={{ display: "flex", gap: "10px", margin: "auto" }}>
+          <div
+            style={{ display: "flex", gap: "10px", margin: "auto", width: 600 }}
+          >
             <button
               style={{
                 width: "max-content",
@@ -126,28 +130,23 @@ export function Sequence({
                 justifySelf: "start",
               }}
               onClick={() => {
-                NGonClass.current.playAnimation = true
-                NGonClass.current.animateSequence()
+                if (isPlaying) {
+                  NGonClass.current.playAnimation = false
+                  setIsPlaying(false)
+                } else {
+                  NGonClass.current.playAnimation = true
+                  NGonClass.current.animateSequence()
+                  setIsPlaying(true)
+                }
               }}
             >
-              Play Sequence
-            </button>
-            <button
-              style={{
-                width: "max-content",
-                textAlign: "center",
-              }}
-              onClick={() => {
-                NGonClass.current.playAnimation = false
-              }}
-            >
-              Stop Sequence
+              {isPlaying ? "Stop Sequence" : "Play Sequence"}
             </button>
           </div>
           <InputSlider
-            title="Speed "
-            min={100}
-            max={500}
+            title="Speed (lower is faster)"
+            min={1}
+            max={200}
             setter={(value: number) => {
               setSpeedMs(value)
             }}

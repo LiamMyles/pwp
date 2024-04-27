@@ -126,6 +126,20 @@ const sequenceOptions: OptionsJson[] = [
       lineStyle: { strokeColour: "#FF006E", strokeWeight: 0.1 },
     },
   },
+  {
+    nGon: [12, 41, [7, 1, 1, 7], { start: 11, end: 492 }],
+    styles: {
+      background: "black",
+      lineStyle: { strokeColour: "#5F0A87", strokeWeight: 0.1 },
+    },
+  },
+  {
+    nGon: [28, 41, [18, 38, 38, 11], { start: 11, end: 656 }],
+    styles: {
+      background: "black",
+      lineStyle: { strokeColour: "#357266", strokeWeight: 0.2 },
+    },
+  },
 ]
 
 export function PickedSequences(): React.ReactElement {

@@ -92,6 +92,7 @@ interface TimeLineProps {
 function TimeLine({ NGonAnimator }: TimeLineProps) {
   const requestedAnimationId = useRef(0)
   const [currentFramePercent, setCurrentFramePercent] = useState(0)
+  const [currentFrame, setCurrentFrame] = useState(0)
 
   useEffect(() => {
     let previousTimestamp = 0
@@ -100,10 +101,14 @@ function TimeLine({ NGonAnimator }: TimeLineProps) {
         (NGonAnimator.current.currentAnimationTick /
           NGonAnimator.current.totalAnimationTicks) *
         100
+      const currentTick = NGonAnimator.current.currentAnimationTick
       if (timestamp - previousTimestamp > 50) {
         previousTimestamp = timestamp
         if (currentFramePercent !== currentPercentage) {
           setCurrentFramePercent(currentPercentage)
+        }
+        if (currentTick !== currentFrame) {
+          setCurrentFrame(currentTick)
         }
       }
 
@@ -116,12 +121,12 @@ function TimeLine({ NGonAnimator }: TimeLineProps) {
     return () => {
       cancelAnimationFrame(requestedAnimationId.current)
     }
-  }, [currentFramePercent])
+  }, [currentFramePercent, currentFrame])
 
   return (
     <>
       <label htmlFor="file">
-        Drawing Progress: {Math.ceil(currentFramePercent)}%
+        Drawing Progress: {Math.ceil(currentFramePercent)}% ({currentFrame})
       </label>
       <StyledProgress id="file" max={100} value={currentFramePercent} />
     </>
