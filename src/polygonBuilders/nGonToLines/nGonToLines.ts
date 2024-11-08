@@ -11,11 +11,28 @@ export class NGonToLines extends NGonSubdivisions {
   verticesPairsMatrix: [Vertices, Vertices][] = []
   arrayListJ: [Vertices, Vertices][] = []
   arrayListK: [Vertices, Vertices][] = []
-  arrayListVWEven: [Vertices, Vertices][] = []
+  arrayListVW: [Vertices, Vertices][] = []
   arrayListVWOdd: [Vertices, Vertices][] = []
+  jValue = 1
   kValue = 1
   vValue = 1
   wValue = 1
+
+  setJValue(jValue: number): void {
+    this.jValue = jValue
+  }
+
+  useJValue(
+    initialJValue: number
+  ): [number, React.Dispatch<React.SetStateAction<number>>] {
+    const [jValue, setJValue] = useState(initialJValue)
+    useEffect(() => {
+      this.setJValue(jValue)
+      this.calculateVertexMatrix()
+    }, [jValue])
+
+    return [jValue, setJValue]
+  }
 
   setKValue(kValue: number): void {
     this.kValue = kValue
@@ -68,7 +85,7 @@ export class NGonToLines extends NGonSubdivisions {
     this.verticesPairsMatrix = []
     this.arrayListJ = []
     this.arrayListK = []
-    this.arrayListVWEven = []
+    this.arrayListVW = []
     this.arrayListVWOdd = []
   }
 
@@ -91,12 +108,12 @@ export class NGonToLines extends NGonSubdivisions {
       },
     })
 
-    for (let inc = 1; inc < length + 1; inc++) {
+    for (let inc = 0; inc < length + 1; inc++) {
       const vertexA = Math.floor(
-        length / 2 - (inc % this.subdivisionMatrix.length)
+        this.jValue / 2 - (inc % this.subdivisionMatrix.length)
       )
-      const vertexB = Math.floor(
-        length / 2 + (inc % this.subdivisionMatrix.length)
+      const vertexB = Math.ceil(
+        this.jValue / 2 + (inc % this.subdivisionMatrix.length)
       )
 
       this.arrayListJ.push([
@@ -105,12 +122,12 @@ export class NGonToLines extends NGonSubdivisions {
       ])
     }
 
-    for (let inc = 1; inc < length + 1; inc++) {
+    for (let inc = 0; inc < length + 1; inc++) {
       const vertexA = Math.floor(
-        (this.kValue + 1) / 2 - (inc % this.subdivisionMatrix.length)
+        this.kValue / 2 - (inc % this.subdivisionMatrix.length)
       )
-      const vertexB = Math.floor(
-        (this.kValue - 1) / 2 + (inc % this.subdivisionMatrix.length)
+      const vertexB = Math.ceil(
+        this.kValue / 2 + (inc % this.subdivisionMatrix.length)
       )
 
       this.arrayListK.push([
@@ -119,47 +136,46 @@ export class NGonToLines extends NGonSubdivisions {
       ])
     }
 
-    for (let inc = 1; inc < length + 1; inc++) {
+    for (let inc = 0; inc < length + 1; inc++) {
       const vertexA = Math.floor(
         (((this.vValue + this.wValue) % this.subdivisionMatrix.length) / 2 -
           inc) %
           this.subdivisionMatrix.length
       )
-      const vertexB = Math.floor(
+      const vertexB = Math.ceil(
         (((this.vValue + this.wValue) % this.subdivisionMatrix.length) / 2 +
           inc) %
           this.subdivisionMatrix.length
       )
 
-      this.arrayListVWEven.push([
+      this.arrayListVW.push([
         verticesMatrixNegativeIndexable[vertexA],
         verticesMatrixNegativeIndexable[vertexB],
       ])
     }
 
-    for (let inc = 1; inc < length + 1; inc++) {
-      const vertexA = Math.floor(
-        (((this.vValue + this.wValue + 1) % this.subdivisionMatrix.length) / 2 -
-          inc) %
-          this.subdivisionMatrix.length
-      )
-      const vertexB = Math.floor(
-        (((this.vValue + this.wValue - 1) % this.subdivisionMatrix.length) / 2 +
-          inc) %
-          this.subdivisionMatrix.length
-      )
+    // for (let inc = 1; inc < length + 1; inc++) {
+    //   const vertexA = Math.floor(
+    //     (((this.vValue + this.wValue + 1) % this.subdivisionMatrix.length) / 2 -
+    //       inc) %
+    //       this.subdivisionMatrix.length
+    //   )
+    //   const vertexB = Math.floor(
+    //     (((this.vValue + this.wValue - 1) % this.subdivisionMatrix.length) / 2 +
+    //       inc) %
+    //       this.subdivisionMatrix.length
+    //   )
 
-      this.arrayListVWOdd.push([
-        verticesMatrixNegativeIndexable[vertexA],
-        verticesMatrixNegativeIndexable[vertexB],
-      ])
-    }
+    //   this.arrayListVWOdd.push([
+    //     verticesMatrixNegativeIndexable[vertexA],
+    //     verticesMatrixNegativeIndexable[vertexB],
+    //   ])
+    // }
 
     this.verticesPairsMatrix = [
       ...this.arrayListJ,
       ...this.arrayListK,
-      ...this.arrayListVWEven,
-      ...this.arrayListVWOdd,
+      ...this.arrayListVW,
     ]
   }
 }

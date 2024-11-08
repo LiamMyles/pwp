@@ -77,6 +77,7 @@ export function DrawingNGonLines({
     initialSubdivisions ?? 1
   )
   const [points, setPoints] = NGonClass.current.usePoints(initialPoints ?? 1)
+  const [jValue, setJValue] = NGonClass.current.useJValue(1)
   const [kValue, setKValue] = NGonClass.current.useKValue(1)
   const [vValue, setVValue] = NGonClass.current.useVValue(1)
   const [wValue, setWValue] = NGonClass.current.useWValue(1)
@@ -118,9 +119,7 @@ export function DrawingNGonLines({
             <span> - </span>
             <span style={{ color: "blue" }}>K Lines</span>
             <span> - </span>
-            <span style={{ color: "green" }}>VW Even Lines</span>
-            <span> - </span>
-            <span style={{ color: "purple" }}>VW Odd Lines</span>
+            <span style={{ color: "green" }}>V-W Lines</span>
           </div>
           <InputSlider
             title="N-Gon"
@@ -150,9 +149,18 @@ export function DrawingNGonLines({
             currentValue={points}
           />
           <InputSlider
+            title="JValue"
+            min={1}
+            max={Math.floor(vertices * subdivisions)}
+            setter={(value: number) => {
+              setJValue(value)
+            }}
+            currentValue={jValue}
+          />
+          <InputSlider
             title="KValue"
             min={1}
-            max={Math.floor((vertices * subdivisions) / 2)}
+            max={Math.floor(vertices * subdivisions)}
             setter={(value: number) => {
               setKValue(value)
             }}
@@ -161,7 +169,7 @@ export function DrawingNGonLines({
           <InputSlider
             title="VValue"
             min={1}
-            max={Math.floor((vertices * subdivisions) / 2)}
+            max={Math.floor(vertices * subdivisions)}
             setter={(value: number) => {
               setVValue(value)
             }}
@@ -170,7 +178,7 @@ export function DrawingNGonLines({
           <InputSlider
             title="WValue"
             min={1}
-            max={Math.floor((vertices * subdivisions) / 2)}
+            max={Math.floor(vertices * subdivisions)}
             setter={(value: number) => {
               setWValue(value)
             }}

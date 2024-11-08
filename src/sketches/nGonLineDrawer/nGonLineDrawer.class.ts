@@ -122,28 +122,13 @@ export class NGonLineDrawer {
       )
       p5.pop()
     })
-    this.NGon.arrayListVWEven.forEach((line) => {
+    this.NGon.arrayListVW.forEach((line) => {
       const { x: subX, y: subY } = line[0]
       const { x: pointX, y: pointY } = line[1]
 
       p5.push()
       p5.strokeWeight(1)
       p5.stroke("green")
-      p5.line(
-        pointX * this.drawingSize,
-        pointY * this.drawingSize,
-        subX * this.drawingSize,
-        subY * this.drawingSize
-      )
-      p5.pop()
-    })
-    this.NGon.arrayListVWOdd.forEach((line) => {
-      const { x: subX, y: subY } = line[0]
-      const { x: pointX, y: pointY } = line[1]
-
-      p5.push()
-      p5.strokeWeight(1)
-      p5.stroke("purple")
       p5.line(
         pointX * this.drawingSize,
         pointY * this.drawingSize,
