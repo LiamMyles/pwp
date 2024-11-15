@@ -12,7 +12,6 @@ export class NGonToLines extends NGonSubdivisions {
   arrayListJ: [Vertices, Vertices][] = []
   arrayListK: [Vertices, Vertices][] = []
   arrayListVW: [Vertices, Vertices][] = []
-  arrayListVWOdd: [Vertices, Vertices][] = []
   jValue = 1
   kValue = 1
   vValue = 1
@@ -153,24 +152,6 @@ export class NGonToLines extends NGonSubdivisions {
         verticesMatrixNegativeIndexable[vertexB],
       ])
     }
-
-    // for (let inc = 1; inc < length + 1; inc++) {
-    //   const vertexA = Math.floor(
-    //     (((this.vValue + this.wValue + 1) % this.subdivisionMatrix.length) / 2 -
-    //       inc) %
-    //       this.subdivisionMatrix.length
-    //   )
-    //   const vertexB = Math.floor(
-    //     (((this.vValue + this.wValue - 1) % this.subdivisionMatrix.length) / 2 +
-    //       inc) %
-    //       this.subdivisionMatrix.length
-    //   )
-
-    //   this.arrayListVWOdd.push([
-    //     verticesMatrixNegativeIndexable[vertexA],
-    //     verticesMatrixNegativeIndexable[vertexB],
-    //   ])
-    // }
 
     this.verticesPairsMatrix = [
       ...this.arrayListJ,
