@@ -67,7 +67,7 @@ export function Spirals({
   initialReduction,
 }: Props): React.ReactElement {
   const [lineDensity, setLineDensity] = useState(0)
-  console.log(lineDensity)
+
   const NGonClass = useRef<NGonSpirals>(new NGonSpirals({ setLineDensity }))
   const NGonDrawer = useRef<SpiralAnimator>(
     new SpiralAnimator({
