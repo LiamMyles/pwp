@@ -2,7 +2,7 @@
 
 A project created for the fun of creating cool patterns with maths 🔢
 
-## Glass Diagrams
+## Class Diagrams
 
 ```mermaid
  classDiagram
@@ -53,7 +53,7 @@ A project created for the fun of creating cool patterns with maths 🔢
     }
 ```
 
-## Sequences to create different variation's
+## Sequences to create different variations
 
 ### Get Shape Classes
 
