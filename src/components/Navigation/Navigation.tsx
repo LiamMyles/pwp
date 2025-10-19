@@ -53,6 +53,11 @@ export function Navigation(): React.ReactElement {
           </Link>
         </li>
         <li>
+          <Link href="/svg-mode">
+            <a>SVG Mode</a>
+          </Link>
+        </li>
+        <li>
           <Link href="/sequence">
             <a>Sequence Player</a>
           </Link>
