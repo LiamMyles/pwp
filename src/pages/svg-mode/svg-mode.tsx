@@ -3,6 +3,7 @@ import { Navigation } from "Components/Navigation"
 import { P5Canvas } from "Components/P5Canvas"
 import { PolygonJumps } from "Components/PolygonJumps"
 import { PolygonMetaTitle } from "Components/PolygonMetaTitle"
+import { calcLineDensity } from "MatrixCalculations/calcLineDensity"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
@@ -58,7 +59,17 @@ interface Props {
   initialJumps: number[] | null
 }
 
-function generateSVGFromPoints(points: Vertices[], scale = 300): string {
+interface GenerateSVGFromPointsParams {
+  verticesMatrix: Vertices[]
+  scale?: number
+  lineDensity: number
+}
+
+function generateSVGFromPoints({
+  verticesMatrix,
+  lineDensity,
+  scale = 300,
+}: GenerateSVGFromPointsParams): string {
   const svgHeader = `<svg width="${scale * 2}" height="${scale * 2}" viewBox="${
     scale * -1
   } ${scale * -1} ${scale * 2} ${
@@ -66,13 +77,14 @@ function generateSVGFromPoints(points: Vertices[], scale = 300): string {
   }" xmlns="http://www.w3.org/2000/svg">`
   const svgFooter = `</svg>`
 
-  const scaledPoints = points
+  const scaledPoints = verticesMatrix
+    .slice(0, lineDensity + 1)
     .map((p) => `${p.x * scale},${-p.y * scale}`) // Flip Y for SVG coordinate system
     .join(" ")
 
-  const polygon = `<polygon points="${scaledPoints}" fill="none" stroke="black" stroke-width="0.1" />`
+  const polyline = `<polyline points="${scaledPoints}" fill="none" stroke="black" stroke-width="0.2" />`
 
-  return `${svgHeader}\n  ${polygon}\n${svgFooter}`
+  return `${svgHeader}\n  ${polyline}\n${svgFooter}`
 }
 
 export function SvgMode({
@@ -101,10 +113,14 @@ export function SvgMode({
   )
 
   const { basePath, pathname } = useRouter()
+  const verticesMatrix =
+    NGonSubdivisionsInstance.current.useVerticesMatrixLister()
 
-  const generatedSvg = generateSVGFromPoints(
-    NGonSubdivisionsInstance.current.verticesMatrix
-  )
+  const generatedSvg = generateSVGFromPoints({
+    verticesMatrix,
+    lineDensity: calcLineDensity({ vertices, subdivisions, points, jumps })
+      .lineDensity,
+  })
 
   return (
     <>

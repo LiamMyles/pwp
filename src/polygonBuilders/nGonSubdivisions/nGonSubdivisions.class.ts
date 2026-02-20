@@ -13,6 +13,7 @@ export class NGonSubdivisions extends NGonJumps {
     super()
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.listenToPoints = undefined
+    this.listenToVerticesMatrix = undefined
   }
 
   subdivisions = 1
@@ -21,7 +22,10 @@ export class NGonSubdivisions extends NGonJumps {
   subdivisionMatrix: VerticesMatrix[] = [{ x: 0, y: 0 }]
   initialMatrix: VerticesMatrix[] = [{ x: 0, y: 0 }]
 
-  listenToPoints: ((points: number) => void) | undefined
+  private listenToPoints: ((points: number) => void) | undefined
+  private listenToVerticesMatrix:
+    | ((points: VerticesMatrix[]) => void)
+    | undefined
 
   setSubdivisions(subdivisions: number): void {
     this.subdivisions = subdivisions
@@ -68,6 +72,13 @@ export class NGonSubdivisions extends NGonJumps {
     return points
   }
 
+  useVerticesMatrixLister(): VerticesMatrix[] {
+    const [verticesMatrix, setVerticesMatrix] = useState(this.verticesMatrix)
+    this.listenToVerticesMatrix = setVerticesMatrix
+
+    return verticesMatrix
+  }
+
   calculateVertexMatrix(): void {
     this.initialMatrix = calcNGonVertices(this.verticesAmount)
 
@@ -86,6 +97,9 @@ export class NGonSubdivisions extends NGonJumps {
       ...this.jumps
     )
     this.verticesMatrix = pointsMatrix
+    if (this.listenToVerticesMatrix !== undefined) {
+      this.listenToVerticesMatrix(pointsMatrix)
+    }
 
     const { lineDensity, subdivisionCommonFactor, verticesCommonFactor } =
       calcLineDensity({

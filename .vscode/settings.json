@@ -1,5 +1,5 @@
 {
-  "cSpell.words": [
-    "VSPJ"
-  ]
+  "cSpell.words": ["VSPJ"],
+  "svg.preview.background": "white",
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
